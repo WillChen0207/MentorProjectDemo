@@ -1,0 +1,63 @@
+{
+  "properties": [
+    {
+      "name": "student.studentId",
+      "type": "java.lang.Integer",
+      "description": "Description for student.studentId."
+    },
+    {
+      "name": "student.studentName",
+      "type": "java.lang.String",
+      "description": "Description for student.studentName."
+    },
+    {
+      "name": "student.gender",
+      "type": "java.lang.Integer",
+      "description": "Description for student.gender."
+    },
+    {
+      "name": "student.gpa",
+      "type": "java.lang.Double",
+      "description": "Description for student.gpa."
+    },
+    {
+      "name": "student.password",
+      "type": "java.lang.String",
+      "description": "Description for student.password."
+    },
+    {
+      "name": "datasource.driver-class-name",
+      "type": "java.lang.String",
+      "description": "Description for datasource.driver-class-name."
+    },
+    {
+      "name": "datasource.url",
+      "type": "java.lang.String",
+      "description": "Description for datasource.url."
+    },
+    {
+      "name": "datasource.username",
+      "type": "java.lang.String",
+      "description": "Description for datasource.username."
+    },
+    {
+      "name": "datasource.password",
+      "type": "java.lang.String",
+      "description": "Description for datasource.password."
+    },
+    {
+      "name": "jpa.hibernate.ddl-auto",
+      "type": "java.lang.String",
+      "description": "Description for jpa.hibernate.ddl-auto."
+    },
+    {
+      "name": "jpa.show-sql",
+      "type": "java.lang.String",
+      "description": "Description for jpa.show-sql."
+    },
+    {
+      "name": "jpa.properties.hibernate.dialect",
+      "type": "java.lang.String",
+      "description": "Description for jpa.properties.hibernate.dialect."
+    }
+  ] }

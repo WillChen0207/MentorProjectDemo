@@ -1,0 +1,29 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /hellomentor
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  profiles:
+    active: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mentor?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&serverTimezone=UTC&useSSL=false
+    username: root
+    password: root
+
+
+jpa:
+  hibernate:
+    ddl-auto: create
+  show-sql: true
+
+#student:
+#  studentName: ${studentName}
+#  gender: ${studentGender}
+#  gpa: ${gpa}
+#  password: ${stduentPassword}
+#  studentId: ${studentId}
+
