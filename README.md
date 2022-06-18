@@ -14,3 +14,9 @@
   3. 双选结果获取（同上）
   4. 私信查看与发送（同上）
  - 导师信息表（允许游客身份查看）
+ # 项目运行
+  - 配置maven的输出
+   1. 点击文件->设置->搜索maven，然后配置maven主路径、用户设置文件、本地仓库，需要先下载apache-maven，我使用的是3.8.4版本。可参考我的设置：
+   2. maven主路径：E:/.../apache-maven-3.8.4
+   3. 用户设置文件：E:/.../apache-maven-3.8.4/conf/settings.xml
+   4. 本地仓库：E:/.../apache-maven-3.8.4/maven-repo
