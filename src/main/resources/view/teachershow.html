@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MentorList</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>TeacherID</th>
+        <th>TeacherName</th>
+        <th>Gender</th>
+        <th>Description</th>
+        <th>Password</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr th:each="teacher,iterStat : ${teacherList}">
+            <td th:text="${teacher.teacherId}"></td>
+            <td th:text="${teacher.teacherName}"></td>
+            <td th:text="${teacher.gender}"></td>
+            <td th:text="${teacher.description}"></td>
+            <td th:text="${teacher.password}"></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

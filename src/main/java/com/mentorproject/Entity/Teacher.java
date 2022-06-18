@@ -6,29 +6,29 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Student {
+public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer studentId;
-    private String studentName;
+    private Integer teacherId;
+    private String teacherName;
     private Integer gender;
-    private double gpa;
+    private String description;
     private String password;
 
-    public Integer getStudentId() {
-        return studentId;
+    public Integer getTeacherId() {
+        return teacherId;
     }
 
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
-    public String getStudentName() {
-        return studentName;
+    public String getTeacherName() {
+        return teacherName;
     }
 
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
     }
 
     public Integer getGender() {
@@ -39,12 +39,12 @@ public class Student {
         this.gender = gender;
     }
 
-    public double getGpa() {
-        return gpa;
+    public String getDescription() {
+        return description;
     }
 
-    public void setGpa(double gpa) {
-        this.gpa = gpa;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getPassword() {
@@ -54,6 +54,4 @@ public class Student {
     public void setPassword(String password) {
         this.password = password;
     }
-
-
 }

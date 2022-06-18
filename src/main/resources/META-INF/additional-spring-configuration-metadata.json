@@ -26,6 +26,31 @@
       "description": "Description for student.password."
     },
     {
+      "name": "teacher.teacherId",
+      "type": "java.lang.Integer",
+      "description": "Description for teacher.teacherId."
+    },
+    {
+      "name": "teacher.teacherName",
+      "type": "java.lang.String",
+      "description": "Description for teacher.teacherName."
+    },
+    {
+      "name": "teacher.gender",
+      "type": "java.lang.Integer",
+      "description": "Description for teacher.gender."
+    },
+    {
+      "name": "teacher.description",
+      "type": "java.lang.String",
+      "description": "Description for teacher.description."
+    },
+    {
+      "name": "teacher.password",
+      "type": "java.lang.String",
+      "description": "Description for teacher.password."
+    },
+    {
       "name": "datasource.driver-class-name",
       "type": "java.lang.String",
       "description": "Description for datasource.driver-class-name."

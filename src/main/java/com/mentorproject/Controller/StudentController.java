@@ -30,21 +30,18 @@ public class StudentController {
 
     /**
     * 添加一个学生
-     * @param studentId
      * @param studentName
      * @param gender
      * @param gpa
      * @param password
     **/
     @RequestMapping(value = "/add",method = RequestMethod.GET)
-    public String addStudent(@RequestParam("studentId") Integer studentId,
-                              @RequestParam("studentName") String studentName,
+    public String addStudent(@RequestParam("studentName") String studentName,
                               @RequestParam("gender") Integer gender,
                               @RequestParam("gpa") Double gpa,
                               @RequestParam("password") String password,
                               Model model){
         Student student = new Student();
-        student.setStudentId(studentId);
         student.setStudentName(studentName);
         student.setGender(gender);
         student.setGpa(gpa);

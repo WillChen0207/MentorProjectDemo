@@ -16,7 +16,7 @@ spring:
   thymeleaf:
     cache: false
     prefix: classpath:/view/
-    mode: LEGACYHTML5
+    mode: HTML
     suffix: .html
 
 
@@ -24,6 +24,7 @@ jpa:
   hibernate:
     ddl-auto: create
   show-sql: true
+
 
 #student:
 #  studentName: ${studentName}
