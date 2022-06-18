@@ -1,5 +1,11 @@
 # 数据库大型实验
  - 考虑Springboot,Mybatis,JSP实现与后端功能交互
+# 版本控制（参考）
+ - JDK:11
+ - Maven:3.8.4
+ - MySQL:5.7
+ - IntelliJ IDEA:2021.2.2(important)
+ - 其余参考pom.xml引入的依赖版本
 # 页面逻辑
  - 主页
  - 登录页
