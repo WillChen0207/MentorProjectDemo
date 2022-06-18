@@ -13,6 +13,11 @@ spring:
     url: jdbc:mysql://localhost:3306/mentor?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&serverTimezone=UTC&useSSL=false
     username: root
     password: root
+  thymeleaf:
+    cache: false
+    prefix: classpath:/view/
+    mode: LEGACYHTML5
+    suffix: .html
 
 
 jpa:
