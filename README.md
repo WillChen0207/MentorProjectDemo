@@ -20,3 +20,5 @@
    2. maven主路径：E:/.../apache-maven-3.8.4
    3. 用户设置文件：E:/.../apache-maven-3.8.4/conf/settings.xml
    4. 本地仓库：E:/.../apache-maven-3.8.4/maven-repo
+  - 找到HelloApplication.java 运行其中的主函数
+  - 浏览器中访问localhost:8080/hellomentor/hello可以看见Hello World提示
