@@ -2,7 +2,6 @@ package com.mentorproject.Controller;
 
 
 import com.mentorproject.Dao.TeacherRep;
-import com.mentorproject.Entity.Student;
 import com.mentorproject.Entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +23,7 @@ public class TeacherController {
      *查询所有导师
      * @return
      **/
-    @RequestMapping(value = "/getall",method = RequestMethod.GET)
+    @RequestMapping(value = "/getall",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView getStudentList(){
         ModelAndView mav = new ModelAndView();
         mav.addObject("teacherList", teacherRep.findAll());
@@ -37,7 +36,7 @@ public class TeacherController {
      * @param teacher_id
      * @param password
      **/
-    @RequestMapping(value = "/login",method = RequestMethod.GET)
+    @RequestMapping(value = "/login",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView logCheck(@RequestParam("teacher_id") String teacher_id,
                                  @RequestParam("password") String password){
         List<Teacher> teacherList = teacherRep.logCheck(teacher_id,password);
@@ -59,7 +58,7 @@ public class TeacherController {
      * @param description
      * @param password
      **/
-    @RequestMapping(value = "/add",method = RequestMethod.GET)
+    @RequestMapping(value = "/add",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView addTeacher(@RequestParam("teacherId") String teacherId,
                                    @RequestParam("teacherName") String teacherName,
                                   @RequestParam("gender") Integer gender,

@@ -24,7 +24,7 @@ public class StudentController {
      *查询所有学生
      * @return
      **/
-    @RequestMapping(value = "/getall",method = RequestMethod.GET)
+    @RequestMapping(value = "/getall",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView getStudentList(){
         ModelAndView mav = new ModelAndView();
         mav.addObject("studentList", studentRep.findAll());
@@ -40,7 +40,7 @@ public class StudentController {
      * @param gpa
      * @param password
     **/
-    @RequestMapping(value = "/add",method = RequestMethod.GET)
+    @RequestMapping(value = "/add",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView addStudent(@RequestParam("studentId") String studentId,
                                    @RequestParam("studentName") String studentName,
                                    @RequestParam("gender") Integer gender,
@@ -62,7 +62,7 @@ public class StudentController {
      * @param student_id
      * @param password
      **/
-    @RequestMapping(value = "/login",method = RequestMethod.GET)
+    @RequestMapping(value = "/login",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView logCheck(@RequestParam("student_id") String student_id,
                                  @RequestParam("password") String password){
         List<Student> studentList = studentRep.logCheck(student_id,password);
@@ -81,7 +81,7 @@ public class StudentController {
      * @param begin
      * @param end
      **/
-    @RequestMapping(value = "/getBetween",method = RequestMethod.GET)
+    @RequestMapping(value = "/getBetween",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView getBetween(@RequestParam("begin") Integer begin,
                                    @RequestParam("end") Integer end){
         ModelAndView mav = new ModelAndView();
@@ -98,7 +98,7 @@ public class StudentController {
      * @param ThirdApp
      * @param IsSelected
      **/
-    @RequestMapping(value = "/fillapp",method = RequestMethod.GET)
+    @RequestMapping(value = "/fillapp",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView fillApp(@RequestParam("student_id") String student_id,
                                 @RequestParam("FirstApp") Integer FirstApp,
                                 @RequestParam("SecondApp") Integer SecondApp,
