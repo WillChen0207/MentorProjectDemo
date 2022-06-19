@@ -3,15 +3,13 @@ package com.mentorproject.Bean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-
-@ConfigurationProperties(prefix = "student")
+@ConfigurationProperties(prefix = "apprec")
 @Component
-public class StudentBean {
+public class ApplicationRecordBean {
 
     private String studentId;
-    private String studentName;
-    private Integer gender;
-    private Double gpa;
-    private String password;
-
+    private String FirstApp;
+    private String SecondApp;
+    private String ThirdApp;
+    private Integer IsSelected;
 }

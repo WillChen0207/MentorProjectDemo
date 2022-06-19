@@ -32,7 +32,9 @@ public interface StudentRep extends JpaRepository<Student,String> {
     @Transactional
     @Modifying
     @Query(value = "insert into application" +
-            "       (student_id, FirstApp, SecondApp, ThirdApp, IsSelected) VALUES (?1,?2,?3,?4,?5)",
+            "       (student_id, first_app, second_app, third_app, is_selected) VALUES (?1,?2,?3,?4,?5)",
             nativeQuery = true)
     int fillApplication(String student_id, Integer FirstApp, Integer SecondApp, Integer ThirdApp, Integer IsSelected);
+
+
 }

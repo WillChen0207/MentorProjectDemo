@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ApplicationRecordsList</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>StudentID</th>
+        <th>FirstApp</th>
+        <th>SecondApp</th>
+        <th>ThirdApp</th>
+        <th>IsSelected</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="apprec,iterStat : ${appRecList}">
+        <td th:text="${apprec.studentId}"></td>
+        <td th:text="${apprec.firstApp}"></td>
+        <td th:text="${apprec.secondApp}"></td>
+        <td th:text="${apprec.thirdApp}"></td>
+        <td th:text="${apprec.isSelected}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

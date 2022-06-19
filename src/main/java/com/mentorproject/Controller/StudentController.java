@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -105,7 +106,19 @@ public class StudentController {
                                 @RequestParam("ThirdApp") Integer ThirdApp,
                                 @RequestParam("IsSelected") Integer IsSelected){
         studentRep.fillApplication(student_id, FirstApp, SecondApp, ThirdApp, IsSelected);
-        ModelAndView mav = new ModelAndView("redirect:/student/getall");
+        ModelAndView mav = new ModelAndView("redirect:/application/getall");
+        return mav;
+    }
+
+    /**
+     * 查看当前学生志愿信息
+     * @param student_id
+     **/
+    @RequestMapping(value = "/getapp",method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView getAppRecByStudentId(@RequestParam("student_id") String student_id){
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("student_id", student_id);
+        mav.setViewName("redirect:/application/getStudent");
         return mav;
     }
 }
