@@ -2,14 +2,13 @@ package com.mentorproject.Controller;
 
 
 import com.mentorproject.Dao.TeacherRep;
-import com.mentorproject.Entity.Student;
 import com.mentorproject.Entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/teacher")
@@ -23,9 +22,11 @@ public class TeacherController {
      * @return
      **/
     @RequestMapping(value = "/getall",method = RequestMethod.GET)
-    public String getStudentList(Model model){
-        model.addAttribute("teacherList", teacherRep.findAll());
-        return "teachershow";
+    public ModelAndView getStudentList(){
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("teacherList", teacherRep.findAll());
+        mav.setViewName("teachershow");
+        return mav;
     }
 
     /**
@@ -36,18 +37,17 @@ public class TeacherController {
      * @param password
      **/
     @RequestMapping(value = "/add",method = RequestMethod.GET)
-    public String addTeacher(@RequestParam("teacherName") String teacherName,
+    public ModelAndView addTeacher(@RequestParam("teacherName") String teacherName,
                              @RequestParam("gender") Integer gender,
                              @RequestParam("description") String description,
-                             @RequestParam("password") String password,
-                             Model model){
+                             @RequestParam("password") String password){
         Teacher teacher = new Teacher();
         teacher.setTeacherName(teacherName);
         teacher.setGender(gender);
         teacher.setDescription(description);
         teacher.setPassword(password);
         teacherRep.save(teacher);
-        model.addAttribute("teacherList", teacherRep.findAll());
-        return "teachershow";
+        ModelAndView mav = new ModelAndView("redirect:/teacher/getall");
+        return mav;
     }
 }
