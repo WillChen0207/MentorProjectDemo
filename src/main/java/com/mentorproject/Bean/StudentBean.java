@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class StudentBean {
 
-    private Integer studentId;
+    private String studentId;
 
     private String studentName;
 

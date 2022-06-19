@@ -9,17 +9,17 @@ import javax.persistence.Id;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer studentId;
+    private String studentId;
     private String studentName;
     private Integer gender;
     private double gpa;
     private String password;
 
-    public Integer getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(Integer studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 

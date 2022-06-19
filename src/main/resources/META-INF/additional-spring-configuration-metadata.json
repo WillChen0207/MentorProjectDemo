@@ -2,7 +2,7 @@
   "properties": [
     {
       "name": "student.studentId",
-      "type": "java.lang.Integer",
+      "type": "java.lang.String",
       "description": "Description for student.studentId."
     },
     {
@@ -27,7 +27,7 @@
     },
     {
       "name": "teacher.teacherId",
-      "type": "java.lang.Integer",
+      "type": "java.lang.String",
       "description": "Description for teacher.teacherId."
     },
     {

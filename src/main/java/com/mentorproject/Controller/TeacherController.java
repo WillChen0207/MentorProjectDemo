@@ -38,7 +38,7 @@ public class TeacherController {
      * @param password
      **/
     @RequestMapping(value = "/login",method = RequestMethod.GET)
-    public ModelAndView logCheck(@RequestParam("teacher_id") Integer teacher_id,
+    public ModelAndView logCheck(@RequestParam("teacher_id") String teacher_id,
                                  @RequestParam("password") String password){
         List<Teacher> teacherList = teacherRep.logCheck(teacher_id,password);
         ModelAndView mav = new ModelAndView();
@@ -53,17 +53,20 @@ public class TeacherController {
 
     /**
      * 添加一个导师
+     * @param teacherId
      * @param teacherName
      * @param gender
      * @param description
      * @param password
      **/
     @RequestMapping(value = "/add",method = RequestMethod.GET)
-    public ModelAndView addTeacher(@RequestParam("teacherName") String teacherName,
-                             @RequestParam("gender") Integer gender,
-                             @RequestParam("description") String description,
-                             @RequestParam("password") String password){
+    public ModelAndView addTeacher(@RequestParam("teacherId") String teacherId,
+                                   @RequestParam("teacherName") String teacherName,
+                                  @RequestParam("gender") Integer gender,
+                                  @RequestParam("description") String description,
+                                  @RequestParam("password") String password){
         Teacher teacher = new Teacher();
+        teacher.setTeacherId(teacherId);
         teacher.setTeacherName(teacherName);
         teacher.setGender(gender);
         teacher.setDescription(description);

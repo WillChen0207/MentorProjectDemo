@@ -34,17 +34,20 @@ public class StudentController {
 
     /**
     * 添加一个学生
+     * @param studentId
      * @param studentName
      * @param gender
      * @param gpa
      * @param password
     **/
     @RequestMapping(value = "/add",method = RequestMethod.GET)
-    public ModelAndView addStudent(@RequestParam("studentName") String studentName,
-                              @RequestParam("gender") Integer gender,
-                              @RequestParam("gpa") Double gpa,
-                              @RequestParam("password") String password){
+    public ModelAndView addStudent(@RequestParam("studentId") String studentId,
+                                   @RequestParam("studentName") String studentName,
+                                   @RequestParam("gender") Integer gender,
+                                   @RequestParam("gpa") Double gpa,
+                                   @RequestParam("password") String password){
         Student student = new Student();
+        student.setStudentId(studentId);
         student.setStudentName(studentName);
         student.setGender(gender);
         student.setGpa(gpa);
@@ -60,7 +63,7 @@ public class StudentController {
      * @param password
      **/
     @RequestMapping(value = "/login",method = RequestMethod.GET)
-    public ModelAndView logCheck(@RequestParam("student_id") Integer student_id,
+    public ModelAndView logCheck(@RequestParam("student_id") String student_id,
                                  @RequestParam("password") String password){
         List<Student> studentList = studentRep.logCheck(student_id,password);
         ModelAndView mav = new ModelAndView();
@@ -96,7 +99,7 @@ public class StudentController {
      * @param IsSelected
      **/
     @RequestMapping(value = "/fillapp",method = RequestMethod.GET)
-    public ModelAndView fillApp(@RequestParam("student_id") Integer student_id,
+    public ModelAndView fillApp(@RequestParam("student_id") String student_id,
                                 @RequestParam("FirstApp") Integer FirstApp,
                                 @RequestParam("SecondApp") Integer SecondApp,
                                 @RequestParam("ThirdApp") Integer ThirdApp,

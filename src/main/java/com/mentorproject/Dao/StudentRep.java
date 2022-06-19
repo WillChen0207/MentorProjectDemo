@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface StudentRep extends JpaRepository<Student,Integer> {
+public interface StudentRep extends JpaRepository<Student,String> {
 
     @Query(value = "select" +
             "           student_id, student_name, gender, gpa, password" +
@@ -27,12 +27,12 @@ public interface StudentRep extends JpaRepository<Student,Integer> {
             "           mentor.student " +
             "       where student_id=?1 and password=?2",
             nativeQuery = true)
-    List<Student> logCheck(Integer student_id, String password);
+    List<Student> logCheck(String student_id, String password);
 
     @Transactional
     @Modifying
     @Query(value = "insert into application" +
             "       (student_id, FirstApp, SecondApp, ThirdApp, IsSelected) VALUES (?1,?2,?3,?4,?5)",
             nativeQuery = true)
-    int fillApplication(Integer student_id, Integer FirstApp, Integer SecondApp, Integer ThirdApp, Integer IsSelected);
+    int fillApplication(String student_id, Integer FirstApp, Integer SecondApp, Integer ThirdApp, Integer IsSelected);
 }

@@ -9,17 +9,17 @@ import javax.persistence.Id;
 public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer teacherId;
+    private String teacherId;
     private String teacherName;
     private Integer gender;
     private String description;
     private String password;
 
-    public Integer getTeacherId() {
+    public String getTeacherId() {
         return teacherId;
     }
 
-    public void setTeacherId(Integer teacherId) {
+    public void setTeacherId(String teacherId) {
         this.teacherId = teacherId;
     }
 
