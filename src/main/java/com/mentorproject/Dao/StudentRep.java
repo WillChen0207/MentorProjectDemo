@@ -21,6 +21,14 @@ public interface StudentRep extends JpaRepository<Student,Integer> {
             nativeQuery = true)
     List<Student> getStudentsByStudentIdBetween(Integer begin, Integer end);
 
+    @Query(value = "select" +
+            "           student_id, student_name, gender, gpa, password" +
+            "       from " +
+            "           mentor.student " +
+            "       where student_id=?1 and password=?2",
+            nativeQuery = true)
+    List<Student> logCheck(Integer student_id, String password);
+
     @Transactional
     @Modifying
     @Query(value = "insert into application" +
