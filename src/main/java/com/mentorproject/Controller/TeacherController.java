@@ -2,6 +2,7 @@ package com.mentorproject.Controller;
 
 
 import com.mentorproject.Dao.TeacherRep;
+import com.mentorproject.Entity.Student;
 import com.mentorproject.Entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/teacher")
@@ -26,6 +29,25 @@ public class TeacherController {
         ModelAndView mav = new ModelAndView();
         mav.addObject("teacherList", teacherRep.findAll());
         mav.setViewName("teachershow");
+        return mav;
+    }
+
+    /**
+     * 登录校验
+     * @param teacher_id
+     * @param password
+     **/
+    @RequestMapping(value = "/login",method = RequestMethod.GET)
+    public ModelAndView logCheck(@RequestParam("teacher_id") Integer teacher_id,
+                                 @RequestParam("password") String password){
+        List<Teacher> teacherList = teacherRep.logCheck(teacher_id,password);
+        ModelAndView mav = new ModelAndView();
+        if (teacherList.isEmpty()) {
+            mav.setViewName("errorpage");
+        }else {
+            mav.addObject("teacherList",teacherList);
+            mav.setViewName("teachershow");
+        }
         return mav;
     }
 

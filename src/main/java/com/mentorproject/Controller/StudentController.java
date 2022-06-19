@@ -64,11 +64,11 @@ public class StudentController {
                                  @RequestParam("password") String password){
         List<Student> studentList = studentRep.logCheck(student_id,password);
         ModelAndView mav = new ModelAndView();
-        if (studentList != null) {
+        if (studentList.isEmpty()) {
+            mav.setViewName("errorpage");
+        }else {
             mav.addObject("studentList",studentList);
             mav.setViewName("studentshow");
-        }else {
-            mav.setViewName("errorpage");
         }
         return mav;
     }
