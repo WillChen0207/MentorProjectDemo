@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -80,19 +79,24 @@ public class StudentController {
     /**
      * 登记志愿信息
      * @param student_id
-     * @param FirstApp
-     * @param SecondApp
-     * @param ThirdApp
-     * @param IsSelected
+     * @param first_app
+     * @param second_app
+     * @param third_app
+     * @param is_selected
      **/
     @RequestMapping(value = "/fillapp",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView fillApp(@RequestParam("student_id") String student_id,
-                                @RequestParam("FirstApp") Integer FirstApp,
-                                @RequestParam("SecondApp") Integer SecondApp,
-                                @RequestParam("ThirdApp") Integer ThirdApp,
-                                @RequestParam("IsSelected") Integer IsSelected){
-        studentRep.fillApplication(student_id, FirstApp, SecondApp, ThirdApp, IsSelected);
-        ModelAndView mav = new ModelAndView("redirect:/application/getall");
+                                @RequestParam("first_app") String first_app,
+                                @RequestParam("second_app") String second_app,
+                                @RequestParam("third_app") String third_app,
+                                @RequestParam("is_selected") Integer is_selected){
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("studentId",student_id);
+        mav.addObject("firstApp",first_app);
+        mav.addObject("secondApp",second_app);
+        mav.addObject("thirdApp",third_app);
+        mav.addObject("isSelected",is_selected);
+        mav.setViewName("redirect:/application/add");
         return mav;
     }
 

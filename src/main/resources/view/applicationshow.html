@@ -9,20 +9,20 @@
     <thead>
     <tr>
         <th>StudentID</th>
-        <th>FirstApp</th>
-        <th>SecondApp</th>
-        <th>ThirdApp</th>
-        <th>IsSelected</th>
+        <th>first_app</th>
+        <th>second_app</th>
+        <th>third_app</th>
+        <th>is_selected</th>
     </tr>
     </thead>
     <tbody>
 
     <tr th:each="apprec,iterStat : ${appRecList}">
         <td th:text="${apprec.studentId}"></td>
-        <td th:text="${apprec.firstApp}"></td>
-        <td th:text="${apprec.secondApp}"></td>
-        <td th:text="${apprec.thirdApp}"></td>
-        <td th:text="${apprec.isSelected}"></td>
+        <td th:text="${apprec.first_app}"></td>
+        <td th:text="${apprec.second_app}"></td>
+        <td th:text="${apprec.third_app}"></td>
+        <td th:text="${apprec.is_selected}"></td>
     </tr>
     </tbody>
 </table>

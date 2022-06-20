@@ -8,12 +8,11 @@ import javax.persistence.Id;
 @Entity
 public class ApplicationRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String studentId;
-    private String firstApp;
-    private String secondApp;
-    private String thirdApp;
-    private Integer isSelected;
+    private String first_app;
+    private String second_app;
+    private String third_app;
+    private Integer is_selected;
 
     public String getStudentId() {
         return studentId;
@@ -23,35 +22,35 @@ public class ApplicationRecord {
         this.studentId = studentId;
     }
 
-    public String getFirstApp() {
-        return firstApp;
+    public String getFirst_app() {
+        return first_app;
     }
 
-    public void setFirstApp(String firstApp) {
-        this.firstApp = firstApp;
+    public void setFirst_app(String first_app) {
+        this.first_app = first_app;
     }
 
-    public String getSecondApp() {
-        return secondApp;
+    public String getSecond_app() {
+        return second_app;
     }
 
-    public void setSecondApp(String secondApp) {
-        this.secondApp = secondApp;
+    public void setSecond_app(String second_app) {
+        this.second_app = second_app;
     }
 
-    public String getThirdApp() {
-        return thirdApp;
+    public String getThird_app() {
+        return third_app;
     }
 
-    public void setThirdApp(String thirdApp) {
-        this.thirdApp = thirdApp;
+    public void setThird_app(String third_app) {
+        this.third_app = third_app;
     }
 
-    public Integer getIsSelected() {
-        return isSelected;
+    public Integer getIs_selected() {
+        return is_selected;
     }
 
-    public void setIsSelected(Integer isSelected) {
-        this.isSelected = isSelected;
+    public void setIs_selected(Integer is_selected) {
+        this.is_selected = is_selected;
     }
 }

@@ -32,6 +32,31 @@ public class TeacherController {
     }
 
     /**
+     * 添加一个导师
+     * @param teacherId
+     * @param teacherName
+     * @param gender
+     * @param description
+     * @param password
+     **/
+    @RequestMapping(value = "/add",method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView addTeacher(@RequestParam("teacherId") String teacherId,
+                                   @RequestParam("teacherName") String teacherName,
+                                   @RequestParam("gender") Integer gender,
+                                   @RequestParam("description") String description,
+                                   @RequestParam("password") String password){
+        Teacher teacher = new Teacher();
+        teacher.setTeacherId(teacherId);
+        teacher.setTeacherName(teacherName);
+        teacher.setGender(gender);
+        teacher.setDescription(description);
+        teacher.setPassword(password);
+        teacherRep.save(teacher);
+        ModelAndView mav = new ModelAndView("redirect:/teacher/getall");
+        return mav;
+    }
+
+    /**
      * 登录校验
      * @param teacher_id
      * @param password
@@ -47,31 +72,6 @@ public class TeacherController {
             mav.addObject("teacherList",teacherList);
             mav.setViewName("teachershow");
         }
-        return mav;
-    }
-
-    /**
-     * 添加一个导师
-     * @param teacherId
-     * @param teacherName
-     * @param gender
-     * @param description
-     * @param password
-     **/
-    @RequestMapping(value = "/add",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView addTeacher(@RequestParam("teacherId") String teacherId,
-                                   @RequestParam("teacherName") String teacherName,
-                                  @RequestParam("gender") Integer gender,
-                                  @RequestParam("description") String description,
-                                  @RequestParam("password") String password){
-        Teacher teacher = new Teacher();
-        teacher.setTeacherId(teacherId);
-        teacher.setTeacherName(teacherName);
-        teacher.setGender(gender);
-        teacher.setDescription(description);
-        teacher.setPassword(password);
-        teacherRep.save(teacher);
-        ModelAndView mav = new ModelAndView("redirect:/teacher/getall");
         return mav;
     }
 }
