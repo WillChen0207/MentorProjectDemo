@@ -9,7 +9,50 @@
 </head>
 <body>
 
-<div>hello ,yeah</div>
+<div class="container">
+    <div class="header">
+        <a class="header_logo" herf="/">导师制双向选择系统</a>
+        <div class="header_link">
+            <a>link1</a>
+            &nbsp;|&nbsp;
+            <a>link2</a>
+            &nbsp;|&nbsp;
+            <a>link3</a>
+        </div>
+    </div>
+
+
+    <form action="" method="post" role="form">
+        <table class="table table-hover table-condensed table-sm">
+            <body>
+            <tr>
+                <td class="text-right" style="vertical-align: middle !important;">账 号：</td>
+                <td class="text-left">
+                    <input type="text" name="myname" class="form-control" value="" placeholder="学号/工号" required="required" style="width: 240px">
+                </td>
+            </tr>
+            <tr>
+                <td class="text-right" style="vertical-align: middle !important;">密 码：</td>
+                <td class="text-left">
+                    <input type="text" name="pin" class="form-control" value="" placeholder="密码" required="required" style="width: 240px">
+                </td>
+            </tr>
+            <tr>
+                <td class="text-right" style="vertical-align: middle !important;">身 份：</td>
+                <td class="text-left">
+                    <label class="radio-inline"><input type="radio" checked name="status" value="学生">学生</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label class="radio-inline"><input type="radio" name="status" value="老师">老师</label>
+                </td>
+            </tr>
+            </body>
+        </table>
+        <div style="margin:20px">
+            <button type="submit" class="btn btn-primary btn-sm">登录</button>
+            <button type="submit" class="btn btn-secondary btn-sm">注册</button>
+        </div>
+    </form>
+
+</div>
 
 </body>
 </html>
