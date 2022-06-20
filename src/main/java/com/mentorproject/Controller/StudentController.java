@@ -5,6 +5,7 @@ import com.mentorproject.Dao.StudentRep;
 import com.mentorproject.Dao.TeacherRep;
 import com.mentorproject.Entity.Student;
 import com.mentorproject.Entity.Teacher;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,23 +37,29 @@ public class StudentController {
         return mav;
     }
 
+    @RequestMapping(value = "/getinfo",method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView getStudentInfo (@RequestParam(student_id) String student_id){
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("student_id")
+    }
+
     /**
     * 添加一个学生
-     * @param studentId
-     * @param studentName
+     * @param student_id
+     * @param student_name
      * @param gender
      * @param gpa
      * @param password
     **/
     @RequestMapping(value = "/add",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView addStudent(@RequestParam("studentId") String studentId,
-                                   @RequestParam("studentName") String studentName,
+    public ModelAndView addStudent(@RequestParam("student_id") String student_id,
+                                   @RequestParam("student_name") String student_name,
                                    @RequestParam("gender") Integer gender,
                                    @RequestParam("gpa") Double gpa,
                                    @RequestParam("password") String password){
         Student student = new Student();
-        student.setStudentId(studentId);
-        student.setStudentName(studentName);
+        student.setStudentId(student_id);
+        student.setStudentName(student_name);
         student.setGender(gender);
         student.setGpa(gpa);
         student.setPassword(password);
@@ -125,5 +132,13 @@ public class StudentController {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("redirect:/teacher/getall");
         return mav;
+    }
+
+    @RequestMapping(value = "/updatePassword",method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView updatePassword(@RequestParam(student_id) String student_id,
+                                       @RequestParam(password) String password){
+        ModelAndView mav = new ModelAndView();
+        List<Student> studentList = studentRep.updatePassword(password,student_id);
+
     }
 }
