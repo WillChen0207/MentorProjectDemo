@@ -2,7 +2,10 @@ package com.mentorproject.Controller;
 
 
 import com.mentorproject.Dao.StudentRep;
+import com.mentorproject.Dao.TeacherRep;
 import com.mentorproject.Entity.Student;
+import com.mentorproject.Entity.Teacher;
+import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +22,7 @@ public class StudentController {
 
     @Autowired
     private StudentRep studentRep;
+    private TeacherRep teacherRep;
 
     /**
      *查询所有学生
@@ -109,6 +113,17 @@ public class StudentController {
         ModelAndView mav = new ModelAndView();
         mav.addObject("student_id", student_id);
         mav.setViewName("redirect:/application/getStudent");
+        return mav;
+    }
+
+    /**查看导师信息
+     *
+     * @return
+     */
+    @RequestMapping(value = "/getteacherinfo",method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView getTeacherInfo(){
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("redirect:/teacher/getall");
         return mav;
     }
 }
