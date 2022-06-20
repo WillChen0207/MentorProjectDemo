@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "element-ui": "^2.15.9",
+    "vue": "^2.6.14"
+  }
+}

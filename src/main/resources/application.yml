@@ -24,12 +24,3 @@ jpa:
   hibernate:
     ddl-auto: create
   show-sql: true
-
-
-#student:
-#  studentName: ${studentName}
-#  gender: ${studentGender}
-#  gpa: ${gpa}
-#  password: ${stduentPassword}
-#  studentId: ${studentId}
-
