@@ -14,15 +14,6 @@ public interface StudentRep extends JpaRepository<Student,String> {
 
     @Query(value = "select" +
             "           student_id, student_name, gender, gpa, password" +
-            "       from" +
-            "           mentor.student" +
-            "       where " +
-            "           student_id >= ?1 and student_id <= ?2 order by student_id",
-            nativeQuery = true)
-    List<Student> getStudentsByStudentIdBetween(Integer begin, Integer end);
-
-    @Query(value = "select" +
-            "           student_id, student_name, gender, gpa, password" +
             "       from " +
             "           mentor.student " +
             "       where student_id=?1 and password=?2",

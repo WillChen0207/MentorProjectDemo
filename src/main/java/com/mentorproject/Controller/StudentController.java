@@ -78,20 +78,6 @@ public class StudentController {
     }
 
     /**
-     *查询学号在begin和end区间内的学生
-     * @param begin
-     * @param end
-     **/
-    @RequestMapping(value = "/getBetween",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView getBetween(@RequestParam("begin") Integer begin,
-                                   @RequestParam("end") Integer end){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("studentList", studentRep.getStudentsByStudentIdBetween(begin,end));
-        mav.setViewName("studentshow");
-        return mav;
-    }
-
-    /**
      * 登记志愿信息
      * @param student_id
      * @param FirstApp
