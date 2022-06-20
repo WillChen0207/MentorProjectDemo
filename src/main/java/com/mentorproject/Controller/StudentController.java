@@ -37,10 +37,17 @@ public class StudentController {
         return mav;
     }
 
+    /**查询学生个人信息
+     *
+     * @param student_id
+     * @return
+     */
     @RequestMapping(value = "/getinfo",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView getStudentInfo (@RequestParam(student_id) String student_id){
+    public ModelAndView getStudentInfo (@RequestParam("student_id") String student_id){
         ModelAndView mav = new ModelAndView();
-        mav.addObject("student_id")
+        mav.addObject("studentList",studentRep.getInfo(student_id));
+        mav.setViewName("studentshow");
+        return mav;
     }
 
     /**
@@ -134,11 +141,21 @@ public class StudentController {
         return mav;
     }
 
+    /**修改个人密码
+     *
+     * @param student_id
+     * @param password
+     * @return
+     */
     @RequestMapping(value = "/updatePassword",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView updatePassword(@RequestParam(student_id) String student_id,
-                                       @RequestParam(password) String password){
+    public ModelAndView updatePassword(@RequestParam("student_id") String student_id,
+                                       @RequestParam("password") String password) {
         ModelAndView mav = new ModelAndView();
-        List<Student> studentList = studentRep.updatePassword(password,student_id);
-
+        Integer isUpdate = studentRep.updatePassword(password, student_id);
+        if (isUpdate == 1) {
+            mav.addObject("studentList", studentRep.getInfo(student_id));
+            mav.setViewName("studentshow");
+        } else System.out.println("修改密码失败");
+        return mav;
     }
 }

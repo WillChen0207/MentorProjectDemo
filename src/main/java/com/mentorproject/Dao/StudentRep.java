@@ -51,5 +51,6 @@ public interface StudentRep extends JpaRepository<Student,String> {
             "           (?1)" +
             "       where student_id = ?2",
             nativeQuery = true)
-    List<Student> updatePassword(String password,String student_id);
+    Integer updatePassword(String password,String student_id);
+    //这能不能返回Integer值？
 }
