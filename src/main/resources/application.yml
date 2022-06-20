@@ -10,7 +10,7 @@ spring:
     active: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mentor?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://localhost:3306/mentor?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: root
   thymeleaf:
