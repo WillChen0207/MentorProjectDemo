@@ -1,7 +1,11 @@
 package com.mentorproject.Entity;
 
-public class Message {
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
+@Entity
+public class Message {
+    @Id
     private String sender;
 
     private String receiver;
