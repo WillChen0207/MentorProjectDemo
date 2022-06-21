@@ -3,21 +3,14 @@ package com.mentorproject.Controller;
 
 import com.mentorproject.Dao.MessageRep;
 import com.mentorproject.Dao.StudentRep;
-import com.mentorproject.Dao.TeacherRep;
 import com.mentorproject.Entity.Message;
 import com.mentorproject.Entity.Student;
-import com.mentorproject.Entity.Teacher;
-import com.sun.org.apache.xpath.internal.operations.Mod;
-import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.lang.annotation.Repeatable;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +21,11 @@ public class StudentController {
 
     @Autowired
     private StudentRep studentRep;
-    private TeacherRep teacherRep;
     private MessageRep messageRep;
+
+    public StudentController(MessageRep messageRep) {
+        this.messageRep = messageRep;
+    }
 
     /**
      *查询所有学生
@@ -172,11 +168,11 @@ public class StudentController {
      * @param student_id
      * @return
      */
-    @RequestMapping(value = "checkMessage",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/checkMessage",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView checkMessage(@RequestParam("student_id") String student_id){
         ModelAndView mav = new ModelAndView();
         mav.addObject("messageList",studentRep.checkMessage(student_id));
-        mav.setViewName("studentSendMessage");
+        mav.setViewName("errorpage");
         return mav;
     }
 
@@ -184,28 +180,27 @@ public class StudentController {
      *
      * @param student_id
      * @param teacher_id
-     * @param _message
-     * @return
+     * @param messageinfo
      */
     @RequestMapping(value = "/sendMessage",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView sendMessage(@RequestParam("student_id") String student_id,
                                      @RequestParam("teacher_id") String teacher_id,
-                                     @RequestParam("message") String _message){
+                                     @RequestParam("messageinfo") String messageinfo){
         ModelAndView mav = new ModelAndView();
-        Message message = new Message();
-        message.setSender(student_id);
-        message.setReceiver(teacher_id);
-        message.setMessage(_message);
-        messageRep.save(message);
+        Message messageRec = new Message();
+        messageRec.setSender(student_id);
+        messageRec.setReceiver(teacher_id);
+        messageRec.setMessage(messageinfo);
+        messageRec.setIsRead(0);
+        messageRep.save(messageRec);
         mav.addObject("seccessmessage","发送成功");
-        mav.setViewName("seccessmessage");
+        mav.setViewName("errorpage");
         return mav;
     }
 
     /**查询导师选择结果
      *
      * @param student_id
-     * @return
      */
     @RequestMapping(value = "/checkResult",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView checkResult(@RequestParam("student_id") String student_id){

@@ -7,33 +7,9 @@ import javax.persistence.Id;
 public class Message {
     @Id
     private String sender;
-
     private String receiver;
-
     private String message;
-
-    private  Integer isRead;
-
-    public Message(String sender, String receiver, String message, Integer isRead) {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.message = message;
-        this.isRead = isRead;
-    }
-
-    public Message() {
-
-    }
-
-    @Override
-    public String toString() {
-        return "Message{" +
-                "sender='" + sender + '\'' +
-                ", receiver='" + receiver + '\'' +
-                ", message='" + message + '\'' +
-                ", isRead=" + isRead +
-                '}';
-    }
+    private Integer isRead;
 
     public String getSender() {
         return sender;

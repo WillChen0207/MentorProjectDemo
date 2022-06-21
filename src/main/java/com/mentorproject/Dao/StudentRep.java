@@ -4,11 +4,11 @@ import com.mentorproject.Entity.Message;
 import com.mentorproject.Entity.Result;
 import com.mentorproject.Entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 
 @Repository
@@ -73,9 +73,9 @@ public interface StudentRep extends JpaRepository<Student,String> {
             "       join" +
             "           teacher" +
             "       on" +
-            "           mentormatch.teacher_id = student.teacher_id" +
+            "           mentormatch.teacher_id = teacher.teacher_id" +
             "       where " +
-            "           mentor.student_id = ?1",
+            "           mentormatch.student_id = ?1",
             nativeQuery = true)
     List<Result> checkResult(String student_id);
 }
