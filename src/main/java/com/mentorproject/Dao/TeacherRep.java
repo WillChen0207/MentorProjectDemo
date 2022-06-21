@@ -1,9 +1,8 @@
 package com.mentorproject.Dao;
 
 
-import com.mentorproject.Entity.Message;
-import com.mentorproject.Entity.Result;
-import com.mentorproject.Entity.Teacher;
+import com.mentorproject.Entity.*;
+import org.hibernate.sql.Select;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -76,4 +75,20 @@ public interface TeacherRep extends JpaRepository<Teacher,String> {
             "           mentormatch.teacher_id = ?1",
             nativeQuery = true)
     List<Result> checkResult(String teacher_id);
+
+
+    /**
+     * 查看可以选择的学生
+     */
+    @Query(value = "select student_name" +
+            "       from mentormatch " +
+            "       join student " +
+            "       on mentormatch.student_id = student.student_id" +
+            "       join application_record" +
+            "       on mentormatch.student_id = application_record.student_id" +
+            "       join teacher" +
+            "       on mentormatch.teacher_id = teacher.teacher_id" +
+            "       where mentormatch.teacher_id = ?1 and is_selected=0",
+            nativeQuery = true)
+    List<Mentormatch> selectStudent(String teacher_id);
 }

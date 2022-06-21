@@ -1,8 +1,10 @@
 package com.mentorproject.Controller;
 
 
+import com.mentorproject.Dao.ApplicationRecordRep;
 import com.mentorproject.Dao.MessageRep;
 import com.mentorproject.Dao.TeacherRep;
+import com.mentorproject.Entity.ApplicationRecord;
 import com.mentorproject.Entity.Message;
 import com.mentorproject.Entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ public class TeacherController {
     @Autowired
     private TeacherRep teacherRep;
     private MessageRep messageRep;
+    private ApplicationRecordRep applicationRecordRep;
 
     public TeacherController(MessageRep messageRep){
         this.messageRep = messageRep;
@@ -181,5 +184,35 @@ public class TeacherController {
         mav.addObject("resultList",teacherRep.checkResult(teacher_id));
         return mav;
     }
+
+    /**
+     * 查看可以选择的学生
+     * @param teacher_id
+     */
+    @RequestMapping(value = "/selectStudent",method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView selectStudent(@RequestParam("teacher_id") String teacher_id){
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("selectList",teacherRep.selectStudent(teacher_id));
+        return mav;
+    }
+
+    /**
+     * 进行选择
+     * @param student_id
+     * @param is_selected
+     * */
+    @RequestMapping(value = "/updateSelect",method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView updateSelect(@RequestParam("student_id") String student_id,
+                                     @RequestParam("is_selected") Integer is_selected) {
+        ModelAndView mav = new ModelAndView();
+        Optional<ApplicationRecord> op = applicationRecordRep.findById(student_id);
+        op.ifPresent(applicationRecord -> {
+            applicationRecord.setIs_selected(is_selected);
+            applicationRecordRep.save(applicationRecord);
+        });
+        mav.setViewName("redirect:/teacher/selectStudent");
+        return mav;
+    }
+
 
 }
