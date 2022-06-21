@@ -198,7 +198,7 @@ public class StudentController {
         return mav;
     }
 
-    /**查询导师选择结果
+    /**查询双选结果
      *
      * @param student_id
      */
