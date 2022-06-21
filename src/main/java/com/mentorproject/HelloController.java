@@ -9,6 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class HelloController {
     @RequestMapping(value = {"/","/homepage"}, method = RequestMethod.GET)
     public ModelAndView index() {
-        return new ModelAndView("/homepage");
+        return new ModelAndView("test2");
     }
 }

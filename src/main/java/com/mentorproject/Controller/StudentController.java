@@ -86,6 +86,7 @@ public class StudentController {
         List<Student> studentList = studentRep.logCheck(student_id,password);
         ModelAndView mav = new ModelAndView();
         if (studentList.isEmpty()) {
+            mav.addObject("errmessage","输入的学号或密码有误");
             mav.setViewName("errorpage");
         }else {
             mav.addObject("studentList",studentList);
@@ -152,10 +153,13 @@ public class StudentController {
                                        @RequestParam("password") String password) {
         ModelAndView mav = new ModelAndView();
         Integer isUpdate = studentRep.updatePassword(password, student_id);
-        if (isUpdate == 1) {
+        if (isUpdate == 0) {
             mav.addObject("studentList", studentRep.getInfo(student_id));
             mav.setViewName("studentshow");
-        } else System.out.println("修改密码失败");
+        } else {
+            mav.addObject("errmessage","修改密码失败");
+            mav.setViewName("errorpage");
+        }
         return mav;
     }
 }
