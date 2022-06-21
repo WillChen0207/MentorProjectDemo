@@ -8,8 +8,13 @@ import org.springframework.stereotype.Component;
 public class ApplicationRecordBean {
 
     private String studentId;
+
     private String firstApp;
+
     private String secondApp;
+
     private String thirdApp;
+
     private Integer isSelected;
+
 }

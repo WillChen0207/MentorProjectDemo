@@ -9,9 +9,13 @@ import org.springframework.stereotype.Component;
 public class StudentBean {
 
     private String studentId;
+
     private String studentName;
+
     private Integer gender;
+
     private Double gpa;
+
     private String password;
 
 }
