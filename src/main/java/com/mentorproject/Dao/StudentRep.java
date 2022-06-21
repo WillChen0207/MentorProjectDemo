@@ -1,5 +1,7 @@
 package com.mentorproject.Dao;
 
+import com.mentorproject.Entity.Message;
+import com.mentorproject.Entity.Result;
 import com.mentorproject.Entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,6 +14,12 @@ import java.util.List;
 @Repository
 public interface StudentRep extends JpaRepository<Student,String> {
 
+    /**学生登录
+     *
+     * @param student_id
+     * @param password
+     * @return
+     */
     @Query(value = "select" +
             "           student_id, student_name, gender, gpa, password" +
             "       from " +
@@ -35,22 +43,39 @@ public interface StudentRep extends JpaRepository<Student,String> {
             nativeQuery = true)
     List<Student> getInfo(String student_id);
 
-    /**修改学生密码
+    /**查看私信
      *
-     * @param password
+     * @param receiver
+     * @return
+     */
+    @Query(value = "select " +
+            "           message,is_read" +
+            "       from" +
+            "           mentor.message" +
+            "       where " +
+            "           receiver = ?1" ,
+            nativeQuery = true)
+    List<Message> checkMessage(String receiver);
+
+    /**查看导师选择结果
+     *
      * @param student_id
      * @return
      */
-    @Transactional
-    @Modifying
-    @Query(value = "update " +
-            "           mentor.student" +
-            "       set" +
-            "           (password)" +
-            "       value" +
-            "           (?1)" +
-            "       where student_id = ?2",
+    @Query(value = "select " +
+            "           student_name,teacher_name" +
+            "       from" +
+            "           mentormatch" +
+            "       join " +
+            "           student" +
+            "       on" +
+            "           mentormatch.student_id = student.student_id" +
+            "       join" +
+            "           teacher" +
+            "       on" +
+            "           mentormatch.teacher_id = student.teacher_id" +
+            "       where " +
+            "           mentor.student_id = ?1",
             nativeQuery = true)
-    Integer updatePassword(String password,String student_id);
-    //这能不能返回Integer值？
+    List<Result> checkResult(String student_id);
 }

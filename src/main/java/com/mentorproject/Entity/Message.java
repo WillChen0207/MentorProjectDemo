@@ -17,6 +17,10 @@ public class Message {
         this.isRead = isRead;
     }
 
+    public Message() {
+
+    }
+
     @Override
     public String toString() {
         return "Message{" +
