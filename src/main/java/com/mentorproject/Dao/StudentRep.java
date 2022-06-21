@@ -57,7 +57,7 @@ public interface StudentRep extends JpaRepository<Student,String> {
             nativeQuery = true)
     List<Message> checkMessage(String receiver);
 
-    /**查看导师选择结果
+    /**查看双选结果
      *
      * @param student_id
      * @return
