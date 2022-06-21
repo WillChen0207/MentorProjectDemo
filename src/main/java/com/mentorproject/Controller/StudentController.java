@@ -1,6 +1,7 @@
 package com.mentorproject.Controller;
 
 
+import com.mentorproject.Dao.MessageRep;
 import com.mentorproject.Dao.StudentRep;
 import com.mentorproject.Dao.TeacherRep;
 import com.mentorproject.Entity.Message;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.lang.annotation.Repeatable;
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -27,6 +29,7 @@ public class StudentController {
     @Autowired
     private StudentRep studentRep;
     private TeacherRep teacherRep;
+    private MessageRep messageRep;
 
     /**
      *查询所有学生
@@ -155,14 +158,12 @@ public class StudentController {
     public ModelAndView updatePassword(@RequestParam("student_id") String student_id,
                                        @RequestParam("password") String password) {
         ModelAndView mav = new ModelAndView();
-        Integer isUpdate = studentRep.updatePassword(password, student_id);
-        if (isUpdate == 0) {
-            mav.addObject("studentList", studentRep.getInfo(student_id));
-            mav.setViewName("studentshow");
-        } else {
-            mav.addObject("errmessage","修改密码失败");
-            mav.setViewName("errorpage");
-        }
+        Optional<Student> op = studentRep.findById(student_id);
+        op.ifPresent(student -> {
+            student.setPassword(password);
+            studentRep.save(student);
+        });
+        mav.setViewName("redirect:/student/getinfo");
         return mav;
     }
 
@@ -191,14 +192,13 @@ public class StudentController {
                                      @RequestParam("teacher_id") String teacher_id,
                                      @RequestParam("message") String _message){
         ModelAndView mav = new ModelAndView();
-        Integer isSend = studentRep.sendmessage(student_id,teacher_id,_message);
-        if (isSend == 0){
-            mav.addObject("seccessmessage","发送成功");
-            mav.setViewName("seccessmessage");
-        }else {
-            mav.addObject("errmessage","发送失败");
-            mav.setViewName("errmessage");
-        }
+        Message message = new Message();
+        message.setSender(student_id);
+        message.setReceiver(teacher_id);
+        message.setMessage(_message);
+        messageRep.save(message);
+        mav.addObject("seccessmessage","发送成功");
+        mav.setViewName("seccessmessage");
         return mav;
     }
 

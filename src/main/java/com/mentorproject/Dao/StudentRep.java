@@ -14,6 +14,12 @@ import java.util.List;
 @Repository
 public interface StudentRep extends JpaRepository<Student,String> {
 
+    /**学生登录
+     *
+     * @param student_id
+     * @param password
+     * @return
+     */
     @Query(value = "select" +
             "           student_id, student_name, gender, gpa, password" +
             "       from " +
@@ -37,25 +43,6 @@ public interface StudentRep extends JpaRepository<Student,String> {
             nativeQuery = true)
     List<Student> getInfo(String student_id);
 
-    /**修改学生密码
-     *
-     * @param password
-     * @param student_id
-     * @return
-     */
-    @Transactional
-    @Modifying
-    @Query(value = "update " +
-            "           mentor.student" +
-            "       set" +
-            "           (password)" +
-            "       value" +
-            "           (?1)" +
-            "       where " +
-            "           student_id = ?2",
-            nativeQuery = true)
-    Integer updatePassword(String password,String student_id);
-
     /**查看私信
      *
      * @param receiver
@@ -70,22 +57,11 @@ public interface StudentRep extends JpaRepository<Student,String> {
             nativeQuery = true)
     List<Message> checkMessage(String receiver);
 
-    /**发送私信
+    /**查看导师选择结果
      *
-     * @param sender
-     * @param receiver
-     * @param message
+     * @param student_id
      * @return
      */
-    @Transactional
-    @Modifying
-    @Query(value = "insert into" +
-            "           mentor.message" +
-            "       values" +
-            "           (?1,?2,?3)",
-            nativeQuery = true)
-    Integer sendmessage(String sender,String receiver,String message);
-
     @Query(value = "select " +
             "           student_name,teacher_name" +
             "       from" +
