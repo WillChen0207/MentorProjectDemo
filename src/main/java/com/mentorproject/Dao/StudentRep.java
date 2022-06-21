@@ -1,5 +1,7 @@
 package com.mentorproject.Dao;
 
+import com.mentorproject.Entity.Message;
+import com.mentorproject.Entity.Result;
 import com.mentorproject.Entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -49,8 +51,55 @@ public interface StudentRep extends JpaRepository<Student,String> {
             "           (password)" +
             "       value" +
             "           (?1)" +
-            "       where student_id = ?2",
+            "       where " +
+            "           student_id = ?2",
             nativeQuery = true)
     Integer updatePassword(String password,String student_id);
-    //这能不能返回Integer值？
+
+    /**查看私信
+     *
+     * @param receiver
+     * @return
+     */
+    @Query(value = "select " +
+            "           message,is_read" +
+            "       from" +
+            "           mentor.message" +
+            "       where " +
+            "           receiver = ?1" ,
+            nativeQuery = true)
+    List<Message> checkMessage(String receiver);
+
+    /**发送私信
+     *
+     * @param sender
+     * @param receiver
+     * @param message
+     * @return
+     */
+    @Transactional
+    @Modifying
+    @Query(value = "insert into" +
+            "           mentor.message" +
+            "       values" +
+            "           (?1,?2,?3)",
+            nativeQuery = true)
+    Integer sendmessage(String sender,String receiver,String message);
+
+    @Query(value = "select " +
+            "           student_name,teacher_name" +
+            "       from" +
+            "           mentormatch" +
+            "       join " +
+            "           student" +
+            "       on" +
+            "           mentormatch.student_id = student.student_id" +
+            "       join" +
+            "           teacher" +
+            "       on" +
+            "           mentormatch.teacher_id = student.teacher_id" +
+            "       where " +
+            "           mentor.student_id = ?1",
+            nativeQuery = true)
+    List<Result> checkResult(String student_id);
 }

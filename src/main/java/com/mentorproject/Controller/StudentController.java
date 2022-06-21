@@ -3,6 +3,7 @@ package com.mentorproject.Controller;
 
 import com.mentorproject.Dao.StudentRep;
 import com.mentorproject.Dao.TeacherRep;
+import com.mentorproject.Entity.Message;
 import com.mentorproject.Entity.Student;
 import com.mentorproject.Entity.Teacher;
 import com.sun.org.apache.xpath.internal.operations.Mod;
@@ -12,8 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.lang.annotation.Repeatable;
 import java.util.List;
 
 
@@ -160,6 +163,54 @@ public class StudentController {
             mav.addObject("errmessage","修改密码失败");
             mav.setViewName("errorpage");
         }
+        return mav;
+    }
+
+    /**查看私信
+     *
+     * @param student_id
+     * @return
+     */
+    @RequestMapping(value = "checkMessage",method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView checkMessage(@RequestParam("student_id") String student_id){
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("messageList",studentRep.checkMessage(student_id));
+        mav.setViewName("studentSendMessage");
+        return mav;
+    }
+
+    /**向指定导师发送私信
+     *
+     * @param student_id
+     * @param teacher_id
+     * @param _message
+     * @return
+     */
+    @RequestMapping(value = "/sendMessage",method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView sendMessage(@RequestParam("student_id") String student_id,
+                                     @RequestParam("teacher_id") String teacher_id,
+                                     @RequestParam("message") String _message){
+        ModelAndView mav = new ModelAndView();
+        Integer isSend = studentRep.sendmessage(student_id,teacher_id,_message);
+        if (isSend == 0){
+            mav.addObject("seccessmessage","发送成功");
+            mav.setViewName("seccessmessage");
+        }else {
+            mav.addObject("errmessage","发送失败");
+            mav.setViewName("errmessage");
+        }
+        return mav;
+    }
+
+    /**查询导师选择结果
+     *
+     * @param student_id
+     * @return
+     */
+    @RequestMapping(value = "/checkResult",method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView checkResult(@RequestParam("student_id") String student_id){
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("resultList",studentRep.checkResult(student_id));
         return mav;
     }
 }
