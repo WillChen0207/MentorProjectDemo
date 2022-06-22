@@ -7,10 +7,13 @@ import com.mentorproject.Entity.Message;
 import com.mentorproject.Entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -27,16 +30,26 @@ public class StudentController {
         this.messageRep = messageRep;
     }
 
+//    /**
+//     *查询所有学生
+//     * @return
+//     **/
+//    @RequestMapping(value = "/getall",method = {RequestMethod.GET,RequestMethod.POST})
+//    public ModelAndView getStudentList(){
+//        ModelAndView mav = new ModelAndView();
+//        mav.addObject("studentList", studentRep.findAll());
+//        mav.setViewName("studentshow");
+//        return mav;
+//    }
+
     /**
      *查询所有学生
      * @return
      **/
     @RequestMapping(value = "/getall",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView getStudentList(){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("studentList", studentRep.findAll());
-        mav.setViewName("studentshow");
-        return mav;
+    public String getStudentList(){
+        String studentList = studentRep.findAll().toString();
+        return studentList;
     }
 
     /**查询学生个人信息

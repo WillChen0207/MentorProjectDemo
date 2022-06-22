@@ -6,10 +6,11 @@
     <!--引入 element-ui 的样式，-->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <!-- 必须先引入vue，  后使用element-ui -->
-    <script src="js/vue.js"></script>
+    <script src="../js/vue.js"></script>
     <!-- 引入element 的组件库-->
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <script src="https://unpkg.com/http-vue-loader"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
         .el-header {
             background-color: #B3C0D1;
@@ -55,25 +56,25 @@
             </el-menu>
         </el-header>
 
-        <el-main v-if="seen">
-            <el-table :data="tableData">
-                <el-table-column prop="mentorId" label="导师编号" width="140">
-                </el-table-column>
-                <el-table-column prop="mentorName" label="导师姓名" width="120">
-                </el-table-column>
-                <el-table-column prop="description" label="导师介绍">
-                </el-table-column>
-            </el-table>
-        </el-main>
-        <el-main v-if="!seen">
-            <el-table :data="tableData">
-                <el-table-column prop="mentorId" label="编号" width="140">
-                </el-table-column>
-                <el-table-column prop="mentorName" label="姓名" width="120">
-                </el-table-column>
-                <el-table-column prop="description" label="介绍">
-                </el-table-column>
-            </el-table>
+        <el-main>
+            <transition name="el-fade-in">
+                <div v-if="seen">
+                    <el-table
+                            :data="tableData"
+                            stripe>
+                        <el-table-column prop="student_id" label="学号" width="140">
+                        </el-table-column>
+                        <el-table-column prop="studentName" label="姓名" width="120">
+                        </el-table-column>
+                        <el-table-column prop="gender" label="性别" width="120">
+                        </el-table-column>
+                        <el-table-column prop="gpa" label="绩点" width="120">
+                        </el-table-column>
+                        <el-table-column prop="password" label="密码">
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </transition>
         </el-main>
     </el-container>
 
@@ -88,25 +89,24 @@
     headerApp.$mount('#headerApp')
 
     var pageApp = new Vue({
-
-        data() {
-            const item = {
-                mentorId: '001',
-                mentorName: '刘迎春',
-                description: '数据库大型开发实验'
-            }
-            return {
-                activeIndex: '1',
-                activeIndex2: '1',
-                seen: false,
-                tableData: Array(5).fill(item),
-                UserName: 'Will'//Shall be set as UserName
-            }
+        data: {
+            activeIndex: '1',
+            activeIndex2: '1',
+            seen: false,
+            tableData: [],
+            UserName: 'Will'//Shall be set as UserName
         },
         methods: {
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
             }
+        },
+        mounted() {
+            axios
+                .get("localhost:8080/student/getall")
+                .then(resp => {
+                    this.tableData = resp.data.data
+                })
         }
     })
     pageApp.$mount('#pageApp')

@@ -15,7 +15,7 @@ spring:
     password: root
   thymeleaf:
     cache: false
-    prefix: classpath:/view/
+    prefix: classpath:/view/pages/
     mode: HTML
     suffix: .html
 
