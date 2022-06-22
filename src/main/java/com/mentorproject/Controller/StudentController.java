@@ -5,7 +5,6 @@ import com.mentorproject.Dao.MessageRep;
 import com.mentorproject.Dao.StudentRep;
 import com.mentorproject.Entity.Message;
 import com.mentorproject.Entity.Student;
-import com.mentorproject.Entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -43,12 +42,10 @@ public class StudentController {
      * @param student_id
      * @return
      */
+    @ResponseBody
     @RequestMapping(value = "/getinfo",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView getStudentInfo (@RequestParam("student_id") String student_id){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("studentList",studentRep.getInfo(student_id));
-        mav.setViewName("studentshow");
-        return mav;
+    public Student getStudentInfo (@RequestParam("student_id") String student_id){
+       return studentRep.getInfo(student_id);
     }
 
     /**
@@ -58,19 +55,22 @@ public class StudentController {
      * @param gender
      * @param gpa
      * @param password
+     * @param student_description
     **/
     @RequestMapping(value = "/add",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView addStudent(@RequestParam("student_id") String student_id,
                                    @RequestParam("student_name") String student_name,
                                    @RequestParam("gender") Integer gender,
                                    @RequestParam("gpa") Double gpa,
-                                   @RequestParam("password") String password){
+                                   @RequestParam("password") String password,
+                                   @RequestParam("student_description") String student_description){
         Student student = new Student();
         student.setStudentId(student_id);
         student.setStudentName(student_name);
         student.setGender(gender);
         student.setGpa(gpa);
         student.setPassword(password);
+        student.setStudentDescription(student_description);
         studentRep.save(student);
         ModelAndView mav = new ModelAndView("redirect:/student/getall");
         return mav;

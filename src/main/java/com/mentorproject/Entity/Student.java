@@ -11,6 +11,7 @@ public class Student {
     private Integer gender;
     private double gpa;
     private String password;
+    private String studentDescription;
 
     public String getStudentId() {
         return studentId;
@@ -52,5 +53,11 @@ public class Student {
         this.password = password;
     }
 
+    public String getStudentDescription() {
+        return studentDescription;
+    }
 
+    public void setStudentDescription(String studentDescription) {
+        this.studentDescription = studentDescription;
+    }
 }

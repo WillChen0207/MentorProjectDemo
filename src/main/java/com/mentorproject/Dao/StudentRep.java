@@ -21,7 +21,7 @@ public interface StudentRep extends JpaRepository<Student,String> {
      * @return
      */
     @Query(value = "select" +
-            "           student_id, student_name, gender, gpa, password" +
+            "           student_id, student_name, gender, gpa, password, student_description" +
             "       from " +
             "           mentor.student " +
             "       where " +
@@ -35,13 +35,13 @@ public interface StudentRep extends JpaRepository<Student,String> {
      * @return
      */
     @Query(value = "select " +
-            "           student_id, student_name, gender, gpa, password" +
+            "           student_id, student_name, gender, gpa, password, student_description" +
             "       from" +
             "           mentor.student" +
             "       where " +
             "           student_id = ?1",
             nativeQuery = true)
-    List<Student> getInfo(String student_id);
+    Student getInfo(String student_id);
 
     /**查看私信
      *

@@ -31,7 +31,7 @@
                     <el-dropdown-item>修改头像</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <span v-bind:title="UserName">欢迎您，{{UserName}}</span>
+            <el-avatar icon="el-icon-user-solid"></el-avatar>
         </el-header>
     </el-container>
 
@@ -45,32 +45,144 @@
                     background-color="#545c64"
                     text-color="#fff"
                     active-text-color="#ffd04b">
-                <el-menu-item index="1" @click="seen=false">个人信息</el-menu-item>
+                <el-menu-item index="1" @click="seen1=true;seen2=false;seen4=false">个人信息</el-menu-item>
                 <el-submenu index="2">
                     <template slot="title">志愿管理</template>
-                    <el-menu-item index="2-1" @click="seen=false">查看志愿</el-menu-item>
-                    <el-menu-item index="2-2" @click="seen=false">填写志愿</el-menu-item>
+                    <el-menu-item index="2-1" @click="seen1=false;seen2=true;seen4=false">查看志愿</el-menu-item>
+                    <el-menu-item index="2-2" @click="seen1=false;seen2=true;seen4=false">填写志愿</el-menu-item>
                 </el-submenu>
                 <el-menu-item index="3" disabled>消息中心</el-menu-item>
-                <el-menu-item index="4" @click="seen=true">导师列表</el-menu-item>
+                <el-menu-item index="4" @click="seen1=false;seen2=false;seen4=true">导师列表</el-menu-item>
             </el-menu>
         </el-header>
 
         <el-main>
             <transition name="el-fade-in">
-                <div v-if="seen">
+                <el-descriptions v-if="seen1" class="margin-top" title="个人信息" :column="3" :size="size" border>
+                    <template slot="extra">
+                        <el-button type="primary" size="small">修改</el-button>
+                    </template>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            <i class="el-icon-user"></i>
+                            姓名
+                        </template>
+                        {{ StudentName }}
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            <i class="el-icon-mobile-phone"></i>
+                            学号
+                        </template>
+                        20206660101
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            <i class="el-icon-location-outline"></i>
+                            绩点
+                        </template>
+                        4.600
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            <i class="el-icon-tickets"></i>
+                            备注
+                        </template>
+                        <el-tag size="small">学校</el-tag>
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            <i class="el-icon-office-building"></i>
+                            所属院系
+                        </template>
+                        {{ StudentDescription }}
+                    </el-descriptions-item>
+                </el-descriptions>
+            </transition>
+            <transition name="el-fade-in">
+                <div v-if="seen2">
+                    <el-table
+                            :data="stuAppData"
+                            :fit="true"
+                            stripe>
+                        <el-table-column
+                                width="140"
+                                prop="firstApp"
+                                label="第一志愿">
+                            <template slot-scope="scope">
+                                {{scope.row.firstApp}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                width="140"
+                                prop="secondApp"
+                                label="第二志愿">
+                            <template slot-scope="scope">
+                                {{scope.row.secondApp}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                width="140"
+                                prop="thirdApp"
+                                label="第三志愿">
+                            <template slot-scope="scope">
+                                {{scope.row.thirdApp}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                width="140"
+                                prop="isSelected"
+                                label="是否已被选">
+                            <template slot-scope="scope">
+                                {{scope.row.isSelected}}
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </transition>
+            <transition name="el-fade-in">
+                <div v-if="seen4">
                     <el-table
                             :data="tableData"
                             :fit="true"
                             stripe>
                         <el-table-column
                                 width="140"
-                                v-for="item in tableHeader"
-                                :key="item.key"
-                                :property="item.key"
-                                :label="item.label">
+                                prop="studentId"
+                                label="学号">
                             <template slot-scope="scope">
-                                {{scope.row[scope.column.property]}}
+                                {{scope.row.studentId}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                width="140"
+                                prop="studentName"
+                                label="姓名">
+                            <template slot-scope="scope">
+                                {{scope.row.studentName}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                width="140"
+                                prop="gender"
+                                label="性别">
+                            <template slot-scope="scope">
+                                {{scope.row.gender === 0 ? '女' : '男'}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                width="140"
+                                prop="gpa"
+                                label="绩点">
+                            <template slot-scope="scope">
+                                {{scope.row.gpa}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                prop="password"
+                                label="密码">
+                            <template slot-scope="scope">
+                                {{scope.row.password}}
                             </template>
                         </el-table-column>
                     </el-table>
@@ -94,16 +206,13 @@
             return {
                 activeIndex: '1',
                 activeIndex2: '1',
-                seen: false,
-                tableHeader: [
-                    { key: 'studentId', label: '学号' },
-                    { key: 'studentName', label: '姓名' },
-                    { key: 'gender', label: '性别' },
-                    { key: 'gpa', label: '绩点' },
-                    { key: 'password', label: '密码'}
-                ],
+                seen1: true,
+                seen2: false,
+                seen4: false,
+                stuAppData: [],
                 tableData: [],
-                UserName: 'Will'//Shall be set as UserName
+                StudentName: '',
+                StudentDescription: ''
             }
         },
         methods: {
@@ -115,9 +224,20 @@
             axios
                 .get("http://localhost:8080/hellomentor/student/getall")
                 .then(resp => {
-                    console.log(resp)
                     this.tableData = resp.data
-                    console.log(this.tableData)
+                })
+                .catch(err => {
+                    console.log(err)
+                });
+            axios
+                .get("http://localhost:8080/hellomentor/student/getinfo", {
+                    params: {
+                        student_id: '20206660101'//通过登录校验控制
+                    }
+                })
+                .then(resp => {
+                    this.StudentName = resp.data.studentName;
+                    this.StudentDescription = resp.data.studentDescription;
                 })
                 .catch(err => {
                     console.log(err)
