@@ -59,12 +59,12 @@ public class StudentController {
     @SneakyThrows
     @ResponseBody
     @RequestMapping(value = "/getapp",method = {RequestMethod.GET,RequestMethod.POST})
-    public ApplicationRecord getAppRecByStudentId(@RequestParam("student_id") String student_id,
+    public List<ApplicationRecord> getAppRecByStudentId(@RequestParam("student_id") String student_id,
                                                   HttpServletRequest request,
                                                   HttpServletResponse response){
         request.setAttribute("student_id", student_id);
         request.getRequestDispatcher("/application/getStudent").forward(request,response);
-        ApplicationRecord appRec = (ApplicationRecord) request.getAttribute("appRec");
+        List<ApplicationRecord> appRec = (List<ApplicationRecord>) request.getAttribute("appRec");
         return appRec;
     }
 

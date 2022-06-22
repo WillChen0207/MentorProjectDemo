@@ -63,10 +63,10 @@ public class ApplicationRecordController {
      **/
     @ResponseBody
     @RequestMapping(value = "/getStudent",method = {RequestMethod.GET,RequestMethod.POST})
-    public ApplicationRecord getAppRecByStudentId(HttpServletRequest request,
+    public List<ApplicationRecord> getAppRecByStudentId(HttpServletRequest request,
                                                   HttpServletResponse response){
         String student_id = (String) request.getAttribute("student_id");
-        ApplicationRecord appRec = appRecRep.getApplicationRecordByStudentId(student_id);
+        List<ApplicationRecord> appRec = appRecRep.getApplicationRecordByStudentId(student_id);
         request.setAttribute("appRec", appRec);
         return appRec;
     }
