@@ -61,16 +61,17 @@
                 <div v-if="seen">
                     <el-table
                             :data="tableData"
+                            :fit="true"
                             stripe>
-                        <el-table-column prop="student_id" label="学号" width="140">
-                        </el-table-column>
-                        <el-table-column prop="studentName" label="姓名" width="120">
-                        </el-table-column>
-                        <el-table-column prop="gender" label="性别" width="120">
-                        </el-table-column>
-                        <el-table-column prop="gpa" label="绩点" width="120">
-                        </el-table-column>
-                        <el-table-column prop="password" label="密码">
+                        <el-table-column
+                                width="140"
+                                v-for="item in tableHeader"
+                                :key="item.key"
+                                :property="item.key"
+                                :label="item.label">
+                            <template slot-scope="scope">
+                                {{scope.row[scope.column.property]}}
+                            </template>
                         </el-table-column>
                     </el-table>
                 </div>
@@ -89,12 +90,29 @@
     headerApp.$mount('#headerApp')
 
     var pageApp = new Vue({
-        data: {
-            activeIndex: '1',
-            activeIndex2: '1',
-            seen: false,
-            tableData: [],
-            UserName: 'Will'//Shall be set as UserName
+        data() {
+            return {
+                activeIndex: '1',
+                activeIndex2: '1',
+                seen: false,
+                tableHeader: [
+                    { key: 'studentId', label: '学号' },
+                    { key: 'studentName', label: '姓名' },
+                    { key: 'gender', label: '性别' },
+                    { key: 'gpa', label: '绩点' },
+                    { key: 'password', label: '密码'}
+                ],
+                tableData: [
+                    {
+                        studentId: '',
+                        studentName: '',
+                        gender: 0,
+                        gpa: 5.0,
+                        password: ''
+                    }
+                ],
+                UserName: 'Will'//Shall be set as UserName
+            }
         },
         methods: {
             handleSelect(key, keyPath) {
@@ -103,9 +121,14 @@
         },
         mounted() {
             axios
-                .get("localhost:8080/student/getall")
+                .get("http://localhost:8080/hellomentor/student/getall")
                 .then(resp => {
-                    this.tableData = resp.data.data
+                    console.log(resp)
+                    this.tableData = resp.data
+                    console.log(this.tableData)
+                })
+                .catch(err => {
+                    console.log(err)
                 })
         }
     })
