@@ -9,14 +9,13 @@ import com.mentorproject.Entity.Message;
 import com.mentorproject.Entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin
 @Controller
 @RequestMapping("/teacher")
 public class TeacherController {
@@ -34,12 +33,10 @@ public class TeacherController {
      *查询所有导师
      * @return
      **/
+    @ResponseBody
     @RequestMapping(value = "/getall",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView getStudentList(){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("teacherList", teacherRep.findAll());
-        mav.setViewName("teachershow");
-        return mav;
+    public List<Teacher> getStudentList(){
+       return teacherRep.findAll();
     }
 
     /**

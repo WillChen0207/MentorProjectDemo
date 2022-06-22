@@ -5,11 +5,13 @@ import com.mentorproject.Dao.MessageRep;
 import com.mentorproject.Dao.StudentRep;
 import com.mentorproject.Entity.Message;
 import com.mentorproject.Entity.Student;
+import com.mentorproject.Entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -134,11 +136,10 @@ public class StudentController {
      *
      * @return
      */
+    @ResponseBody
     @RequestMapping(value = "/getteacherinfo",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView getTeacherInfo(){
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("redirect:/teacher/getall");
-        return mav;
+    public void getTeacherInfo(HttpServletRequest request){
+        request.getRequestDispatcher("/teacher/getall");
     }
 
     /**修改个人密码
