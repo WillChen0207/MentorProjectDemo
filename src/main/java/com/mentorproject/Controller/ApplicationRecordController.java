@@ -7,8 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -57,18 +60,14 @@ public class ApplicationRecordController {
 
     /**
      * 查询自己填写的志愿信息
-     * @param student_id
      **/
+    @ResponseBody
     @RequestMapping(value = "/getStudent",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView getAppRecByStudentId(@RequestParam("student_id") String student_id){
-        List<ApplicationRecord> appRecList = appRecRep.getApplicationRecordByStudentId(student_id);
-        ModelAndView mav = new ModelAndView();
-        if (appRecList.isEmpty()){
-            mav.setViewName("errorpage");
-        }else {
-            mav.addObject("appRecList", appRecList);
-            mav.setViewName("applicationshow");
-        }
-        return mav;
+    public ApplicationRecord getAppRecByStudentId(HttpServletRequest request,
+                                                  HttpServletResponse response){
+        String student_id = (String) request.getAttribute("student_id");
+        ApplicationRecord appRec = appRecRep.getApplicationRecordByStudentId(student_id);
+        request.setAttribute("appRec", appRec);
+        return appRec;
     }
 }

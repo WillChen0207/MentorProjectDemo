@@ -36,7 +36,7 @@
     </el-container>
 
     <el-container id="pageApp">
-        <el-header style="background-color: #545c64;text-align: right; font-size: 12px">
+        <el-header style="background-color: #545c64; text-align: right; font-size: 12px">
             <el-menu
                     :default-active="activeIndex2"
                     class="el-menu-demo"
@@ -107,34 +107,42 @@
                             stripe>
                         <el-table-column
                                 width="140"
-                                prop="firstApp"
+                                prop="studentId"
+                                label="学号">
+                            <template slot-scope="scope">
+                                {{scope.row.studentId}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                width="140"
+                                prop="first_app"
                                 label="第一志愿">
                             <template slot-scope="scope">
-                                {{scope.row.firstApp}}
+                                {{scope.row.first_app}}
                             </template>
                         </el-table-column>
                         <el-table-column
                                 width="140"
-                                prop="secondApp"
+                                prop="second_app"
                                 label="第二志愿">
                             <template slot-scope="scope">
-                                {{scope.row.secondApp}}
+                                {{scope.row.second_app}}
                             </template>
                         </el-table-column>
                         <el-table-column
                                 width="140"
-                                prop="thirdApp"
+                                prop="third_app"
                                 label="第三志愿">
                             <template slot-scope="scope">
-                                {{scope.row.thirdApp}}
+                                {{scope.row.third_app}}
                             </template>
                         </el-table-column>
                         <el-table-column
                                 width="140"
-                                prop="isSelected"
+                                prop="is_selected"
                                 label="是否已被选">
                             <template slot-scope="scope">
-                                {{scope.row.isSelected}}
+                                {{scope.row.is_selected}}
                             </template>
                         </el-table-column>
                     </el-table>
@@ -225,10 +233,24 @@
                 .get("http://localhost:8080/hellomentor/student/getall")
                 .then(resp => {
                     this.tableData = resp.data
+                    console.log(this.tableData)
                 })
                 .catch(err => {
                     console.log(err)
-                });
+                })
+            axios
+                .get("http://localhost:8080/hellomentor/student/getapp", {
+                    params: {
+                        student_id: '20206660101'//通过登录校验控制
+                    }
+                })
+                .then(resp => {
+                    this.stuAppData = resp.data
+                    console.log(this.stuAppData)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
             axios
                 .get("http://localhost:8080/hellomentor/student/getinfo", {
                     params: {

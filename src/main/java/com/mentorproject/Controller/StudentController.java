@@ -3,14 +3,17 @@ package com.mentorproject.Controller;
 
 import com.mentorproject.Dao.MessageRep;
 import com.mentorproject.Dao.StudentRep;
+import com.mentorproject.Entity.ApplicationRecord;
 import com.mentorproject.Entity.Message;
 import com.mentorproject.Entity.Student;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +49,23 @@ public class StudentController {
     @RequestMapping(value = "/getinfo",method = {RequestMethod.GET,RequestMethod.POST})
     public Student getStudentInfo (@RequestParam("student_id") String student_id){
        return studentRep.getInfo(student_id);
+    }
+
+    /**
+     * 查看当前学生志愿信息
+     * @param student_id
+     * @return
+     **/
+    @SneakyThrows
+    @ResponseBody
+    @RequestMapping(value = "/getapp",method = {RequestMethod.GET,RequestMethod.POST})
+    public ApplicationRecord getAppRecByStudentId(@RequestParam("student_id") String student_id,
+                                                  HttpServletRequest request,
+                                                  HttpServletResponse response){
+        request.setAttribute("student_id", student_id);
+        request.getRequestDispatcher("/application/getStudent").forward(request,response);
+        ApplicationRecord appRec = (ApplicationRecord) request.getAttribute("appRec");
+        return appRec;
     }
 
     /**
@@ -117,18 +137,6 @@ public class StudentController {
         mav.addObject("thirdApp",third_app);
         mav.addObject("isSelected",is_selected);
         mav.setViewName("redirect:/application/add");
-        return mav;
-    }
-
-    /**
-     * 查看当前学生志愿信息
-     * @param student_id
-     **/
-    @RequestMapping(value = "/getapp",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView getAppRecByStudentId(@RequestParam("student_id") String student_id){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("student_id", student_id);
-        mav.setViewName("redirect:/application/getStudent");
         return mav;
     }
 
