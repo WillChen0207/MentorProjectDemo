@@ -28,7 +28,7 @@
                 <i class="el-icon-setting" style="margin-right: 15px"></i>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item>登出</el-dropdown-item>
-                    <el-dropdown-item>修改头像</el-dropdown-item>
+                    <el-dropdown-item>更改用户</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
             <el-avatar icon="el-icon-user-solid"></el-avatar>
@@ -65,10 +65,10 @@
                             <el-dialog title="个人信息" :visible.sync="dialogVisible">
                                 <el-form :model="form">
                                     <el-form-item label="姓名">
-                                        <el-input v-model="form.stduentName" autocomplete="off"></el-input>
+                                        <el-input v-model="form.studentName" autocomplete="off"></el-input>
                                     </el-form-item>
                                     <el-form-item label="个人介绍">
-                                        <el-input v-model="form.stduentDescription" autocomplete="off"></el-input>
+                                        <el-input v-model="form.studentDescription" autocomplete="off" type="textarea"></el-input>
                                     </el-form-item>
                                 </el-form>
                                 <div slot="footer" class="dialog-footer">
@@ -90,14 +90,14 @@
                             <i class="el-icon-mobile-phone"></i>
                             学号
                         </template>
-                        20206660101
+                        {{ StudentId }}
                     </el-descriptions-item>
                     <el-descriptions-item>
                         <template slot="label">
                             <i class="el-icon-location-outline"></i>
                             绩点
                         </template>
-                        4.600
+                        {{ StudentGPA }}
                     </el-descriptions-item>
                     <el-descriptions-item>
                         <template slot="label">
@@ -105,13 +105,12 @@
                             志愿匹配状态
                         </template>
                         <el-tag size="small" type="warning" v-if="{ StudentSelected } !== 0">未完成匹配</el-tag>
-<!--                        Require editing-->
                         <el-tag size="small" type="success" v-if="{ StudentSelected } === 0">已完成匹配</el-tag>
                     </el-descriptions-item>
                     <el-descriptions-item>
                         <template slot="label">
                             <i class="el-icon-office-building"></i>
-                            所属院系
+                            个人介绍
                         </template>
                         {{ StudentDescription }}
                     </el-descriptions-item>
@@ -251,6 +250,7 @@
                 return testData;
             }
             return {
+                isRouterAlive:true,
                 activeIndex: '1',
                 activeIndex2: '1',
                 seen1: true,
@@ -259,8 +259,14 @@
                 seen4: false,
                 stuAppData: [],
                 tableData: [],
+
+                StudentId: '',
                 StudentName: '',
+                StudentGender: 0,
                 StudentDescription: '',
+                StudentGPA: 0,
+                StudentPassword: '',
+
                 StudentSelected: 0,
                 dialogVisible: false,
                 form: {
@@ -277,10 +283,21 @@
             },
             submitForm(formName) {
                 console.log(this.$refs[formName]);
-                this.$message({
-                    message: '提交成功',
-                    type: 'success'
-                });
+                axios
+                    .get("http://localhost:8080/hellomentor/student/add", {
+                        params: {
+                            student_id: this.StudentId,
+                            student_name: this.form.studentName,
+                            gender: this.StudentGender,
+                            gpa: this.StudentGPA,
+                            password: this.StudentPassword,
+                            student_description: this.form.studentDescription
+                        }
+                    })
+                    .then(resp => {
+                        this.$message.success('已保存修改！');
+                        console.log(resp.data);
+                    });
             },
             cancelForm() {
                 this.$message({
@@ -322,7 +339,7 @@
                         }
                     })
                     .then(resp => {
-                        this.$message.success('已成功提交');
+                        this.$message.success('已成功提交！');
                         console.log(resp.data);
                     })
             },
@@ -333,6 +350,10 @@
                 } else {
                     this.$message.success("选择成功！")
                 }
+            },
+            reload(){
+                this.isRouterAlive=false
+                this.$nextTick(()=>this.isRouterAlive=true)
             }
         },
         mounted() {
@@ -353,7 +374,7 @@
                 })
                 .then(resp => {
                     this.stuAppData = resp.data;
-                    this.StudentSelected = this.stuAppData.is_selected
+                    this.StudentSelected = resp.data.is_selected
                     console.log(this.StudentSelected);
                 })
                 .catch(err => {
@@ -366,8 +387,15 @@
                     }
                 })
                 .then(resp => {
+                    this.StudentId = resp.data.studentId;
                     this.StudentName = resp.data.studentName;
+                    this.StudentGPA = resp.data.gpa;
+                    this.StudentGender = resp.data.gender;
                     this.StudentDescription = resp.data.studentDescription;
+                    this.StudentPassword = resp.data.password;
+
+                    this.form.studentName = resp.data.studentName;
+                    this.form.studentDescription = resp.data.studentDescription;
                 })
                 .catch(err => {
                     console.log(err);

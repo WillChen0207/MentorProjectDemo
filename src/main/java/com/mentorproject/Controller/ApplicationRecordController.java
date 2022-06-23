@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +49,7 @@ public class ApplicationRecordController {
     @ResponseBody
     @RequestMapping(value = "/getStudent",method = {RequestMethod.GET,RequestMethod.POST})
     public List<ApplicationRecord> getAppRecByStudentId(HttpServletRequest request,
-                                                  HttpServletResponse response){
+                                                        HttpServletResponse response){
         String student_id = (String) request.getAttribute("student_id");
         List<ApplicationRecord> appRec = appRecRep.getApplicationRecordByStudentId(student_id);
         request.setAttribute("appRec", appRec);
@@ -64,7 +62,7 @@ public class ApplicationRecordController {
     @ResponseBody
     @RequestMapping(value = "/getFirstApp",method = {RequestMethod.GET,RequestMethod.POST})
     public List<ApplicationRecord> getFirstApp(HttpServletRequest request,
-                                                        HttpServletResponse response){
+                                               HttpServletResponse response){
         String student_id = (String) request.getAttribute("student_id");
         List<ApplicationRecord> appRec = appRecRep.getFirstApp(student_id);
         request.setAttribute("appRec", appRec);
