@@ -75,6 +75,58 @@ public class StudentController {
     }
 
     /**
+     * 查询第一志愿导师
+     * @param student_id
+     * @return
+     */
+    @SneakyThrows
+    @ResponseBody
+    @RequestMapping(value = "/getfirstapp",method = {RequestMethod.GET,RequestMethod.POST})
+    public List<ApplicationRecord> getFirstApp(@RequestParam("student_id") String student_id,
+                                                        HttpServletRequest request,
+                                                        HttpServletResponse response){
+        request.setAttribute("student_id", student_id);
+        request.getRequestDispatcher("/application/getStudent").forward(request,response);
+        List<ApplicationRecord> appRec = (List<ApplicationRecord>) request.getAttribute("appRec");
+        return appRec;
+    }
+
+    /**
+     * 查询第二志愿导师
+     * @param student_id
+     * @return
+     */
+    @SneakyThrows
+    @ResponseBody
+    @RequestMapping(value = "/getsecondapp",method = {RequestMethod.GET,RequestMethod.POST})
+    public List<ApplicationRecord> getSecondApp(@RequestParam("student_id") String student_id,
+                                               HttpServletRequest request,
+                                               HttpServletResponse response){
+        request.setAttribute("student_id", student_id);
+        request.getRequestDispatcher("/application/getStudent").forward(request,response);
+        List<ApplicationRecord> appRec = (List<ApplicationRecord>) request.getAttribute("appRec");
+        return appRec;
+    }
+
+    /**
+     * 查询第三志愿导师
+     * @param student_id
+     * @return
+     */
+    @SneakyThrows
+    @ResponseBody
+    @RequestMapping(value = "/getthirdapp",method = {RequestMethod.GET,RequestMethod.POST})
+    public List<ApplicationRecord> getThirdApp(@RequestParam("student_id") String student_id,
+                                               HttpServletRequest request,
+                                               HttpServletResponse response){
+        request.setAttribute("student_id", student_id);
+        request.getRequestDispatcher("/application/getStudent").forward(request,response);
+        List<ApplicationRecord> appRec = (List<ApplicationRecord>) request.getAttribute("appRec");
+        return appRec;
+    }
+
+
+    /**
     * 添加一个学生
      * @param student_id
      * @param student_name

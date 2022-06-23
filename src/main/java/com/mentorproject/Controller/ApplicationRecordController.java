@@ -57,4 +57,43 @@ public class ApplicationRecordController {
         request.setAttribute("appRec", appRec);
         return appRec;
     }
+
+    /**
+     * 查询第一志愿信息
+     **/
+    @ResponseBody
+    @RequestMapping(value = "/getStudent",method = {RequestMethod.GET,RequestMethod.POST})
+    public List<ApplicationRecord> getFirstApp(HttpServletRequest request,
+                                                        HttpServletResponse response){
+        String student_id = (String) request.getAttribute("student_id");
+        List<ApplicationRecord> appRec = appRecRep.getFirstApp(student_id);
+        request.setAttribute("appRec", appRec);
+        return appRec;
+    }
+
+    /**
+     * 查询第二志愿信息
+     **/
+    @ResponseBody
+    @RequestMapping(value = "/getStudent",method = {RequestMethod.GET,RequestMethod.POST})
+    public List<ApplicationRecord> getSecondApp(HttpServletRequest request,
+                                               HttpServletResponse response){
+        String student_id = (String) request.getAttribute("student_id");
+        List<ApplicationRecord> appRec = appRecRep.getSecondApp(student_id);
+        request.setAttribute("appRec", appRec);
+        return appRec;
+    }
+
+    /**
+     * 查询第三志愿信息
+     **/
+    @ResponseBody
+    @RequestMapping(value = "/getStudent",method = {RequestMethod.GET,RequestMethod.POST})
+    public List<ApplicationRecord> getThirdApp(HttpServletRequest request,
+                                               HttpServletResponse response){
+        String student_id = (String) request.getAttribute("student_id");
+        List<ApplicationRecord> appRec = appRecRep.getThirdApp(student_id);
+        request.setAttribute("appRec", appRec);
+        return appRec;
+    }
 }
