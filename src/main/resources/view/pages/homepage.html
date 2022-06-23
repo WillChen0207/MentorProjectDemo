@@ -102,9 +102,11 @@
                     <el-descriptions-item>
                         <template slot="label">
                             <i class="el-icon-tickets"></i>
-                            备注
+                            志愿匹配状态
                         </template>
-                        <el-tag size="small">学校</el-tag>
+                        <el-tag size="small" type="warning" v-if="{ StudentSelected } !== 0">未完成匹配</el-tag>
+<!--                        Require editing-->
+                        <el-tag size="small" type="success" v-if="{ StudentSelected } === 0">已完成匹配</el-tag>
                     </el-descriptions-item>
                     <el-descriptions-item>
                         <template slot="label">
@@ -156,7 +158,7 @@
                         <el-table-column
                                 prop="is_selected"
                                 label="是否已被选">
-                            <template slot-scope="scope">
+                            <template slot-scope="scope" v-model="StudentSelected">
                                 {{scope.row.is_selected === 0 ? '否' : '是'}}
                             </template>
                         </el-table-column>
@@ -167,7 +169,7 @@
                 <div v-if="seen22">
                     <el-transfer
                             style="text-align: left; display: inline-block"
-                            v-model="value"
+                            v-model="selected"
                             filterable
                             :titles="['导师列表', '志愿列表']"
                             :button-texts="['撤销选择', '添加选择']"
@@ -176,8 +178,9 @@
                                 label: 'desc'
                             }"
                             target-order="push"
+                            @change="check(right)"
                             :data="testData">
-                        <el-button type="primary" class="transfer-footer" slot="right-footer" size="small">保存</el-button>
+                        <el-button type="primary" class="transfer-footer" slot="right-footer" size="small" @click="fillApp()">保存</el-button>
                     </el-transfer>
                 </div>
             </transition>
@@ -189,18 +192,18 @@
                             stripe>
                         <el-table-column
                                 width="140"
-                                prop="studentId"
-                                label="学号">
+                                prop="teacherId"
+                                label="工号">
                             <template slot-scope="scope">
-                                {{scope.row.studentId}}
+                                {{scope.row.teacherId}}
                             </template>
                         </el-table-column>
                         <el-table-column
                                 width="140"
-                                prop="studentName"
+                                prop="teacherName"
                                 label="姓名">
                             <template slot-scope="scope">
-                                {{scope.row.studentName}}
+                                {{scope.row.teacherName}}
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -212,18 +215,10 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                                width="140"
-                                prop="gpa"
-                                label="绩点">
+                                prop="teacherDescription"
+                                label="个人介绍">
                             <template slot-scope="scope">
-                                {{scope.row.gpa}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                prop="password"
-                                label="密码">
-                            <template slot-scope="scope">
-                                {{scope.row.password}}
+                                {{scope.row.teacherDescription}}
                             </template>
                         </el-table-column>
                     </el-table>
@@ -246,10 +241,10 @@
         data() {
             const generateTestData = _ => {
                 var testData = [];
-                for (let i = 1; i <= 10; i++) {
+                for (let i = 1; i <= 4; i++) {
                     testData.push({
-                        value: i,
-                        desc: '备选项' + i,
+                        value: '2020666000' + i,
+                        desc: '导师' + i,
                         disabled: false
                     })
                 }
@@ -266,13 +261,14 @@
                 tableData: [],
                 StudentName: '',
                 StudentDescription: '',
+                StudentSelected: 0,
                 dialogVisible: false,
                 form: {
                     studentName: '',
                     studentDescription: ''
                 },
-                testData: generateTestData(),
-                value: []
+                selected: [],
+                testData: generateTestData()
             }
         },
         methods: {
@@ -294,11 +290,54 @@
             },
             handleChange(value, direction, movedKeys) {
                 console.log(value, direction, movedKeys);
+            },
+            fillApp(){
+                if (this.selected.length > 3){
+                    this.$message.error("仅限选择三位导师作为志愿！")
+                } else {
+                    this.$confirm('请确认填写情况，是否提交?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.appSubmit();
+                        // this.$message.success('已提交');
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '取消提交'
+                        });
+                    });
+                }
+            },
+            appSubmit(){
+                axios
+                    .get("http://localhost:8080/hellomentor/student/fillapp", {
+                        params: {
+                            student_id: '20206660107',
+                            first_app: this.selected[0],
+                            second_app: this.selected[1],
+                            third_app: this.selected[2],
+                            is_selected: 0
+                        }
+                    })
+                    .then(resp => {
+                        this.$message.success('已成功提交');
+                        console.log(resp.data);
+                    })
+            },
+            check() {
+                if (this.selected.length > 3) {
+                    this.$message.error("最多选择三个志愿!")
+                    this.selected.pop();
+                } else {
+                    this.$message.success("选择成功！")
+                }
             }
         },
         mounted() {
             axios
-                .get("http://localhost:8080/hellomentor/student/getall")
+                .get("http://localhost:8080/hellomentor/teacher/getall")
                 .then(resp => {
                     this.tableData = resp.data;
                     console.log(this.tableData);
@@ -309,12 +348,13 @@
             axios
                 .get("http://localhost:8080/hellomentor/student/getapp", {
                     params: {
-                        student_id: '20206660101'//通过登录校验控制
+                        student_id: '20206660103'//通过登录校验控制
                     }
                 })
                 .then(resp => {
                     this.stuAppData = resp.data;
-                    console.log(this.stuAppData);
+                    this.StudentSelected = this.stuAppData.is_selected
+                    console.log(this.StudentSelected);
                 })
                 .catch(err => {
                     console.log(err);

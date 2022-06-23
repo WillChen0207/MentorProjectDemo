@@ -14,7 +14,7 @@ public class TeacherBean {
 
     private Integer gender;
 
-    private String description;
+    private String teacherDescription;
 
     private String password;
 

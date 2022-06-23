@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -124,20 +125,27 @@ public class StudentController {
      * @param third_app
      * @param is_selected
      **/
+    @SneakyThrows
+    @ResponseBody
     @RequestMapping(value = "/fillapp",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView fillApp(@RequestParam("student_id") String student_id,
-                                @RequestParam("first_app") String first_app,
-                                @RequestParam("second_app") String second_app,
-                                @RequestParam("third_app") String third_app,
-                                @RequestParam("is_selected") Integer is_selected){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("studentId",student_id);
-        mav.addObject("firstApp",first_app);
-        mav.addObject("secondApp",second_app);
-        mav.addObject("thirdApp",third_app);
-        mav.addObject("isSelected",is_selected);
-        mav.setViewName("redirect:/application/add");
-        return mav;
+    public List<ApplicationRecord> fillApp(@RequestParam("student_id") String student_id,
+                                           @RequestParam("first_app") String first_app,
+                                           @RequestParam("second_app") String second_app,
+                                           @RequestParam("third_app") String third_app,
+                                           @RequestParam("is_selected") Integer is_selected,
+                                           HttpServletRequest request,
+                                           HttpServletResponse response){
+        List<ApplicationRecord> fillApp = new ArrayList<>();
+        ApplicationRecord appRec = new ApplicationRecord();
+        appRec.setStudentId(student_id);
+        appRec.setFirst_app(first_app);
+        appRec.setSecond_app(second_app);
+        appRec.setThird_app(third_app);
+        appRec.setIs_selected(is_selected);
+        fillApp.add(appRec);
+        request.setAttribute("appRec", appRec);
+        request.getRequestDispatcher("/application/add").forward(request,response);
+        return fillApp;
     }
 
     /**查看导师信息

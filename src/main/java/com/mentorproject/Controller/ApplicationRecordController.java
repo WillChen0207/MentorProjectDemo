@@ -35,27 +35,15 @@ public class ApplicationRecordController {
 
     /**
      * 添加一条志愿提交记录
-     * @param studentId
-     * @param firstApp
-     * @param secondApp
-     * @param thirdApp
-     * @param isSelected
+     * @return
      **/
+    @ResponseBody
     @RequestMapping(value = "/add",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView addAppRec(@RequestParam("studentId") String studentId,
-                                  @RequestParam("firstApp") String firstApp,
-                                  @RequestParam("secondApp") String secondApp,
-                                  @RequestParam("thirdApp") String thirdApp,
-                                  @RequestParam("isSelected") Integer isSelected){
-        ApplicationRecord appRec = new ApplicationRecord();
-        appRec.setStudentId(studentId);
-        appRec.setFirst_app(firstApp);
-        appRec.setSecond_app(secondApp);
-        appRec.setThird_app(thirdApp);
-        appRec.setIs_selected(isSelected);
+    public ApplicationRecord addAppRec(HttpServletRequest request,
+                                       HttpServletResponse response){
+        ApplicationRecord appRec = (ApplicationRecord) request.getAttribute("appRec");
         appRecRep.save(appRec);
-        ModelAndView mav = new ModelAndView("redirect:/application/getall");
-        return mav;
+        return appRec;
     }
 
     /**

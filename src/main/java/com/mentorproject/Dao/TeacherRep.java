@@ -2,7 +2,6 @@ package com.mentorproject.Dao;
 
 
 import com.mentorproject.Entity.*;
-import org.hibernate.sql.Select;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,7 +18,7 @@ public interface TeacherRep extends JpaRepository<Teacher,String> {
      * @return
      */
     @Query(value = "select" +
-            "           teacher_id, teacher_name, gender, description, password" +
+            "           teacher_id, teacher_name, gender, teacher_description, password" +
             "       from " +
             "           mentor.teacher " +
             "       where teacher_id=?1 and password=?2",
@@ -32,7 +31,7 @@ public interface TeacherRep extends JpaRepository<Teacher,String> {
      * @return
      */
     @Query(value = "select " +
-            "           teacher_id, teacher_name, gender, description, password" +
+            "           teacher_id, teacher_name, gender, teacher_description, password" +
             "       from" +
             "           mentor.teacher" +
             "       where " +
