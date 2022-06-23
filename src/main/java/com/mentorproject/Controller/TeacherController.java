@@ -57,20 +57,20 @@ public class TeacherController {
      * @param teacherId
      * @param teacherName
      * @param gender
-     * @param description
+     * @param teacherDescription
      * @param password
      **/
     @RequestMapping(value = "/add",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView addTeacher(@RequestParam("teacherId") String teacherId,
                                    @RequestParam("teacherName") String teacherName,
                                    @RequestParam("gender") Integer gender,
-                                   @RequestParam("description") String description,
+                                   @RequestParam("teacherDescription") String teacherDescription,
                                    @RequestParam("password") String password){
         Teacher teacher = new Teacher();
         teacher.setTeacherId(teacherId);
         teacher.setTeacherName(teacherName);
         teacher.setGender(gender);
-        teacher.setDescription(description);
+        teacher.setTeacherDescription(teacherDescription);
         teacher.setPassword(password);
         teacherRep.save(teacher);
         ModelAndView mav = new ModelAndView("redirect:/teacher/getall");
@@ -98,16 +98,16 @@ public class TeacherController {
     /**
      * 修改导师个人介绍
      * @param teacher_id
-     * @param description
+     * @param teacher_description
      * @return
      */
     @RequestMapping(value = "/updateDescription",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView updateDescription(@RequestParam("teacher_id") String teacher_id,
-                                       @RequestParam("description") String description) {
+                                       @RequestParam("teacher_description") String teacher_description) {
         ModelAndView mav = new ModelAndView();
         Optional<Teacher> op = teacherRep.findById(teacher_id);
         op.ifPresent(teacher -> {
-            teacher.setDescription(description);
+            teacher.setTeacherDescription(teacher_description);
             teacherRep.save(teacher);
         });
         mav.setViewName("redirect:/teacher/getinfo");

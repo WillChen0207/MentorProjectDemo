@@ -1,18 +1,15 @@
 package com.mentorproject.Entity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Teacher {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String teacherId;
     private String teacherName;
     private Integer gender;
-    private String description;
+    private String teacherDescription;
     private String password;
 
     public String getTeacherId() {
@@ -39,12 +36,12 @@ public class Teacher {
         this.gender = gender;
     }
 
-    public String getDescription() {
-        return description;
+    public String getTeacherDescription() {
+        return teacherDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTeacherDescription(String teacherDescription) {
+        this.teacherDescription = teacherDescription;
     }
 
     public String getPassword() {
