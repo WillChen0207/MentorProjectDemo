@@ -16,31 +16,43 @@ public interface ApplicationRecordRep extends JpaRepository<ApplicationRecord,St
             "           mentor.application_record" +
             "       where student_id=?1",
             nativeQuery = true)
-    List<ApplicationRecord> getApplicationRecordByStudentId(String student_id);
+    ApplicationRecord getApplicationRecordByStudentId(String student_id);
 
     @Query(value = "select " +
-            "           student_id, first_app, is_selected" +
+            "           student_id, first_app, teacher_name, is_selected" +
             "       from" +
             "           mentor.application_record" +
+            "       inner join " +
+            "           mentor.teacher " +
+            "       on" +
+            "           teacher.teacher_id = application_record.first_app" +
             "       where student_id=?1",
             nativeQuery = true)
-    List<ApplicationRecord> getFirstApp(String student_id);
+    ApplicationRecord getFirstApp(String student_id);
 
     @Query(value = "select " +
-            "           student_id,  second_app, is_selected" +
+            "           student_id,  second_app, teacher_name, is_selected" +
             "       from" +
             "           mentor.application_record" +
+            "       inner join " +
+            "           mentor.teacher " +
+            "       on" +
+            "           teacher.teacher_id = application_record.second_app" +
             "       where student_id=?1",
             nativeQuery = true)
-    List<ApplicationRecord> getSecondApp(String student_id);
+    ApplicationRecord getSecondApp(String student_id);
 
     @Query(value = "select " +
-            "           student_id, third_app, is_selected" +
+            "           student_id, third_app, teacher_name, is_selected" +
             "       from" +
             "           mentor.application_record" +
+            "       inner join " +
+            "           mentor.teacher " +
+            "       on" +
+            "           teacher.teacher_id = application_record.third_app" +
             "       where student_id=?1",
             nativeQuery = true)
-    List<ApplicationRecord> getThirdApp(String student_id);
+    ApplicationRecord getThirdApp(String student_id);
 
     @Query(value = "select " +
             "           student_id, first_app, second_app, third_app, is_selected" +

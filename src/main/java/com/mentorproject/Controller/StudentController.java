@@ -70,12 +70,15 @@ public class StudentController {
     @ResponseBody
     @RequestMapping(value = "/getapp",method = {RequestMethod.GET,RequestMethod.POST})
     public List<ApplicationRecord> getAppRecByStudentId(@RequestParam("student_id") String student_id,
-                                                  HttpServletRequest request,
-                                                  HttpServletResponse response){
+                                                        HttpServletRequest request,
+                                                        HttpServletResponse response){
         request.setAttribute("student_id", student_id);
         request.getRequestDispatcher("/application/getStudent").forward(request,response);
-        List<ApplicationRecord> appRec = (List<ApplicationRecord>) request.getAttribute("appRec");
-        return appRec;
+        List<ApplicationRecord> appRecList = new ArrayList<>();
+        ApplicationRecord appRec = (ApplicationRecord) request.getAttribute("appRec");
+        appRecList.add(appRec);
+//        System.out.println(appRecList);
+        return appRecList;
     }
 
     /**
@@ -90,9 +93,11 @@ public class StudentController {
                                                         HttpServletRequest request,
                                                         HttpServletResponse response){
         request.setAttribute("student_id", student_id);
-        request.getRequestDispatcher("/application/getStudent").forward(request,response);
-        List<ApplicationRecord> appRec = (List<ApplicationRecord>) request.getAttribute("appRec");
-        return appRec;
+        request.getRequestDispatcher("/application/getFirstApp").forward(request,response);
+        List<ApplicationRecord> appRecList = new ArrayList<>();
+        ApplicationRecord appRec = (ApplicationRecord) request.getAttribute("appRec");
+        appRecList.add(appRec);
+        return appRecList;
     }
 
     /**
@@ -107,9 +112,11 @@ public class StudentController {
                                                HttpServletRequest request,
                                                HttpServletResponse response){
         request.setAttribute("student_id", student_id);
-        request.getRequestDispatcher("/application/getStudent").forward(request,response);
-        List<ApplicationRecord> appRec = (List<ApplicationRecord>) request.getAttribute("appRec");
-        return appRec;
+        request.getRequestDispatcher("/application/getSecondApp").forward(request,response);
+        List<ApplicationRecord> appRecList = new ArrayList<>();
+        ApplicationRecord appRec = (ApplicationRecord) request.getAttribute("appRec");
+        appRecList.add(appRec);
+        return appRecList;
     }
 
     /**
@@ -124,9 +131,11 @@ public class StudentController {
                                                HttpServletRequest request,
                                                HttpServletResponse response){
         request.setAttribute("student_id", student_id);
-        request.getRequestDispatcher("/application/getStudent").forward(request,response);
-        List<ApplicationRecord> appRec = (List<ApplicationRecord>) request.getAttribute("appRec");
-        return appRec;
+        request.getRequestDispatcher("/application/getThirdApp").forward(request,response);
+        List<ApplicationRecord> appRecList = new ArrayList<>();
+        ApplicationRecord appRec = (ApplicationRecord) request.getAttribute("appRec");
+        appRecList.add(appRec);
+        return appRecList;
     }
 
 

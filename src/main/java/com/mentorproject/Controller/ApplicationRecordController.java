@@ -48,10 +48,10 @@ public class ApplicationRecordController {
      **/
     @ResponseBody
     @RequestMapping(value = "/getStudent",method = {RequestMethod.GET,RequestMethod.POST})
-    public List<ApplicationRecord> getAppRecByStudentId(HttpServletRequest request,
+    public ApplicationRecord getAppRecByStudentId(HttpServletRequest request,
                                                         HttpServletResponse response){
         String student_id = (String) request.getAttribute("student_id");
-        List<ApplicationRecord> appRec = appRecRep.getApplicationRecordByStudentId(student_id);
+        ApplicationRecord appRec = appRecRep.getApplicationRecordByStudentId(student_id);
         request.setAttribute("appRec", appRec);
         return appRec;
     }
@@ -61,11 +61,10 @@ public class ApplicationRecordController {
      **/
     @ResponseBody
     @RequestMapping(value = "/getFirstApp",method = {RequestMethod.GET,RequestMethod.POST})
-    public List<ApplicationRecord> getFirstApp(HttpServletRequest request,
+    public ApplicationRecord getFirstApp(HttpServletRequest request,
                                                HttpServletResponse response){
         String student_id = (String) request.getAttribute("student_id");
-        List<ApplicationRecord> appRec = appRecRep.getFirstApp(student_id);
-        request.setAttribute("appRec", appRec);
+        ApplicationRecord appRec = appRecRep.getFirstApp(student_id);
         return appRec;
     }
 
@@ -74,10 +73,10 @@ public class ApplicationRecordController {
      **/
     @ResponseBody
     @RequestMapping(value = "/getSecondApp",method = {RequestMethod.GET,RequestMethod.POST})
-    public List<ApplicationRecord> getSecondApp(HttpServletRequest request,
+    public ApplicationRecord getSecondApp(HttpServletRequest request,
                                                HttpServletResponse response){
         String student_id = (String) request.getAttribute("student_id");
-        List<ApplicationRecord> appRec = appRecRep.getSecondApp(student_id);
+        ApplicationRecord appRec = appRecRep.getSecondApp(student_id);
         request.setAttribute("appRec", appRec);
         return appRec;
     }
@@ -87,10 +86,10 @@ public class ApplicationRecordController {
      **/
     @ResponseBody
     @RequestMapping(value = "/getThirdApp",method = {RequestMethod.GET,RequestMethod.POST})
-    public List<ApplicationRecord> getThirdApp(HttpServletRequest request,
+    public ApplicationRecord getThirdApp(HttpServletRequest request,
                                                HttpServletResponse response){
         String student_id = (String) request.getAttribute("student_id");
-        List<ApplicationRecord> appRec = appRecRep.getThirdApp(student_id);
+        ApplicationRecord appRec = appRecRep.getThirdApp(student_id);
         request.setAttribute("appRec", appRec);
         return appRec;
     }

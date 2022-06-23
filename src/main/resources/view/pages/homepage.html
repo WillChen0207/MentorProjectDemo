@@ -28,7 +28,7 @@
                 <i class="el-icon-setting" style="margin-right: 15px"></i>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item>登出</el-dropdown-item>
-                    <el-dropdown-item>更改用户</el-dropdown-item>
+                    <el-dropdown-item @click="pageApp.StudentId='20206660102'">更改用户</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
             <el-avatar icon="el-icon-user-solid"></el-avatar>
@@ -65,7 +65,7 @@
                             <el-dialog title="个人信息" :visible.sync="dialogVisible">
                                 <el-form :model="form">
                                     <el-form-item label="姓名">
-                                        <el-input v-model="form.studentName" autocomplete="off"></el-input>
+                                        <el-input v-model="form.studentName" autocomplete="off" disabled></el-input>
                                     </el-form-item>
                                     <el-form-item label="个人介绍">
                                         <el-input v-model="form.studentDescription" autocomplete="off" type="textarea"></el-input>
@@ -73,7 +73,7 @@
                                 </el-form>
                                 <div slot="footer" class="dialog-footer">
                                     <el-button @click="dialogVisible=false;cancelForm();">取 消</el-button>
-                                    <el-button type="primary" @click="dialogVisible=false;submitForm('form');">确 定</el-button>
+                                    <el-button type="primary" @click="dialogVisible=false;submitForm();">确 定</el-button>
                                 </div>
                             </el-dialog>
                         </div>
@@ -104,8 +104,8 @@
                             <i class="el-icon-tickets"></i>
                             志愿匹配状态
                         </template>
-                        <el-tag size="small" type="warning" v-if="{ StudentSelected } !== 0">未完成匹配</el-tag>
-                        <el-tag size="small" type="success" v-if="{ StudentSelected } === 0">已完成匹配</el-tag>
+                        <el-tag size="small" type="warning" v-if="StudentSelected === 0">未完成匹配</el-tag>
+                        <el-tag size="small" type="success" v-if="StudentSelected === 1">已完成匹配</el-tag>
                     </el-descriptions-item>
                     <el-descriptions-item>
                         <template slot="label">
@@ -119,7 +119,7 @@
             <transition name="el-fade-in">
                 <div v-if="seen21">
                     <el-table
-                            :data="stuAppData"
+                            :data="stuAppDataList"
                             :fit="true"
                             stripe>
                         <el-table-column
@@ -177,7 +177,7 @@
                                 label: 'desc'
                             }"
                             target-order="push"
-                            @change="check(right)"
+                            @change="check()"
                             :data="testData">
                         <el-button type="primary" class="transfer-footer" slot="right-footer" size="small" @click="fillApp()">保存</el-button>
                     </el-transfer>
@@ -250,24 +250,29 @@
                 return testData;
             }
             return {
-                isRouterAlive:true,
                 activeIndex: '1',
                 activeIndex2: '1',
+
                 seen1: true,
                 seen21: false,
                 seen22: false,
                 seen4: false,
-                stuAppData: [],
+
+                stuAppDataList: [],
+                stuAppData: {
+                    first_app: '',
+                    second_app: '',
+                    third_app: '',
+                    is_selected: 0,
+                },
                 tableData: [],
 
-                StudentId: '',
+                StudentId: '20206660101',
                 StudentName: '',
-                StudentGender: 0,
                 StudentDescription: '',
                 StudentGPA: 0,
-                StudentPassword: '',
 
-                StudentSelected: 0,
+                StudentSelected: '',
                 dialogVisible: false,
                 form: {
                     studentName: '',
@@ -281,16 +286,11 @@
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
             },
-            submitForm(formName) {
-                console.log(this.$refs[formName]);
+            submitForm() {
                 axios
-                    .get("http://localhost:8080/hellomentor/student/add", {
+                    .get("http://localhost:8080/hellomentor/student/updateInfo", {
                         params: {
                             student_id: this.StudentId,
-                            student_name: this.form.studentName,
-                            gender: this.StudentGender,
-                            gpa: this.StudentGPA,
-                            password: this.StudentPassword,
                             student_description: this.form.studentDescription
                         }
                     })
@@ -318,7 +318,6 @@
                         type: 'warning'
                     }).then(() => {
                         this.appSubmit();
-                        // this.$message.success('已提交');
                     }).catch(() => {
                         this.$message({
                             type: 'info',
@@ -328,6 +327,9 @@
                 }
             },
             appSubmit(){
+                for (let i = this.selected.length; i < 3; i++){
+                    this.selected[i] = '';
+                }
                 axios
                     .get("http://localhost:8080/hellomentor/student/fillapp", {
                         params: {
@@ -340,7 +342,8 @@
                     })
                     .then(resp => {
                         this.$message.success('已成功提交！');
-                        console.log(resp.data);
+                        this.selected = [];
+                        // console.log(resp.data);
                     })
             },
             check() {
@@ -350,10 +353,6 @@
                 } else {
                     this.$message.success("选择成功！")
                 }
-            },
-            reload(){
-                this.isRouterAlive=false
-                this.$nextTick(()=>this.isRouterAlive=true)
             }
         },
         mounted() {
@@ -366,6 +365,7 @@
                 .catch(err => {
                     console.log(err);
                 })
+
             axios
                 .get("http://localhost:8080/hellomentor/student/getapp", {
                     params: {
@@ -374,25 +374,64 @@
                 })
                 .then(resp => {
                     this.stuAppData = resp.data;
-                    this.StudentSelected = resp.data.is_selected
-                    console.log(this.StudentSelected);
+                    this.stuAppDataList.push(this.stuAppData);
+                    // this.stuAppData.is_selected = resp.data.is_selected;
+                    this.StudentSelected = resp.data.is_selected;
                 })
                 .catch(err => {
                     console.log(err);
                 })
+
+            // axios
+            //     .get("http://localhost:8080/hellomentor/student/getfirstapp", {
+            //         params: {
+            //             student_id: '20206660103'//通过登录校验控制
+            //         }
+            //     })
+            //     .then(resp => {
+            //         this.stuAppData.first_app = resp.data.first_app;
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     })
+            //
+            // axios
+            //     .get("http://localhost:8080/hellomentor/student/getsecondapp", {
+            //         params: {
+            //             student_id: '20206660103'//通过登录校验控制
+            //         }
+            //     })
+            //     .then(resp => {
+            //         this.stuAppData.second_app = resp.data.second_app;
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     })
+            //
+            // axios
+            //     .get("http://localhost:8080/hellomentor/student/getthirdapp", {
+            //         params: {
+            //             student_id: '20206660103'//通过登录校验控制
+            //         }
+            //     })
+            //     .then(resp => {
+            //         this.stuAppData.third_app = resp.data.third_app;
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     })
+
             axios
                 .get("http://localhost:8080/hellomentor/student/getinfo", {
                     params: {
-                        student_id: '20206660101'//通过登录校验控制
+                        student_id: this.StudentId//通过登录校验控制
                     }
                 })
                 .then(resp => {
                     this.StudentId = resp.data.studentId;
                     this.StudentName = resp.data.studentName;
                     this.StudentGPA = resp.data.gpa;
-                    this.StudentGender = resp.data.gender;
                     this.StudentDescription = resp.data.studentDescription;
-                    this.StudentPassword = resp.data.password;
 
                     this.form.studentName = resp.data.studentName;
                     this.form.studentDescription = resp.data.studentDescription;
