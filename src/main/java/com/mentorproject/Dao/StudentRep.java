@@ -42,7 +42,6 @@ public interface StudentRep extends JpaRepository<Student,String> {
             "           student_id = ?1",
             nativeQuery = true)
     Student getInfo(String student_id);
-
     /**查看私信
      *
      * @param receiver
