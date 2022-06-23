@@ -2,9 +2,11 @@ package com.mentorproject.Controller;
 
 
 import com.mentorproject.Dao.MessageRep;
+import com.mentorproject.Dao.ResultRep;
 import com.mentorproject.Dao.StudentRep;
 import com.mentorproject.Entity.ApplicationRecord;
 import com.mentorproject.Entity.Message;
+import com.mentorproject.Entity.Result;
 import com.mentorproject.Entity.Student;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,8 @@ public class StudentController {
     @Autowired
     private StudentRep studentRep;
     private MessageRep messageRep;
+    @Autowired
+    private ResultRep resultRep;
 
     public StudentController(MessageRep messageRep) {
         this.messageRep = messageRep;
@@ -234,7 +238,7 @@ public class StudentController {
     }
 
     /**修改个人简介
-     * 
+     *
      * @param student_id
      * @param student_description
      * @return
@@ -256,12 +260,10 @@ public class StudentController {
      * @param student_id
      * @return
      */
+    @ResponseBody
     @RequestMapping(value = "/checkMessage",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView checkMessage(@RequestParam("student_id") String student_id){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("messageList",studentRep.checkMessage(student_id));
-        mav.setViewName("errorpage");
-        return mav;
+    public List<Message> checkMessage(@RequestParam("student_id") String student_id){
+        return messageRep.checkMessage(student_id);
     }
 
     /**向指定导师发送私信
@@ -270,6 +272,7 @@ public class StudentController {
      * @param teacher_id
      * @param messageinfo
      */
+    @ResponseBody
     @RequestMapping(value = "/sendMessage",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView sendMessage(@RequestParam("student_id") String student_id,
                                      @RequestParam("teacher_id") String teacher_id,
@@ -281,7 +284,7 @@ public class StudentController {
         messageRec.setMessage(messageinfo);
         messageRec.setIsRead(0);
         messageRep.save(messageRec);
-        mav.addObject("seccessmessage","发送成功");
+        mav.addObject("successmessage","发送成功");
         mav.setViewName("errorpage");
         return mav;
     }
@@ -290,10 +293,9 @@ public class StudentController {
      *
      * @param student_id
      */
+    @ResponseBody
     @RequestMapping(value = "/checkResult",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView checkResult(@RequestParam("student_id") String student_id){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("resultList",studentRep.checkResult(student_id));
-        return mav;
+    public List<Result> checkResult(@RequestParam("student_id") String student_id){
+        return resultRep.checkResult(student_id);
     }
 }
