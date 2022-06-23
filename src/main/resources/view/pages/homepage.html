@@ -45,22 +45,38 @@
                     background-color="#545c64"
                     text-color="#fff"
                     active-text-color="#ffd04b">
-                <el-menu-item index="1" @click="seen1=true;seen21=false;seen4=false">个人信息</el-menu-item>
+                <el-menu-item index="1" @click="seen1=true;seen21=false;seen22=false;seen4=false">个人信息</el-menu-item>
                 <el-submenu index="2">
                     <template slot="title">志愿管理</template>
-                    <el-menu-item index="2-1" @click="seen1=false;seen21=true;seen4=false">查看志愿</el-menu-item>
-                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen4=false">填写志愿</el-menu-item>
+                    <el-menu-item index="2-1" @click="seen1=false;seen21=true;seen22=false;seen4=false">查看志愿</el-menu-item>
+                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen4=false">填写志愿</el-menu-item>
                 </el-submenu>
                 <el-menu-item index="3" disabled>消息中心</el-menu-item>
-                <el-menu-item index="4" @click="seen1=false;seen21=false;seen4=true">导师列表</el-menu-item>
+                <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen4=true">导师列表</el-menu-item>
             </el-menu>
         </el-header>
 
         <el-main>
             <transition name="el-fade-in">
-                <el-descriptions v-if="seen1" class="margin-top" title="个人信息" :column="3" :size="size" border>
+                <el-descriptions v-if="seen1" class="margin-top" title="个人信息" :column="3" border>
                     <template slot="extra">
-                        <el-button type="primary" size="small">修改</el-button>
+                        <div>
+                            <el-button type="primary" size="small" @click="dialogVisible=true">修改</el-button>
+                            <el-dialog title="个人信息" :visible.sync="dialogVisible">
+                                <el-form :model="form">
+                                    <el-form-item label="姓名">
+                                        <el-input v-model="form.stduentName" autocomplete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="个人介绍">
+                                        <el-input v-model="form.stduentDescription" autocomplete="off"></el-input>
+                                    </el-form-item>
+                                </el-form>
+                                <div slot="footer" class="dialog-footer">
+                                    <el-button @click="dialogVisible=false;cancelForm();">取 消</el-button>
+                                    <el-button type="primary" @click="dialogVisible=false;submitForm('form');">确 定</el-button>
+                                </div>
+                            </el-dialog>
+                        </div>
                     </template>
                     <el-descriptions-item>
                         <template slot="label">
@@ -141,10 +157,28 @@
                                 prop="is_selected"
                                 label="是否已被选">
                             <template slot-scope="scope">
-                                {{scope.row.is_selected}}
+                                {{scope.row.is_selected === 0 ? '否' : '是'}}
                             </template>
                         </el-table-column>
                     </el-table>
+                </div>
+            </transition>
+            <transition name="el-fade-in">
+                <div v-if="seen22">
+                    <el-transfer
+                            style="text-align: left; display: inline-block"
+                            v-model="value"
+                            filterable
+                            :titles="['导师列表', '志愿列表']"
+                            :button-texts="['撤销选择', '添加选择']"
+                            :props="{
+                                key: 'value',
+                                label: 'desc'
+                            }"
+                            target-order="push"
+                            :data="testData">
+                        <el-button type="primary" class="transfer-footer" slot="right-footer" size="small">保存</el-button>
+                    </el-transfer>
                 </div>
             </transition>
             <transition name="el-fade-in">
@@ -210,32 +244,67 @@
 
     var pageApp = new Vue({
         data() {
+            const generateTestData = _ => {
+                var testData = [];
+                for (let i = 1; i <= 10; i++) {
+                    testData.push({
+                        value: i,
+                        desc: '备选项' + i,
+                        disabled: false
+                    })
+                }
+                return testData;
+            }
             return {
                 activeIndex: '1',
                 activeIndex2: '1',
                 seen1: true,
                 seen21: false,
+                seen22: false,
                 seen4: false,
                 stuAppData: [],
                 tableData: [],
                 StudentName: '',
-                StudentDescription: ''
+                StudentDescription: '',
+                dialogVisible: false,
+                form: {
+                    studentName: '',
+                    studentDescription: ''
+                },
+                testData: generateTestData(),
+                value: []
             }
         },
         methods: {
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
+            },
+            submitForm(formName) {
+                console.log(this.$refs[formName]);
+                this.$message({
+                    message: '提交成功',
+                    type: 'success'
+                });
+            },
+            cancelForm() {
+                this.$message({
+                    message: '取消提交',
+                    type: 'warning'
+                })
+            },
+            handleChange(value, direction, movedKeys) {
+                console.log(value, direction, movedKeys);
             }
         },
         mounted() {
             axios
                 .get("http://localhost:8080/hellomentor/student/getall")
                 .then(resp => {
-                    this.tableData = resp.data
-                    console.log(this.tableData)
+                    this.tableData = resp.data;
+                    console.log(this.tableData);
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.log(err);
                 })
             axios
                 .get("http://localhost:8080/hellomentor/student/getapp", {
@@ -244,11 +313,11 @@
                     }
                 })
                 .then(resp => {
-                    this.stuAppData = resp.data
-                    console.log(this.stuAppData)
+                    this.stuAppData = resp.data;
+                    console.log(this.stuAppData);
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.log(err);
                 })
             axios
                 .get("http://localhost:8080/hellomentor/student/getinfo", {
@@ -261,7 +330,7 @@
                     this.StudentDescription = resp.data.studentDescription;
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.log(err);
                 })
         }
     })
