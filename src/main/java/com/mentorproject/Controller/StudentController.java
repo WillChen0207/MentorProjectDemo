@@ -10,6 +10,11 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -164,17 +169,34 @@ public class StudentController {
      * @param password
      * @return
      */
+    @ResponseBody
     @RequestMapping(value = "/updatePassword",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView updatePassword(@RequestParam("student_id") String student_id,
+    public Student updatePassword(@RequestParam("student_id") String student_id,
                                        @RequestParam("password") String password) {
-        ModelAndView mav = new ModelAndView();
         Optional<Student> op = studentRep.findById(student_id);
         op.ifPresent(student -> {
             student.setPassword(password);
             studentRep.save(student);
         });
-        mav.setViewName("redirect:/student/getinfo");
-        return mav;
+        return studentRep.getInfo(student_id);
+    }
+
+    /**修改个人简介
+     * 
+     * @param student_id
+     * @param student_description
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/updateInfo",method = {RequestMethod.GET,RequestMethod.POST})
+    public Student updateInfo(@RequestParam("student_id") String student_id,
+                              @RequestParam("student_description") String student_description){
+        Optional<Student> op = studentRep.findById(student_id);
+        op.ifPresent(student -> {
+            student.setStudentDescription(student_description);
+            studentRep.save(student);
+        });
+        return studentRep.getInfo(student_id);
     }
 
     /**查看私信

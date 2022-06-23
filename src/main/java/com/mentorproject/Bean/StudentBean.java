@@ -18,4 +18,6 @@ public class StudentBean {
 
     private String password;
 
+    private String studentDescription;
+
 }
