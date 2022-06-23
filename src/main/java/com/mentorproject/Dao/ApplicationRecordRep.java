@@ -41,4 +41,12 @@ public interface ApplicationRecordRep extends JpaRepository<ApplicationRecord,St
             "       where student_id=?1",
             nativeQuery = true)
     List<ApplicationRecord> getThirdApp(String student_id);
+
+    @Query(value = "select " +
+            "           student_id, first_app, second_app, third_app, is_selected" +
+            "       from" +
+            "           mentor.application_record" +
+            "       where student_id=?1",
+            nativeQuery = true)
+    ApplicationRecord select(String student_id);
 }

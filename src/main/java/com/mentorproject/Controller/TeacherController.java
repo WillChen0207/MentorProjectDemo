@@ -3,9 +3,11 @@ package com.mentorproject.Controller;
 
 import com.mentorproject.Dao.ApplicationRecordRep;
 import com.mentorproject.Dao.MessageRep;
+import com.mentorproject.Dao.ResultRep;
 import com.mentorproject.Dao.TeacherRep;
 import com.mentorproject.Entity.ApplicationRecord;
 import com.mentorproject.Entity.Message;
+import com.mentorproject.Entity.Result;
 import com.mentorproject.Entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,7 @@ public class TeacherController {
     @Autowired
     private TeacherRep teacherRep;
     private MessageRep messageRep;
+    private ResultRep resultRep;
     private ApplicationRecordRep applicationRecordRep;
 
     public TeacherController(MessageRep messageRep){
@@ -45,11 +48,8 @@ public class TeacherController {
      * @return
      */
     @RequestMapping(value = "/getinfo",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView getTeacherInfo (@RequestParam("teacher_id") String teacher_id){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("teacherList",teacherRep.getInfo(teacher_id));
-        mav.setViewName("teachershow");
-        return mav;
+    public Teacher getTeacherInfo (@RequestParam("teacher_id") String teacher_id){
+        return teacherRep.getInfo(teacher_id);
     }
 
     /**
@@ -102,16 +102,14 @@ public class TeacherController {
      * @return
      */
     @RequestMapping(value = "/updateDescription",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView updateDescription(@RequestParam("teacher_id") String teacher_id,
+    public Teacher updateDescription(@RequestParam("teacher_id") String teacher_id,
                                        @RequestParam("teacher_description") String teacher_description) {
-        ModelAndView mav = new ModelAndView();
         Optional<Teacher> op = teacherRep.findById(teacher_id);
         op.ifPresent(teacher -> {
             teacher.setTeacherDescription(teacher_description);
             teacherRep.save(teacher);
         });
-        mav.setViewName("redirect:/teacher/getinfo");
-        return mav;
+        return teacherRep.getInfo(teacher_id);
     }
 
 
@@ -122,16 +120,14 @@ public class TeacherController {
      * @return
      */
     @RequestMapping(value = "/updatePassword",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView updatePassword(@RequestParam("teacher_id") String teacher_id,
+    public Teacher updatePassword(@RequestParam("teacher_id") String teacher_id,
                                        @RequestParam("password") String password) {
-        ModelAndView mav = new ModelAndView();
         Optional<Teacher> op = teacherRep.findById(teacher_id);
         op.ifPresent(teacher -> {
             teacher.setPassword(password);
             teacherRep.save(teacher);
         });
-        mav.setViewName("redirect:/teacher/getinfo");
-        return mav;
+        return teacherRep.getInfo(teacher_id);
     }
 
 
@@ -141,11 +137,9 @@ public class TeacherController {
      * @return
      */
     @RequestMapping(value = "/checkMessage",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView checkMessage(@RequestParam("teacher_id") String teacher_id){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("messageList",teacherRep.checkMessage(teacher_id));
-        mav.setViewName("errorpage");
-        return mav;
+    public List<Message> checkMessage(@RequestParam("teacher_id") String teacher_id){
+
+        return messageRep.checkMessage(teacher_id);
     }
 
     /**向指定学生发送私信
@@ -176,10 +170,8 @@ public class TeacherController {
      * @param teacher_id
      */
     @RequestMapping(value = "/checkResult",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView checkResult(@RequestParam("teacher_id") String teacher_id){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("resultList",teacherRep.checkResult(teacher_id));
-        return mav;
+    public List<Result> checkResult(@RequestParam("teacher_id") String teacher_id){
+        return resultRep.checkResult(teacher_id);
     }
 
     /**
@@ -187,10 +179,8 @@ public class TeacherController {
      * @param teacher_id
      */
     @RequestMapping(value = "/selectStudent",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView selectStudent(@RequestParam("teacher_id") String teacher_id){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("selectList",teacherRep.selectStudent(teacher_id));
-        return mav;
+    public List<Result> selectStudent(@RequestParam("teacher_id") String teacher_id){
+        return resultRep.selectStudent(teacher_id);
     }
 
     /**
@@ -199,16 +189,14 @@ public class TeacherController {
      * @param is_selected
      * */
     @RequestMapping(value = "/updateSelect",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView updateSelect(@RequestParam("student_id") String student_id,
+    public ApplicationRecord updateSelect(@RequestParam("student_id") String student_id,
                                      @RequestParam("is_selected") Integer is_selected) {
-        ModelAndView mav = new ModelAndView();
         Optional<ApplicationRecord> op = applicationRecordRep.findById(student_id);
         op.ifPresent(applicationRecord -> {
             applicationRecord.setIs_selected(is_selected);
             applicationRecordRep.save(applicationRecord);
         });
-        mav.setViewName("redirect:/teacher/selectStudent");
-        return mav;
+        return applicationRecordRep.select(student_id);
     }
 
 

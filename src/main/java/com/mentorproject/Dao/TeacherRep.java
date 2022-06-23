@@ -37,7 +37,7 @@ public interface TeacherRep extends JpaRepository<Teacher,String> {
             "       where " +
             "           teacher_id = ?1",
             nativeQuery = true)
-    List<Teacher> getInfo(String teacher_id);
+    Teacher getInfo(String teacher_id);
 
     /**查看私信
      *
@@ -75,19 +75,4 @@ public interface TeacherRep extends JpaRepository<Teacher,String> {
             nativeQuery = true)
     List<Result> checkResult(String teacher_id);
 
-
-    /**
-     * 查看可以选择的学生
-     */
-    @Query(value = "select student_name" +
-            "       from mentormatch " +
-            "       join student " +
-            "       on mentormatch.student_id = student.student_id" +
-            "       join application_record" +
-            "       on mentormatch.student_id = application_record.student_id" +
-            "       join teacher" +
-            "       on mentormatch.teacher_id = teacher.teacher_id" +
-            "       where mentormatch.teacher_id = ?1 and is_selected=0",
-            nativeQuery = true)
-    List<Mentormatch> selectStudent(String teacher_id);
 }
