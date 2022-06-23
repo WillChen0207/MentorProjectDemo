@@ -62,7 +62,7 @@ public class ApplicationRecordController {
      * 查询第一志愿信息
      **/
     @ResponseBody
-    @RequestMapping(value = "/getStudent",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/getFirstApp",method = {RequestMethod.GET,RequestMethod.POST})
     public List<ApplicationRecord> getFirstApp(HttpServletRequest request,
                                                         HttpServletResponse response){
         String student_id = (String) request.getAttribute("student_id");
@@ -75,7 +75,7 @@ public class ApplicationRecordController {
      * 查询第二志愿信息
      **/
     @ResponseBody
-    @RequestMapping(value = "/getStudent",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/getSecondApp",method = {RequestMethod.GET,RequestMethod.POST})
     public List<ApplicationRecord> getSecondApp(HttpServletRequest request,
                                                HttpServletResponse response){
         String student_id = (String) request.getAttribute("student_id");
@@ -88,7 +88,7 @@ public class ApplicationRecordController {
      * 查询第三志愿信息
      **/
     @ResponseBody
-    @RequestMapping(value = "/getStudent",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/getThirdApp",method = {RequestMethod.GET,RequestMethod.POST})
     public List<ApplicationRecord> getThirdApp(HttpServletRequest request,
                                                HttpServletResponse response){
         String student_id = (String) request.getAttribute("student_id");
