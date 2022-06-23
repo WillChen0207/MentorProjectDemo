@@ -272,7 +272,18 @@
                     studentDescription: ''
                 },
                 testData: generateTestData(),
-                value: []
+                value: [],
+                seen: false,
+                tableHeader: [
+                    { key: 'studentId', label: '学号' },
+                    { key: 'studentName', label: '姓名' },
+                    { key: 'gender', label: '性别' },
+                    { key: 'gpa', label: '绩点' },
+                    { key: 'password', label: '密码'}
+                ],
+                tableData: [
+                ],
+                UserName: 'Will'//Shall be set as UserName
             }
         },
         methods: {
@@ -328,6 +339,8 @@
                 .then(resp => {
                     this.StudentName = resp.data.studentName;
                     this.StudentDescription = resp.data.studentDescription;
+                    console.log(resp)
+                    this.tableData = resp.data
                 })
                 .catch(err => {
                     console.log(err);
