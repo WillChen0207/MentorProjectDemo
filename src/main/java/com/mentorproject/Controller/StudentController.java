@@ -5,6 +5,7 @@ import com.mentorproject.Dao.MessageRep;
 import com.mentorproject.Dao.StudentRep;
 import com.mentorproject.Entity.ApplicationRecord;
 import com.mentorproject.Entity.Message;
+import com.mentorproject.Entity.Result;
 import com.mentorproject.Entity.Student;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,13 +79,18 @@ public class StudentController {
      * @param password
      * @param student_description
     **/
+    @SneakyThrows
+    @ResponseBody
     @RequestMapping(value = "/add",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView addStudent(@RequestParam("student_id") String student_id,
+    public List<Student> addStudent(@RequestParam("student_id") String student_id,
                                    @RequestParam("student_name") String student_name,
                                    @RequestParam("gender") Integer gender,
                                    @RequestParam("gpa") Double gpa,
                                    @RequestParam("password") String password,
-                                   @RequestParam("student_description") String student_description){
+                                   @RequestParam("student_description") String student_description,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response){
+        List<Student> addStudent = new ArrayList<>();
         Student student = new Student();
         student.setStudentId(student_id);
         student.setStudentName(student_name);
@@ -92,8 +99,9 @@ public class StudentController {
         student.setPassword(password);
         student.setStudentDescription(student_description);
         studentRep.save(student);
-        ModelAndView mav = new ModelAndView("redirect:/student/getall");
-        return mav;
+        request.setAttribute("student", student);
+        request.getRequestDispatcher("/student/add").forward(request,response);
+        return addStudent;
     }
 
     /**
@@ -101,19 +109,22 @@ public class StudentController {
      * @param student_id
      * @param password
      **/
+    @SneakyThrows
+    @ResponseBody
     @RequestMapping(value = "/login",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView logCheck(@RequestParam("student_id") String student_id,
-                                 @RequestParam("password") String password){
+    public List<Student> logCheck(@RequestParam("student_id") String student_id,
+                                 @RequestParam("password") String password,
+                                  HttpServletRequest request,
+                                  HttpServletResponse response){
         List<Student> studentList = studentRep.logCheck(student_id,password);
-        ModelAndView mav = new ModelAndView();
         if (studentList.isEmpty()) {
-            mav.addObject("errmessage","输入的学号或密码有误");
-            mav.setViewName("errorpage");
+            request.setAttribute("errmessage","输入的学号或密码有误");
+            request.getRequestDispatcher("/error").forward(request,response);
         }else {
-            mav.addObject("studentList",studentList);
-            mav.setViewName("studentshow");
+            request.setAttribute("studentList",studentList);
+            request.getRequestDispatcher("/student").forward(request,response);
         }
-        return mav;
+        return studentList;
     }
 
     /**
@@ -124,20 +135,27 @@ public class StudentController {
      * @param third_app
      * @param is_selected
      **/
+    @SneakyThrows
+    @ResponseBody
     @RequestMapping(value = "/fillapp",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView fillApp(@RequestParam("student_id") String student_id,
-                                @RequestParam("first_app") String first_app,
-                                @RequestParam("second_app") String second_app,
-                                @RequestParam("third_app") String third_app,
-                                @RequestParam("is_selected") Integer is_selected){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("studentId",student_id);
-        mav.addObject("firstApp",first_app);
-        mav.addObject("secondApp",second_app);
-        mav.addObject("thirdApp",third_app);
-        mav.addObject("isSelected",is_selected);
-        mav.setViewName("redirect:/application/add");
-        return mav;
+    public List<ApplicationRecord> fillApp(@RequestParam("student_id") String student_id,
+                                           @RequestParam("first_app") String first_app,
+                                           @RequestParam("second_app") String second_app,
+                                           @RequestParam("third_app") String third_app,
+                                           @RequestParam("is_selected") Integer is_selected,
+                                           HttpServletRequest request,
+                                           HttpServletResponse response){
+        List<ApplicationRecord> fillApp = new ArrayList<>();
+        ApplicationRecord appRec = new ApplicationRecord();
+        appRec.setStudentId(student_id);
+        appRec.setFirst_app(first_app);
+        appRec.setSecond_app(second_app);
+        appRec.setThird_app(third_app);
+        appRec.setIs_selected(is_selected);
+        fillApp.add(appRec);
+        request.setAttribute("appRec", appRec);
+        request.getRequestDispatcher("/application/add").forward(request,response);
+        return fillApp;
     }
 
     /**查看导师信息
@@ -156,17 +174,24 @@ public class StudentController {
      * @param password
      * @return
      */
+    @SneakyThrows
+    @ResponseBody
     @RequestMapping(value = "/updatePassword",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView updatePassword(@RequestParam("student_id") String student_id,
-                                       @RequestParam("password") String password) {
-        ModelAndView mav = new ModelAndView();
+    public List<Student> updatePassword(@RequestParam("student_id") String student_id,
+                                       @RequestParam("password") String password,
+                                        HttpServletRequest request,
+                                        HttpServletResponse response
+    ) {
+        //ModelAndView mav = new ModelAndView();
+        List<Student> updatePassword = new ArrayList<>();
         Optional<Student> op = studentRep.findById(student_id);
         op.ifPresent(student -> {
             student.setPassword(password);
             studentRep.save(student);
         });
-        mav.setViewName("redirect:/student/getinfo");
-        return mav;
+        //mav.setViewName("redirect:/student/getinfo");
+        request.getRequestDispatcher("/student/getinfo").forward(request,response);
+        return updatePassword;
     }
 
     /**查看私信
@@ -174,12 +199,17 @@ public class StudentController {
      * @param student_id
      * @return
      */
+    @SneakyThrows
+    @ResponseBody
     @RequestMapping(value = "/checkMessage",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView checkMessage(@RequestParam("student_id") String student_id){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("messageList",studentRep.checkMessage(student_id));
-        mav.setViewName("errorpage");
-        return mav;
+    public List<Message> checkMessage(@RequestParam("student_id") String student_id,
+                                      HttpServletRequest request,
+                                      HttpServletResponse response){
+        //ModelAndView mav = new ModelAndView();
+        request.setAttribute("student_id",student_id);
+        request.getRequestDispatcher("/student/checkMessage").forward(request,response);
+        List<Message> checkRec = (List<Message>) request.getAttribute("checkRec");
+        return checkRec;
     }
 
     /**向指定导师发送私信
@@ -188,30 +218,41 @@ public class StudentController {
      * @param teacher_id
      * @param messageinfo
      */
+    @SneakyThrows
+    @ResponseBody
     @RequestMapping(value = "/sendMessage",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView sendMessage(@RequestParam("student_id") String student_id,
+    public List<Message> sendMessage(@RequestParam("student_id") String student_id,
                                      @RequestParam("teacher_id") String teacher_id,
-                                     @RequestParam("messageinfo") String messageinfo){
-        ModelAndView mav = new ModelAndView();
+                                     @RequestParam("messageinfo") String messageinfo,
+                                     HttpServletRequest request,
+                                     HttpServletResponse response){
+        List<Message> sendMessage = new ArrayList<>();
         Message messageRec = new Message();
         messageRec.setSender(student_id);
         messageRec.setReceiver(teacher_id);
         messageRec.setMessage(messageinfo);
         messageRec.setIsRead(0);
         messageRep.save(messageRec);
-        mav.addObject("seccessmessage","发送成功");
-        mav.setViewName("errorpage");
-        return mav;
+        request.setAttribute("messageRec", messageRec);
+        request.getRequestDispatcher("/application/add").forward(request,response);
+//        mav.addObject("seccessmessage","发送成功");
+//        mav.setViewName("errorpage");
+        return sendMessage;
     }
 
     /**查询双选结果
      *
      * @param student_id
      */
+    @SneakyThrows
+    @ResponseBody
     @RequestMapping(value = "/checkResult",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView checkResult(@RequestParam("student_id") String student_id){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("resultList",studentRep.checkResult(student_id));
-        return mav;
+    public List<Result> checkResult(@RequestParam("student_id") String student_id,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response){
+        request.setAttribute("student_id",student_id);
+        request.getRequestDispatcher("/student/checkResult").forward(request,response);
+        List<Result> resultRec = (List<Result>) request.getAttribute("resultRec");
+        return resultRec;
     }
 }
