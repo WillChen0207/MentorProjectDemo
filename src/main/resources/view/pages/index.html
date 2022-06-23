@@ -61,72 +61,71 @@
 </head>
 
 <body>
-<el-container style="height: 100%; border: 1px solid #000000" id="App">
-  <el-header style="font-size: 25px">
-    <i class="el-icon-s-promotion" style="margin-left: 15px;"></i>
-    <el-link href="https://www.baidu.com" target="_blank">导师制双向选择系统</el-link>
-  </el-header>
-  <el-main>
-    <el-row gutter="20">
-      <el-col :span="14">
-        <template>
-          <div class="block">
-            <el-carousel height="500px">
-              <el-carousel-item v-for="item in 4" :key="item">
-                <h3 class="small">{{ item }}</h3>
-              </el-carousel-item> </el-carousel>
-          </div>
-        </template>
-      </el-col>
-      <el-col :span="10">
-        <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item>
-            <h3>用户登录</h3>
-          </el-form-item>
-          <el-form-item label="账号">
-            <el-input ></el-input><!--v-mode去掉了-->
-          </el-form-item>
-          <el-form-item label="密码">
-            <el-input ></el-input><!--v-mode去掉了-->
-          </el-form-item>
-          <el-form-item label="身份">
-            <el-select  placeholder="请选择身份">
-              <el-option label="学生" value="学生"></el-option>
-              <el-option label="老师" value="老师"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-button type="primary" @click="onSubmit">立即登录</el-button>
-          <el-button>取消</el-button>
-          </el-form-item>
-        </el-form>
-        <script>
-          export default {
-            data() {
-              return {
-                form: {
-                  name: '',
-                  region: '',
-                  date1: '',
-                  date2: '',
-                  delivery: false,
-                  type: [],
-                  resource: '',
-                  desc: ''
+    <el-container style="height: 100%; border: 1px solid #000000" id="App">
+      <el-header style="font-size: 25px">
+        <i class="el-icon-s-promotion" style="margin-left: 15px;"></i>
+        <el-link href="https://www.baidu.com" target="_blank">导师制双向选择系统</el-link>
+      </el-header>
+      <el-main>
+        <el-row gutter="20">
+          <el-col :span="14">
+            <template>
+              <div class="block">
+                <el-carousel height="500px">
+                  <el-carousel-item v-for="item in 4" :key="item">
+                    <h3 class="small">{{ item }}</h3>
+                  </el-carousel-item> </el-carousel>
+              </div>
+            </template>
+          </el-col>
+          <el-col :span="10">
+            <el-form ref="form" :model="form" label-width="80px">
+              <el-form-item>
+                <h3>用户登录</h3>
+              </el-form-item>
+              <el-form-item label="账号">
+                <el-input ></el-input><!--v-mode去掉了-->
+              </el-form-item>
+              <el-form-item label="密码">
+                <el-input ></el-input><!--v-mode去掉了-->
+              </el-form-item>
+              <el-form-item label="身份">
+                <el-select  placeholder="请选择身份">
+                  <el-option label="学生" value="学生"></el-option>
+                  <el-option label="老师" value="老师"></el-option>
+                </el-select>
+              </el-form-item>
+                  <el-button type="primary" @click="onSubmit">立即登录</el-button>
+                  <el-button>取消</el-button>
+            </el-form>
+            <script>
+              export default {
+                data() {
+                  return {
+                    form: {
+                      name: '',
+                      region: '',
+                      date1: '',
+                      date2: '',
+                      delivery: false,
+                      type: [],
+                      resource: '',
+                      desc: ''
+                    }
+                  }
+                },
+                methods: {
+                  onSubmit() {
+                    console.log('submit!');
+                  }
                 }
               }
-            },
-            methods: {
-              onSubmit() {
-                console.log('submit!');
-              }
-            }
-          }
-        </script>
-      </el-col>
-    </el-row>
-  </el-main>
-  <el-footer>Footer</el-footer>
-</el-container>
+            </script>
+          </el-col>
+        </el-row>
+      </el-main>
+      <el-footer>Footer</el-footer>
+    </el-container>
 
 <script type="text/javascript">
   var pageApp = new Vue({
