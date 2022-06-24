@@ -4,10 +4,7 @@ package com.mentorproject.Controller;
 import com.mentorproject.Dao.MessageRep;
 import com.mentorproject.Dao.ResultRep;
 import com.mentorproject.Dao.StudentRep;
-import com.mentorproject.Entity.ApplicationRecord;
-import com.mentorproject.Entity.Message;
-import com.mentorproject.Entity.Result;
-import com.mentorproject.Entity.Student;
+import com.mentorproject.Entity.*;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -89,15 +86,15 @@ public class StudentController {
     @SneakyThrows
     @ResponseBody
     @RequestMapping(value = "/getfirstapp",method = {RequestMethod.GET,RequestMethod.POST})
-    public List<ApplicationRecord> getFirstApp(@RequestParam("student_id") String student_id,
-                                                        HttpServletRequest request,
-                                                        HttpServletResponse response){
+    public List<FirstApplication> getFirstApp(@RequestParam("student_id") String student_id,
+                                              HttpServletRequest request,
+                                              HttpServletResponse response){
         request.setAttribute("student_id", student_id);
         request.getRequestDispatcher("/application/getFirstApp").forward(request,response);
-        List<ApplicationRecord> appRecList = new ArrayList<>();
-        ApplicationRecord appRec = (ApplicationRecord) request.getAttribute("appRec");
-        appRecList.add(appRec);
-        return appRecList;
+        List<FirstApplication> firstApplicationList = new ArrayList<>();
+        FirstApplication firstApplication = (FirstApplication) request.getAttribute("firstApplication");
+        firstApplicationList.add(firstApplication);
+        return firstApplicationList;
     }
 
     /**

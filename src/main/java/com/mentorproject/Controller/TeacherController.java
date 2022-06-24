@@ -38,7 +38,7 @@ public class TeacherController {
      **/
     @ResponseBody
     @RequestMapping(value = "/getall",method = {RequestMethod.GET,RequestMethod.POST})
-    public List<Teacher> getStudentList(){
+    public List<Teacher> getTeacherList(){
        return teacherRep.findAll();
     }
 
@@ -196,7 +196,7 @@ public class TeacherController {
             applicationRecord.setIs_selected(is_selected);
             applicationRecordRep.save(applicationRecord);
         });
-        return applicationRecordRep.select(student_id);
+        return applicationRecordRep.getApplicationRecordByStudentId(student_id);
     }
 
 
