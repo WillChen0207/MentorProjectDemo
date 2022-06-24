@@ -1,5 +1,5 @@
 # 数据库大型实验
- - 考虑Springboot,Mybatis,JSP实现与后端功能交互
+ - Vue+Element UI+Springboot+axios
 # 版本控制（参考）
  - JDK:11
  - Maven:3.8.4
