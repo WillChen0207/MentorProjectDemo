@@ -46,14 +46,18 @@
                     background-color="#545c64"
                     text-color="#fff"
                     active-text-color="#ffd04b">
-                <el-menu-item index="1" @click="seen1=true;seen21=false;seen22=false;seen4=false">个人信息</el-menu-item>
+                <el-menu-item index="1" @click="seen1=true;seen21=false;seen22=false;seen3=false;seen4=false">个人信息</el-menu-item>
                 <el-submenu index="2">
                     <template slot="title">志愿管理</template>
-                    <el-menu-item index="2-1" @click="seen1=false;seen21=true;seen22=false;seen4=false">查看志愿</el-menu-item>
-                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen4=false">填写志愿</el-menu-item>
+                    <el-menu-item index="2-1" @click="seen1=false;seen21=true;seen22=false;seen3=false;seen4=false">查看志愿</el-menu-item>
+                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen3=false;seen4=false">填写志愿</el-menu-item>
                 </el-submenu>
-                <el-menu-item index="3" disabled>消息中心</el-menu-item>
-                <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen4=true">导师列表</el-menu-item>
+                <el-menu-item index="3" @click="seen1=false;seen21=false;seen22=false;seen3=true;seen4=false">
+                    <el-badge :value="newMessage" class="item">
+                        私信中心
+                    </el-badge>
+                </el-menu-item>
+                <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen3=false;seen4=true">导师列表</el-menu-item>
             </el-menu>
         </el-header>
 
@@ -74,7 +78,7 @@
                                 </el-form>
                                 <div slot="footer" class="dialog-footer">
                                     <el-button @click="dialogVisible=false;cancelForm();">取 消</el-button>
-                                    <el-button type="primary" @click="dialogVisible=false;submitForm();">确 定</el-button>
+                                    <el-button type="primary" @click="dialogVisible=false;submitForm();showStudentId();">确 定</el-button>
                                 </div>
                             </el-dialog>
                         </div>
@@ -117,6 +121,7 @@
                     </el-descriptions-item>
                 </el-descriptions>
             </transition>
+
             <transition name="el-fade-in">
                 <div v-if="seen21">
                     <el-table
@@ -180,10 +185,53 @@
                             target-order="push"
                             @change="check()"
                             :data="testData">
+                        <el-button type="primary" class="transfer-footer" slot="left-footer" size="small" @click="resetSelect()">重置</el-button>
                         <el-button type="primary" class="transfer-footer" slot="right-footer" size="small" @click="fillApp()">保存</el-button>
                     </el-transfer>
                 </div>
             </transition>
+
+            <transition name="el-fade-in">
+                <div v-if="seen3">
+                    <el-table
+                            :data="messageData"
+                            :fit="true"
+                            stripe>
+                        <el-table-column
+                                width="140"
+                                prop="sender"
+                                label="发送者">
+                            <template slot-scope="scope">
+                                {{scope.row.sender}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                width="140"
+                                prop="receiver"
+                                label="接收者">
+                            <template slot-scope="scope">
+                                {{scope.row.receiver}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                width="140"
+                                prop="is_read"
+                                label="是否已读">
+                            <template slot-scope="scope">
+                                {{scope.row.is_read === 0 ? '否' : '是'}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                prop="message"
+                                label="私信内容">
+                            <template slot-scope="scope">
+                                {{scope.row.message}}
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </transition>
+
             <transition name="el-fade-in">
                 <div v-if="seen4">
                     <el-table
@@ -257,6 +305,7 @@
                 seen1: true,
                 seen21: false,
                 seen22: false,
+                seen3: false,
                 seen4: false,
 
                 stuAppDataList: [],
@@ -266,13 +315,17 @@
                     third_app: '',
                     is_selected: 0,
                 },
+
                 tableData: [],
+
+                messageData: [],
 
                 StudentId: '20206660101',
                 StudentName: '',
                 StudentDescription: '',
                 StudentGPA: 0,
 
+                newMessage: 11,
                 StudentSelected: '',
                 dialogVisible: false,
                 form: {
@@ -308,6 +361,24 @@
             },
             handleChange(value, direction, movedKeys) {
                 console.log(value, direction, movedKeys);
+            },
+            resetSelect(){
+                this.$confirm('确定要重置选择吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.selected = [];
+                    this.$message({
+                        type: 'success',
+                        message: '已重置选择！'
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消重置'
+                    })
+                })
             },
             fillApp(){
                 if (this.selected.length > 3){
@@ -354,6 +425,14 @@
                 } else {
                     this.$message.success("选择成功！")
                 }
+            },
+            showStudentId(){
+                this.$message.info(this.StudentId);
+                if (this.StudentId === '20206660105') {
+                    this.StudentId = '20206660101';
+                } else {
+                    this.StudentId = '20206660105';
+                }
             }
         },
         mounted() {
@@ -368,16 +447,31 @@
                 })
 
             axios
+                .get("http://localhost:8080/hellomentor/student/checkMessage", {
+                    params: {
+                        student_id: this.StudentId
+                    }
+                })
+                .then(resp => {
+                    this.messageData = resp.data;
+                    console.log('hello');
+                    console.log(this.messageData);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+            axios
                 .get("http://localhost:8080/hellomentor/student/getapp", {
                     params: {
-                        student_id: '20206660103'//通过登录校验控制
+                        student_id: this.StudentId//通过登录校验控制
                     }
                 })
                 .then(resp => {
                     this.stuAppData = resp.data;
                     this.stuAppDataList.push(this.stuAppData);
                     // this.stuAppData.is_selected = resp.data.is_selected;
-                    this.StudentSelected = resp.data.is_selected;
+                    this.StudentSelected = this.stuAppData.is_selected;
                 })
                 .catch(err => {
                     console.log(err);
