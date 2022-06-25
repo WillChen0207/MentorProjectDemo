@@ -211,7 +211,8 @@ public class StudentController {
     @ResponseBody
     @RequestMapping(value = "/checkMessage",method = {RequestMethod.GET,RequestMethod.POST})
     public List<Message> checkMessage(@RequestParam("student_id") String student_id){
-        return messageRep.checkMessage(student_id);
+        List<Message> messageList = messageRep.checkMessage(student_id);
+        return messageList;
     }
 
     /**向指定导师发送私信

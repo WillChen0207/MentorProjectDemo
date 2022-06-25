@@ -1,14 +1,8 @@
 package com.mentorproject.Controller;
 
 
-import com.mentorproject.Dao.ApplicationRecordRep;
-import com.mentorproject.Dao.MessageRep;
-import com.mentorproject.Dao.ResultRep;
-import com.mentorproject.Dao.TeacherRep;
-import com.mentorproject.Entity.ApplicationRecord;
-import com.mentorproject.Entity.Message;
-import com.mentorproject.Entity.Result;
-import com.mentorproject.Entity.Teacher;
+import com.mentorproject.Dao.*;
+import com.mentorproject.Entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +18,12 @@ public class TeacherController {
 
     @Autowired
     private TeacherRep teacherRep;
+    @Autowired
     private MessageRep messageRep;
+    @Autowired
+    private MentorMatchRep mentorMatchRep;
+    @Autowired
     private ResultRep resultRep;
-    private ApplicationRecordRep applicationRecordRep;
 
     public TeacherController(MessageRep messageRep){
         this.messageRep = messageRep;
@@ -47,6 +44,7 @@ public class TeacherController {
      * @param teacher_id
      * @return
      */
+    @ResponseBody
     @RequestMapping(value = "/getinfo",method = {RequestMethod.GET,RequestMethod.POST})
     public Teacher getTeacherInfo (@RequestParam("teacher_id") String teacher_id){
         return teacherRep.getInfo(teacher_id);
@@ -82,6 +80,7 @@ public class TeacherController {
      * @param teacher_id
      * @param password
      **/
+    @ResponseBody
     @RequestMapping(value = "/login",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView logCheck(@RequestParam("teacher_id") String teacher_id,
                                  @RequestParam("password") String password){
@@ -101,6 +100,7 @@ public class TeacherController {
      * @param teacher_description
      * @return
      */
+    @ResponseBody
     @RequestMapping(value = "/updateDescription",method = {RequestMethod.GET,RequestMethod.POST})
     public Teacher updateDescription(@RequestParam("teacher_id") String teacher_id,
                                        @RequestParam("teacher_description") String teacher_description) {
@@ -119,6 +119,7 @@ public class TeacherController {
      * @param password
      * @return
      */
+    @ResponseBody
     @RequestMapping(value = "/updatePassword",method = {RequestMethod.GET,RequestMethod.POST})
     public Teacher updatePassword(@RequestParam("teacher_id") String teacher_id,
                                        @RequestParam("password") String password) {
@@ -136,6 +137,7 @@ public class TeacherController {
      * @param teacher_id
      * @return
      */
+    @ResponseBody
     @RequestMapping(value = "/checkMessage",method = {RequestMethod.GET,RequestMethod.POST})
     public List<Message> checkMessage(@RequestParam("teacher_id") String teacher_id){
 
@@ -169,35 +171,34 @@ public class TeacherController {
      *
      * @param teacher_id
      */
+    @ResponseBody
     @RequestMapping(value = "/checkResult",method = {RequestMethod.GET,RequestMethod.POST})
     public List<Result> checkResult(@RequestParam("teacher_id") String teacher_id){
-        return resultRep.checkResult(teacher_id);
+        return resultRep.checkTeacherResult(teacher_id);
     }
 
     /**
      * 查看可以选择的学生
-     * @param teacher_id
      */
-    @RequestMapping(value = "/selectStudent",method = {RequestMethod.GET,RequestMethod.POST})
-    public List<Result> selectStudent(@RequestParam("teacher_id") String teacher_id){
-        return resultRep.selectStudent(teacher_id);
+    @ResponseBody
+    @RequestMapping(value = "/selectStudentInfo",method = {RequestMethod.GET,RequestMethod.POST})
+    public List<Result> selectStudent(){
+        return resultRep.selectStudent();
     }
 
     /**
      * 进行选择
      * @param student_id
-     * @param is_selected
+     * @param teacher_id
      * */
-    @RequestMapping(value = "/updateSelect",method = {RequestMethod.GET,RequestMethod.POST})
-    public ApplicationRecord updateSelect(@RequestParam("student_id") String student_id,
-                                     @RequestParam("is_selected") Integer is_selected) {
-        Optional<ApplicationRecord> op = applicationRecordRep.findById(student_id);
-        op.ifPresent(applicationRecord -> {
-            applicationRecord.setIs_selected(is_selected);
-            applicationRecordRep.save(applicationRecord);
-        });
-        return applicationRecordRep.getApplicationRecordByStudentId(student_id);
+    @ResponseBody
+    @RequestMapping(value = "/selectStudent",method = {RequestMethod.GET,RequestMethod.POST})
+    public List<Result> updateSelect(@RequestParam("student_id") String student_id,
+                                     @RequestParam("teacher_id") String teacher_id) {
+        Mentormatch mentorMatch = new Mentormatch();
+        mentorMatch.setStudent_id(student_id);
+        mentorMatch.setTeacher_id(teacher_id);
+        mentorMatchRep.save(mentorMatch);
+        return resultRep.checkTeacherResult(teacher_id);
     }
-
-
 }
