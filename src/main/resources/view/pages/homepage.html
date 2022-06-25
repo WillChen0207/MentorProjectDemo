@@ -400,7 +400,7 @@
                 axios
                     .get("http://localhost:8080/hellomentor/student/fillapp", {
                         params: {
-                            student_id: '20206660107',
+                            student_id: this.StudentId,
                             first_app: this.selected[0],
                             second_app: this.selected[1],
                             third_app: this.selected[2],
@@ -466,6 +466,8 @@
                 })
                 .then(resp => {
                     this.messageData = resp.data;
+                    console.log(resp.data)
+                    console.log(this.messageData)
                 })
                 .catch(err => {
                     console.log(err);

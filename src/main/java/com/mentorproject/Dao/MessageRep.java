@@ -8,14 +8,14 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MessageRep extends JpaRepository<Message,String> {
+public interface MessageRep extends JpaRepository<Message,Integer> {
     /**查看私信
      *
      * @param receiver
      * @return
      */
     @Query(value = "select " +
-            "           sender,receiver,message,is_read" +
+            "           rec_id,sender,receiver,message,is_read" +
             "       from" +
             "           mentor.message" +
             "       where " +

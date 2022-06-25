@@ -29,6 +29,7 @@ public class StudentController {
 
     @Autowired
     private StudentRep studentRep;
+    @Autowired
     private MessageRep messageRep;
     @Autowired
     private ResultRep resultRep;
@@ -76,64 +77,6 @@ public class StudentController {
         appRecList.add(appRec);
         return appRecList;
     }
-
-    /**
-     * 查询第一志愿导师
-     * @param student_id
-     * @return
-     */
-    @SneakyThrows
-    @ResponseBody
-    @RequestMapping(value = "/getfirstapp",method = {RequestMethod.GET,RequestMethod.POST})
-    public List<FirstApplication> getFirstApp(@RequestParam("student_id") String student_id,
-                                              HttpServletRequest request,
-                                              HttpServletResponse response){
-        request.setAttribute("student_id", student_id);
-        request.getRequestDispatcher("/application/getFirstApp").forward(request,response);
-        List<FirstApplication> firstApplicationList = new ArrayList<>();
-        FirstApplication firstApplication = (FirstApplication) request.getAttribute("firstApplication");
-        firstApplicationList.add(firstApplication);
-        return firstApplicationList;
-    }
-
-    /**
-     * 查询第二志愿导师
-     * @param student_id
-     * @return
-     */
-    @SneakyThrows
-    @ResponseBody
-    @RequestMapping(value = "/getsecondapp",method = {RequestMethod.GET,RequestMethod.POST})
-    public List<ApplicationRecord> getSecondApp(@RequestParam("student_id") String student_id,
-                                               HttpServletRequest request,
-                                               HttpServletResponse response){
-        request.setAttribute("student_id", student_id);
-        request.getRequestDispatcher("/application/getSecondApp").forward(request,response);
-        List<ApplicationRecord> appRecList = new ArrayList<>();
-        ApplicationRecord appRec = (ApplicationRecord) request.getAttribute("appRec");
-        appRecList.add(appRec);
-        return appRecList;
-    }
-
-    /**
-     * 查询第三志愿导师
-     * @param student_id
-     * @return
-     */
-    @SneakyThrows
-    @ResponseBody
-    @RequestMapping(value = "/getthirdapp",method = {RequestMethod.GET,RequestMethod.POST})
-    public List<ApplicationRecord> getThirdApp(@RequestParam("student_id") String student_id,
-                                               HttpServletRequest request,
-                                               HttpServletResponse response){
-        request.setAttribute("student_id", student_id);
-        request.getRequestDispatcher("/application/getThirdApp").forward(request,response);
-        List<ApplicationRecord> appRecList = new ArrayList<>();
-        ApplicationRecord appRec = (ApplicationRecord) request.getAttribute("appRec");
-        appRecList.add(appRec);
-        return appRecList;
-    }
-
 
     /**
     * 添加一个学生

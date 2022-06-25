@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessageBean {
 
+    private Integer rec_id;
+
     private String sender;
 
     private String receiver;

@@ -2,7 +2,6 @@ package com.mentorproject.Controller;
 
 import com.mentorproject.Dao.ApplicationRecordRep;
 import com.mentorproject.Entity.ApplicationRecord;
-import com.mentorproject.Entity.FirstApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,42 +56,4 @@ public class ApplicationRecordController {
         return appRec;
     }
 
-    /**
-     * 查询第一志愿信息
-     **/
-    @ResponseBody
-    @RequestMapping(value = "/getFirstApp",method = {RequestMethod.GET,RequestMethod.POST})
-    public FirstApplication getFirstApp(HttpServletRequest request,
-                                        HttpServletResponse response){
-        String student_id = (String) request.getAttribute("student_id");
-        FirstApplication firstApplication = appRecRep.getFirstApp(student_id);
-        request.setAttribute("firstApplication", firstApplication);
-        return firstApplication;
-    }
-
-    /**
-     * 查询第二志愿信息
-     **/
-    @ResponseBody
-    @RequestMapping(value = "/getSecondApp",method = {RequestMethod.GET,RequestMethod.POST})
-    public ApplicationRecord getSecondApp(HttpServletRequest request,
-                                          HttpServletResponse response){
-        String student_id = (String) request.getAttribute("student_id");
-        ApplicationRecord appRec = appRecRep.getSecondApp(student_id);
-        request.setAttribute("appRec", appRec);
-        return appRec;
-    }
-
-    /**
-     * 查询第三志愿信息
-     **/
-    @ResponseBody
-    @RequestMapping(value = "/getThirdApp",method = {RequestMethod.GET,RequestMethod.POST})
-    public ApplicationRecord getThirdApp(HttpServletRequest request,
-                                         HttpServletResponse response){
-        String student_id = (String) request.getAttribute("student_id");
-        ApplicationRecord appRec = appRecRep.getThirdApp(student_id);
-        request.setAttribute("appRec", appRec);
-        return appRec;
-    }
 }

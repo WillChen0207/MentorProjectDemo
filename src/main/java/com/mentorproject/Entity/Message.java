@@ -6,10 +6,19 @@ import javax.persistence.Id;
 @Entity
 public class Message {
     @Id
+    private Integer rec_id;
     private String sender;
     private String receiver;
     private String message;
     private Integer isRead;
+
+    public Integer getRec_id() {
+        return rec_id;
+    }
+
+    public void setRec_id(Integer rec_id) {
+        this.rec_id = rec_id;
+    }
 
     public String getSender() {
         return sender;
