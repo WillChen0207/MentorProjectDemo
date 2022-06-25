@@ -6,7 +6,8 @@
     <!--引入 element-ui 的样式，-->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <!-- 必须先引入vue，  后使用element-ui -->
-    <script src="../js/vue.js"></script>
+<!--    <script src="../js/vue.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
     <!-- 引入element 的组件库-->
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <script src="https://unpkg.com/http-vue-loader"></script>
@@ -23,267 +24,261 @@
 </head>
 
 <body>
-    <el-container id="headerApp">
-        <el-header style="text-align: right; font-size: 12px">
-            <el-dropdown>
-                <i class="el-icon-setting" style="margin-right: 15px"></i>
-                <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>登出</el-dropdown-item>
-                    <el-dropdown-item @click="pageApp.StudentId='20206660102'">更改用户</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
-            <el-avatar icon="el-icon-user-solid"></el-avatar>
-        </el-header>
-    </el-container>
+    <div id="pageApp">
+        <el-container>
+            <el-header style="text-align: right; font-size: 12px">
+                <el-dropdown>
+                    <i class="el-icon-setting" style="margin-right: 15px"></i>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>登出</el-dropdown-item>
+                        <el-dropdown-item @click.native="changeStudent()">更改用户</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <el-avatar icon="el-icon-user-solid"></el-avatar>
+            </el-header>
+        </el-container>
 
-    <el-container id="pageApp">
-        <el-header style="background-color: #545c64; text-align: right; font-size: 12px">
-            <el-menu
-                    :default-active="activeIndex2"
-                    class="el-menu-demo"
-                    mode="horizontal"
-                    @select="handleSelect"
-                    background-color="#545c64"
-                    text-color="#fff"
-                    active-text-color="#ffd04b">
-                <el-menu-item index="1" @click="seen1=true;seen21=false;seen22=false;seen3=false;seen4=false">个人信息</el-menu-item>
-                <el-submenu index="2">
-                    <template slot="title">志愿管理</template>
-                    <el-menu-item index="2-1" @click="seen1=false;seen21=true;seen22=false;seen3=false;seen4=false">查看志愿</el-menu-item>
-                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen3=false;seen4=false">填写志愿</el-menu-item>
-                </el-submenu>
-                <el-menu-item index="3" @click="seen1=false;seen21=false;seen22=false;seen3=true;seen4=false">
-                    <el-badge :value="newMessage" class="item">
-                        私信中心
-                    </el-badge>
-                </el-menu-item>
-                <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen3=false;seen4=true">导师列表</el-menu-item>
-            </el-menu>
-        </el-header>
+        <el-container>
+            <el-header style="background-color: #545c64; text-align: right; font-size: 12px">
+                <el-menu
+                        :default-active="activeIndex2"
+                        class="el-menu-demo"
+                        mode="horizontal"
+                        @select="handleSelect"
+                        background-color="#545c64"
+                        text-color="#fff"
+                        active-text-color="#ffd04b">
+                    <el-menu-item index="1" @click="seen1=true;seen21=false;seen22=false;seen3=false;seen4=false">个人信息</el-menu-item>
+                    <el-submenu index="2">
+                        <template slot="title">志愿管理</template>
+                        <el-menu-item index="2-1" @click="seen1=false;seen21=true;seen22=false;seen3=false;seen4=false">查看志愿</el-menu-item>
+                        <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen3=false;seen4=false">填写志愿</el-menu-item>
+                    </el-submenu>
+                    <el-menu-item index="3" @click="seen1=false;seen21=false;seen22=false;seen3=true;seen4=false">
+                        <el-badge :value="newMessage" class="item">
+                            私信中心
+                        </el-badge>
+                    </el-menu-item>
+                    <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen3=false;seen4=true">导师列表</el-menu-item>
+                </el-menu>
+            </el-header>
 
-        <el-main>
-            <transition name="el-fade-in">
-                <el-descriptions v-if="seen1" class="margin-top" title="个人信息" :column="3" border>
-                    <template slot="extra">
-                        <div>
-                            <el-button type="primary" size="small" @click="dialogVisible=true">修改</el-button>
-                            <el-dialog title="个人信息" :visible.sync="dialogVisible">
-                                <el-form :model="form">
-                                    <el-form-item label="姓名">
-                                        <el-input v-model="form.studentName" autocomplete="off" disabled></el-input>
-                                    </el-form-item>
-                                    <el-form-item label="个人介绍">
-                                        <el-input v-model="form.studentDescription" autocomplete="off" type="textarea"></el-input>
-                                    </el-form-item>
-                                </el-form>
-                                <div slot="footer" class="dialog-footer">
-                                    <el-button @click="dialogVisible=false;cancelForm();">取 消</el-button>
-                                    <el-button type="primary" @click="dialogVisible=false;submitForm();showStudentId();">确 定</el-button>
-                                </div>
-                            </el-dialog>
-                        </div>
-                    </template>
-                    <el-descriptions-item>
-                        <template slot="label">
-                            <i class="el-icon-user"></i>
-                            姓名
+            <el-main>
+                <transition name="el-fade-in">
+                    <el-descriptions v-if="seen1" class="margin-top" title="个人信息" :column="3" border>
+                        <template slot="extra">
+                            <div>
+                                <el-button type="primary" size="small" @click="dialogVisible=true">修改</el-button>
+                                <el-dialog title="个人信息" :visible.sync="dialogVisible">
+                                    <el-form :model="form">
+                                        <el-form-item label="姓名">
+                                            <el-input v-model="form.studentName" autocomplete="off" disabled></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="个人介绍">
+                                            <el-input v-model="form.studentDescription" autocomplete="off" type="textarea"></el-input>
+                                        </el-form-item>
+                                    </el-form>
+                                    <div slot="footer" class="dialog-footer">
+                                        <el-button @click="dialogVisible=false;cancelForm();">取 消</el-button>
+                                        <el-button type="primary" @click="dialogVisible=false;submitForm();">确 定</el-button>
+                                    </div>
+                                </el-dialog>
+                            </div>
                         </template>
-                        {{ StudentName }}
-                    </el-descriptions-item>
-                    <el-descriptions-item>
-                        <template slot="label">
-                            <i class="el-icon-mobile-phone"></i>
-                            学号
-                        </template>
-                        {{ StudentId }}
-                    </el-descriptions-item>
-                    <el-descriptions-item>
-                        <template slot="label">
-                            <i class="el-icon-location-outline"></i>
-                            绩点
-                        </template>
-                        {{ StudentGPA }}
-                    </el-descriptions-item>
-                    <el-descriptions-item>
-                        <template slot="label">
-                            <i class="el-icon-tickets"></i>
-                            志愿匹配状态
-                        </template>
-                        <el-tag size="small" type="warning" v-if="StudentSelected === 0">未完成匹配</el-tag>
-                        <el-tag size="small" type="success" v-if="StudentSelected === 1">已完成匹配</el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item>
-                        <template slot="label">
-                            <i class="el-icon-office-building"></i>
-                            个人介绍
-                        </template>
-                        {{ StudentDescription }}
-                    </el-descriptions-item>
-                    <el-descriptions-item>
-                        <template slot="label">
-                            <i class="el-icon-user"></i>
-                            匹配的导师
-                        </template>
-                        {{ StudentMatchMentor }}
-                    </el-descriptions-item>
-                </el-descriptions>
-            </transition>
+                        <el-descriptions-item>
+                            <template slot="label">
+                                <i class="el-icon-user"></i>
+                                姓名
+                            </template>
+                            {{ StudentName }}
+                        </el-descriptions-item>
+                        <el-descriptions-item>
+                            <template slot="label">
+                                <i class="el-icon-mobile-phone"></i>
+                                学号
+                            </template>
+                            {{ StudentId }}
+                        </el-descriptions-item>
+                        <el-descriptions-item>
+                            <template slot="label">
+                                <i class="el-icon-location-outline"></i>
+                                绩点
+                            </template>
+                            {{ StudentGPA }}
+                        </el-descriptions-item>
+                        <el-descriptions-item>
+                            <template slot="label">
+                                <i class="el-icon-tickets"></i>
+                                志愿匹配状态
+                            </template>
+                            <el-tag size="small" type="warning" v-if="StudentSelected === 0">未完成匹配</el-tag>
+                            <el-tag size="small" type="success" v-if="StudentSelected === 1">已完成匹配</el-tag>
+                        </el-descriptions-item>
+                        <el-descriptions-item>
+                            <template slot="label">
+                                <i class="el-icon-office-building"></i>
+                                个人介绍
+                            </template>
+                            {{ StudentDescription }}
+                        </el-descriptions-item>
+                        <el-descriptions-item>
+                            <template slot="label">
+                                <i class="el-icon-user"></i>
+                                匹配的导师
+                            </template>
+                            {{ StudentMatchMentor }}
+                        </el-descriptions-item>
+                    </el-descriptions>
+                </transition>
 
-            <transition name="el-fade-in">
-                <div v-if="seen21">
-                    <el-table
-                            :data="stuAppDataList"
-                            :fit="true"
-                            stripe>
-                        <el-table-column
-                                width="140"
-                                prop="studentId"
-                                label="学号">
-                            <template slot-scope="scope">
-                                {{scope.row.studentId}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                width="140"
-                                prop="first_app"
-                                label="第一志愿">
-                            <template slot-scope="scope">
-                                {{teacherNameFormatter(scope.row.first_app)}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                width="140"
-                                prop="second_app"
-                                label="第二志愿">
-                            <template slot-scope="scope">
-                                {{teacherNameFormatter(scope.row.second_app)}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                width="140"
-                                prop="third_app"
-                                label="第三志愿">
-                            <template slot-scope="scope">
-                                {{teacherNameFormatter(scope.row.third_app)}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                prop="is_selected"
-                                label="是否已被选">
-                            <template slot-scope="scope" v-model="StudentSelected">
-                                {{scope.row.is_selected === 0 ? '否' : '是'}}
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-            </transition>
-            <transition name="el-fade-in">
-                <div v-if="seen22">
-                    <el-transfer
-                            style="text-align: left; display: inline-block"
-                            v-model="selected"
-                            filterable
-                            :titles="['导师列表', '志愿列表']"
-                            :button-texts="['撤销选择', '添加选择']"
-                            :props="{
+                <transition name="el-fade-in">
+                    <div v-if="seen21">
+                        <el-table
+                                :data="stuAppDataList"
+                                :fit="true"
+                                stripe>
+                            <el-table-column
+                                    width="140"
+                                    prop="studentId"
+                                    label="学号">
+                                <template slot-scope="scope">
+                                    {{scope.row.studentId}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    width="140"
+                                    prop="first_app"
+                                    label="第一志愿">
+                                <template slot-scope="scope">
+                                    {{teacherNameFormatter(scope.row.first_app)}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    width="140"
+                                    prop="second_app"
+                                    label="第二志愿">
+                                <template slot-scope="scope">
+                                    {{teacherNameFormatter(scope.row.second_app)}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    width="140"
+                                    prop="third_app"
+                                    label="第三志愿">
+                                <template slot-scope="scope">
+                                    {{teacherNameFormatter(scope.row.third_app)}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="is_selected"
+                                    label="是否已被选">
+                                <template slot-scope="scope" v-model="StudentSelected">
+                                    {{scope.row.is_selected === 0 ? '否' : '是'}}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </transition>
+                <transition name="el-fade-in">
+                    <div v-if="seen22">
+                        <el-transfer
+                                style="text-align: left; display: inline-block"
+                                v-model="selected"
+                                filterable
+                                :titles="['导师列表', '志愿列表']"
+                                :button-texts="['撤销选择', '添加选择']"
+                                :props="{
                                 key: 'key',
                                 label: 'desc'
                             }"
-                            target-order="push"
-                            @change="check()"
-                            :data="teacherNameList">
-                        <el-button type="primary" class="transfer-footer" slot="left-footer" size="small" @click="resetSelect()">重置</el-button>
-                        <el-button type="primary" class="transfer-footer" slot="right-footer" size="small" @click="fillApp()">保存</el-button>
-                    </el-transfer>
-                </div>
-            </transition>
+                                target-order="push"
+                                @change="check()"
+                                :data="teacherNameList">
+                            <el-button type="primary" class="transfer-footer" slot="left-footer" size="small" @click="resetSelect()">重置</el-button>
+                            <el-button type="primary" class="transfer-footer" slot="right-footer" size="small" @click="fillApp()">保存</el-button>
+                        </el-transfer>
+                    </div>
+                </transition>
 
-            <transition name="el-fade-in">
-                <div v-if="seen3">
-                    <el-table
-                            :data="messageData"
-                            :fit="true"
-                            stripe>
-                        <el-table-column
-                                width="140"
-                                prop="sender"
-                                label="发送者">
-                            <template slot-scope="scope">
-                                {{teacherNameFormatter(scope.row.sender)}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                width="140"
-                                prop="is_read"
-                                label="是否已读">
-                            <template slot-scope="scope">
-                                {{scope.row.is_read === 0 ? '否' : '是'}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                prop="message"
-                                label="私信内容">
-                            <template slot-scope="scope">
-                                {{scope.row.message}}
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-            </transition>
+                <transition name="el-fade-in">
+                    <div v-if="seen3">
+                        <el-table
+                                :data="messageData"
+                                :fit="true"
+                                stripe>
+                            <el-table-column
+                                    width="140"
+                                    prop="sender"
+                                    label="发送者">
+                                <template slot-scope="scope">
+                                    {{teacherNameFormatter(scope.row.sender)}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    width="140"
+                                    prop="is_read"
+                                    label="是否已读">
+                                <template slot-scope="scope">
+                                    {{scope.row.is_read === 0 ? '否' : '是'}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="message"
+                                    label="私信内容">
+                                <template slot-scope="scope">
+                                    {{scope.row.message}}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </transition>
 
-            <transition name="el-fade-in">
-                <div v-if="seen4">
-                    <el-table
-                            :data="tableData"
-                            :fit="true"
-                            stripe>
-                        <el-table-column
-                                width="140"
-                                prop="teacherId"
-                                label="工号">
-                            <template slot-scope="scope">
-                                {{scope.row.teacherId}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                width="140"
-                                prop="teacherName"
-                                label="姓名">
-                            <template slot-scope="scope">
-                                {{scope.row.teacherName}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                width="140"
-                                prop="gender"
-                                label="性别">
-                            <template slot-scope="scope">
-                                {{scope.row.gender === 0 ? '女' : '男'}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                prop="teacherDescription"
-                                label="个人介绍">
-                            <template slot-scope="scope">
-                                {{scope.row.teacherDescription}}
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-            </transition>
-        </el-main>
-    </el-container>
+                <transition name="el-fade-in">
+                    <div v-if="seen4">
+                        <el-table
+                                :data="tableData"
+                                :fit="true"
+                                stripe>
+                            <el-table-column
+                                    width="140"
+                                    prop="teacherId"
+                                    label="工号">
+                                <template slot-scope="scope">
+                                    {{scope.row.teacherId}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    width="140"
+                                    prop="teacherName"
+                                    label="姓名">
+                                <template slot-scope="scope">
+                                    {{scope.row.teacherName}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    width="140"
+                                    prop="gender"
+                                    label="性别">
+                                <template slot-scope="scope">
+                                    {{scope.row.gender === 0 ? '女' : '男'}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="teacherDescription"
+                                    label="个人介绍">
+                                <template slot-scope="scope">
+                                    {{scope.row.teacherDescription}}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </transition>
+            </el-main>
+        </el-container>
+    </div>
 
 <script type="text/javascript">
-    var headerApp = new Vue({
-        data() {
-            return {
-                UserName: 'Will'
-            }
-        }
-    })
-    headerApp.$mount('#headerApp')
-
+    // var StudentID = [[${StudentID}]];
     var pageApp = new Vue({
         data() {
             return {
@@ -315,13 +310,13 @@
 
                 messageData: [],
 
-                StudentId: '20206660101',
+                StudentId: JSON.parse(localStorage.getItem('StudentID')),
                 StudentName: '',
                 StudentDescription: '',
                 StudentGPA: 0,
                 StudentMatchMentor: '',
 
-                newMessage: 11,
+                newMessage: 0,
                 StudentSelected: '',
                 dialogVisible: false,
                 form: {
@@ -420,23 +415,26 @@
                     this.$message.success("选择成功！")
                 }
             },
-            showStudentId(){
-                this.$message.info(this.StudentId);
-                if (this.StudentId === '20206660105') {
-                    this.StudentId = '20206660101';
-                } else {
-                    this.StudentId = '20206660105';
-                }
-            },
             teacherNameFormatter(idToFormat){
                 for (let i = 0; i < this.teacherNameList.length; i++) {
                     if (idToFormat === this.teacherNameList[i].key){
                         return  this.teacherNameList[i].desc;
                     }
                 }
+                return '暂未选择';
+            },
+            changeStudent(){
+                // console.log(this.StudentId);
+                if (this.StudentId !== '20206660101') {
+                    localStorage.setItem('StudentID', '20206660101');
+                } else {
+                    localStorage.setItem('StudentID', '20206660102');
+                }
+                window.location.reload();
             }
         },
         mounted() {
+            // console.log(StudentId);
             axios
                 .get("http://localhost:8080/hellomentor/teacher/getall")
                 .then(resp => {
@@ -466,8 +464,7 @@
                 })
                 .then(resp => {
                     this.messageData = resp.data;
-                    console.log(resp.data)
-                    console.log(this.messageData)
+                    this.newMessage = this.messageData.length;
                 })
                 .catch(err => {
                     console.log(err);

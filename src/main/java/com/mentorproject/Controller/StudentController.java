@@ -113,7 +113,8 @@ public class StudentController {
      **/
     @RequestMapping(value = "/login",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView logCheck(@RequestParam("student_id") String student_id,
-                                 @RequestParam("password") String password){
+                                 @RequestParam("password") String password,
+                                 HttpServletRequest request){
         List<Student> studentList = studentRep.logCheck(student_id,password);
         ModelAndView mav = new ModelAndView();
         if (studentList.isEmpty()) {
@@ -121,7 +122,8 @@ public class StudentController {
             mav.setViewName("errorpage");
         }else {
             mav.addObject("studentList",studentList);
-            mav.setViewName("studentshow");
+//            mav.addObject("StudentID", student_id);
+            mav.setViewName("homepage");
         }
         return mav;
     }

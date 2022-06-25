@@ -7,8 +7,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 public class HelloController {
-    @RequestMapping(value = {"/","/homepage"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/","/index"}, method = RequestMethod.GET)
     public ModelAndView index() {
-        return new ModelAndView("homepage");
+        return new ModelAndView("index");
     }
 }
