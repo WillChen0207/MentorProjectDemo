@@ -119,6 +119,13 @@
                         </template>
                         {{ StudentDescription }}
                     </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            <i class="el-icon-user"></i>
+                            匹配的导师
+                        </template>
+                        {{ StudentMatchMentor }}
+                    </el-descriptions-item>
                 </el-descriptions>
             </transition>
 
@@ -141,7 +148,7 @@
                                 prop="first_app"
                                 label="第一志愿">
                             <template slot-scope="scope">
-                                {{scope.row.first_app}}
+                                {{teacherNameFormatter(scope.row.first_app)}}
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -149,7 +156,7 @@
                                 prop="second_app"
                                 label="第二志愿">
                             <template slot-scope="scope">
-                                {{scope.row.second_app}}
+                                {{teacherNameFormatter(scope.row.second_app)}}
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -157,7 +164,7 @@
                                 prop="third_app"
                                 label="第三志愿">
                             <template slot-scope="scope">
-                                {{scope.row.third_app}}
+                                {{teacherNameFormatter(scope.row.third_app)}}
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -179,12 +186,12 @@
                             :titles="['导师列表', '志愿列表']"
                             :button-texts="['撤销选择', '添加选择']"
                             :props="{
-                                key: 'value',
+                                key: 'key',
                                 label: 'desc'
                             }"
                             target-order="push"
                             @change="check()"
-                            :data="testData">
+                            :data="teacherNameList">
                         <el-button type="primary" class="transfer-footer" slot="left-footer" size="small" @click="resetSelect()">重置</el-button>
                         <el-button type="primary" class="transfer-footer" slot="right-footer" size="small" @click="fillApp()">保存</el-button>
                     </el-transfer>
@@ -202,15 +209,7 @@
                                 prop="sender"
                                 label="发送者">
                             <template slot-scope="scope">
-                                {{scope.row.sender}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                width="140"
-                                prop="receiver"
-                                label="接收者">
-                            <template slot-scope="scope">
-                                {{scope.row.receiver}}
+                                {{teacherNameFormatter(scope.row.sender)}}
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -287,17 +286,6 @@
 
     var pageApp = new Vue({
         data() {
-            const generateTestData = _ => {
-                var testData = [];
-                for (let i = 1; i <= 4; i++) {
-                    testData.push({
-                        value: '2020666000' + i,
-                        desc: '导师' + i,
-                        disabled: false
-                    })
-                }
-                return testData;
-            }
             return {
                 activeIndex: '1',
                 activeIndex2: '1',
@@ -313,10 +301,17 @@
                     first_app: '',
                     second_app: '',
                     third_app: '',
-                    is_selected: 0,
+                    is_selected: 0
                 },
 
-                tableData: [],
+                tableData: [{
+                    teacher_id: '',
+                    teacher_name: '',
+                    gender: '',
+                    teacher_description: '',
+                    password: ''
+                }],
+                teacherNameList: [],
 
                 messageData: [],
 
@@ -324,6 +319,7 @@
                 StudentName: '',
                 StudentDescription: '',
                 StudentGPA: 0,
+                StudentMatchMentor: '',
 
                 newMessage: 11,
                 StudentSelected: '',
@@ -332,8 +328,7 @@
                     studentName: '',
                     studentDescription: ''
                 },
-                selected: [],
-                testData: generateTestData()
+                selected: []
             }
         },
         methods: {
@@ -384,7 +379,7 @@
                 if (this.selected.length > 3){
                     this.$message.error("仅限选择三位导师作为志愿！")
                 } else {
-                    this.$confirm('请确认填写情况，是否提交?', '提示', {
+                    this.$confirm('请确认填写情况,是否提交?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
@@ -413,9 +408,8 @@
                         }
                     })
                     .then(resp => {
-                        this.$message.success('已成功提交！');
+                        this.$message.success('已成功提交！' );
                         this.selected = [];
-                        // console.log(resp.data);
                     })
             },
             check() {
@@ -433,6 +427,13 @@
                 } else {
                     this.StudentId = '20206660105';
                 }
+            },
+            teacherNameFormatter(idToFormat){
+                for (let i = 0; i < this.teacherNameList.length; i++) {
+                    if (idToFormat === this.teacherNameList[i].key){
+                        return  this.teacherNameList[i].desc;
+                    }
+                }
             }
         },
         mounted() {
@@ -440,7 +441,18 @@
                 .get("http://localhost:8080/hellomentor/teacher/getall")
                 .then(resp => {
                     this.tableData = resp.data;
-                    console.log(this.tableData);
+
+                    for (let i = 0; i < this.tableData.length; i++){
+                        let id = resp.data[i].teacherId;
+                        let name = resp.data[i].teacherName;
+                        let socket = {
+                            key: id,
+                            desc: name,
+                            disabled: false
+                        };
+                        this.teacherNameList.push(socket);
+                    }
+
                 })
                 .catch(err => {
                     console.log(err);
@@ -454,8 +466,19 @@
                 })
                 .then(resp => {
                     this.messageData = resp.data;
-                    console.log('hello');
-                    console.log(this.messageData);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+            axios
+                .get("http://localhost:8080/hellomentor/student/checkResult", {
+                    params: {
+                        student_id: this.StudentId
+                    }
+                })
+                .then(resp => {
+                    this.StudentMatchMentor = resp.data[0].teacher_name;
                 })
                 .catch(err => {
                     console.log(err);
@@ -470,51 +493,11 @@
                 .then(resp => {
                     this.stuAppData = resp.data;
                     this.stuAppDataList.push(this.stuAppData);
-                    // this.stuAppData.is_selected = resp.data.is_selected;
                     this.StudentSelected = this.stuAppData.is_selected;
                 })
                 .catch(err => {
                     console.log(err);
                 })
-
-            // axios
-            //     .get("http://localhost:8080/hellomentor/student/getfirstapp", {
-            //         params: {
-            //             student_id: '20206660103'//通过登录校验控制
-            //         }
-            //     })
-            //     .then(resp => {
-            //         this.stuAppData.first_app = resp.data.first_app;
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     })
-            //
-            // axios
-            //     .get("http://localhost:8080/hellomentor/student/getsecondapp", {
-            //         params: {
-            //             student_id: '20206660103'//通过登录校验控制
-            //         }
-            //     })
-            //     .then(resp => {
-            //         this.stuAppData.second_app = resp.data.second_app;
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     })
-            //
-            // axios
-            //     .get("http://localhost:8080/hellomentor/student/getthirdapp", {
-            //         params: {
-            //             student_id: '20206660103'//通过登录校验控制
-            //         }
-            //     })
-            //     .then(resp => {
-            //         this.stuAppData.third_app = resp.data.third_app;
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     })
 
             axios
                 .get("http://localhost:8080/hellomentor/student/getinfo", {

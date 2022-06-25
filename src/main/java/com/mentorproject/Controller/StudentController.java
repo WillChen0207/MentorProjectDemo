@@ -74,7 +74,6 @@ public class StudentController {
         List<ApplicationRecord> appRecList = new ArrayList<>();
         ApplicationRecord appRec = (ApplicationRecord) request.getAttribute("appRec");
         appRecList.add(appRec);
-//        System.out.println(appRecList);
         return appRecList;
     }
 

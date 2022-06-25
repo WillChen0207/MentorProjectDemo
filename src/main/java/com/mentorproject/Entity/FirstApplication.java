@@ -8,7 +8,7 @@ public class FirstApplication {
     @Id
     private String student_id;
 
-    private String firstapp;
+    private String first_app;
 
     private Integer is_selected;
 
@@ -20,12 +20,12 @@ public class FirstApplication {
         this.student_id = student_id;
     }
 
-    public String getFirstapp() {
-        return firstapp;
+    public String getFirst_app() {
+        return first_app;
     }
 
-    public void setFirstapp(String firstapp) {
-        this.firstapp = firstapp;
+    public void setFirst_app(String first_app) {
+        this.first_app = first_app;
     }
 
     public Integer getIs_selected() {
