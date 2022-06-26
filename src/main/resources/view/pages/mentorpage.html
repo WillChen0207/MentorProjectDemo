@@ -136,6 +136,37 @@
 
             <transition name="el-fade-in">
                 <div v-if="seen21">
+                    <template>
+                        <el-table
+                                :data="tableData"
+                                border
+                                style="width: 100%">
+                            <el-table-column
+                                    fixed
+                                    prop="StudentName"
+                                    label="姓名"
+                                    width="150%">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="StudentGPA"
+                                    label="绩点"
+                                    width="150%">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="StudentDescription"
+                                    label="个人介绍">
+                            </el-table-column>
+                            <el-table-column
+                                    fixed="right"
+                                    label="操作"
+                                    width="180%">
+                                <template slot-scope="scope">
+                                    <el-button @click="handleClick(scope.row)" type="primary" size="middle">选中</el-button>
+                                    <el-button @click="handleClick(scope.row)" type="danger" size="middle">不选</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
                 </div>
             </transition>
             <transition name="el-fade-in">
@@ -187,10 +218,10 @@
                 seen4: false,
 
                 tableData: [{
-                    teacher_id: '',
-                    teacher_name: '',
+                    teacherId: '',
+                    teacherName: '',
                     gender: '',
-                    teacher_description: '',
+                    teacherDescription: '',
                     password: ''
                 }],
                 teacherNameList: [],

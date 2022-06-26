@@ -19,6 +19,7 @@
             color: #333;
             line-height: 60px;
         }
+
         .image {
             width: 100%;
             display: block;
@@ -53,23 +54,27 @@
                     background-color="#545c64"
                     text-color="#fff"
                     active-text-color="#ffd04b">
-                <el-menu-item index="1" @click="seen1=true;seen21=false;seen22=false;seen3=false;seen4=false">个人信息
+                <el-menu-item index="1" @click="seen1=true;seen21=false;seen22=false;seen3=false;">个人信息
                 </el-menu-item>
                 <el-submenu index="2">
                     <template slot="title">志愿管理</template>
-                    <el-menu-item index="2-1" @click="seen1=false;seen21=true;seen22=false;seen3=false;seen4=false">
+                    <el-menu-item index="2-1" @click="seen1=false;seen21=true;seen22=false;seen3=false;">
                         查看志愿
                     </el-menu-item>
-                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen3=false;seen4=false" v-if="this.presentStatus === 0">
+                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen3=false;"
+                                  v-if="this.presentStatus === 0">
                         填写志愿
                     </el-menu-item>
                 </el-submenu>
-                <el-menu-item index="3" @click="seen1=false;seen21=false;seen22=false;seen3=true;seen4=false">
+                <el-menu-item index="3" @click="seen1=false;seen21=false;seen22=false;seen3=true;">
                     <el-badge :value="newMessage" class="item">
                         私信中心
                     </el-badge>
                 </el-menu-item>
-                <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen3=false;seen4=true">导师列表
+                <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen3=false;">
+                    <el-link href="http://localhost:63342/MentorProject/view/pages/teachershow.html" target="_blank">
+                        导师列表
+                    </el-link>
                 </el-menu-item>
             </el-menu>
         </el-header>
@@ -260,25 +265,7 @@
                 </div>
             </transition>
 
-            <transition name="el-fade-in">
-                <div v-if="seen4">
-                    <template>
-                        <el-row>
-                            <el-col :span="4" v-for="teacher in this.teacherNameList" :key="teacher.key" :offset="3">
-                                    <el-card :body-style="{ padding: '5px' }">
-                                        <img src="https://game.gtimg.cn/images/lol/act/img/tft/hero/lolapp_39003.png" class="image">
-                                        <div style="padding: 20px;">
-                                            <span>{{ teacher.desc }}</span>
-                                            <div class="bottom clearfix">
-                                                <el-button type="text" class="button">操作按钮</el-button>
-                                            </div>
-                                        </div>
-                                    </el-card>
-                            </el-col>
-                        </el-row>
-                    </template>
-                </div>
-            </transition>
+
         </el-main>
     </el-container>
 </div>
@@ -307,7 +294,6 @@
                 seen21: false,
                 seen22: false,
                 seen3: false,
-                seen4: false,
 
                 stuAppDataList: [],
                 stuAppData: {
