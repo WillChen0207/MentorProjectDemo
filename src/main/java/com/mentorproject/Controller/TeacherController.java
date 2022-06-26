@@ -211,7 +211,7 @@ public class TeacherController {
     @ResponseBody
     @RequestMapping(value = "/getFirstApp", method = {RequestMethod.GET,RequestMethod.POST})
     public List<ApplicationRecord> getAppFirstRecList(@RequestParam("teacher_id") String teacher_id){
-        return appRecRep.getFirstApp(teacher_id);
+        return appRecRep.getApp(teacher_id);
     }
 
     /**查询第二志愿
@@ -222,7 +222,7 @@ public class TeacherController {
     @ResponseBody
     @RequestMapping(value = "/getSecondApp", method = {RequestMethod.GET,RequestMethod.POST})
     public List<ApplicationRecord> getAppSecondRecList(@RequestParam("teacher_id") String teacher_id){
-        return appRecRep.getFirstApp(teacher_id);
+        return appRecRep.getApp(teacher_id);
     }
 
     /**查询第三志愿
@@ -233,7 +233,7 @@ public class TeacherController {
     @ResponseBody
     @RequestMapping(value = "/getThirdApp", method = {RequestMethod.GET,RequestMethod.POST})
     public List<ApplicationRecord> getAppThirdRecList(@RequestParam("teacher_id") String teacher_id){
-        return appRecRep.getFirstApp(teacher_id);
+        return appRecRep.getApp(teacher_id);
     }
 
 }
