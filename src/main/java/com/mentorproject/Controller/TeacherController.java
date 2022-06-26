@@ -24,6 +24,8 @@ public class TeacherController {
     private MentorMatchRep mentorMatchRep;
     @Autowired
     private ResultRep resultRep;
+    @Autowired
+    private ApplicationRecordRep appRecRep;
 
     public TeacherController(MessageRep messageRep){
         this.messageRep = messageRep;
@@ -201,4 +203,38 @@ public class TeacherController {
         mentorMatchRep.save(mentorMatch);
         return resultRep.checkTeacherResult(teacher_id);
     }
+
+    /**查询第一志愿
+     *
+     * @param teacher_id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getFirstApp", method = {RequestMethod.GET,RequestMethod.POST})
+    public List<ApplicationRecord> getAppFirstRecList(@RequestParam("teacher_id") String teacher_id){
+        return appRecRep.getFirstApp(teacher_id);
+    }
+
+    /**查询第二志愿
+     *
+     * @param teacher_id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getSecondApp", method = {RequestMethod.GET,RequestMethod.POST})
+    public List<ApplicationRecord> getAppSecondRecList(@RequestParam("teacher_id") String teacher_id){
+        return appRecRep.getFirstApp(teacher_id);
+    }
+
+    /**查询第三志愿
+     *
+     * @param teacher_id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getThirdApp", method = {RequestMethod.GET,RequestMethod.POST})
+    public List<ApplicationRecord> getAppThirdRecList(@RequestParam("teacher_id") String teacher_id){
+        return appRecRep.getFirstApp(teacher_id);
+    }
+
 }

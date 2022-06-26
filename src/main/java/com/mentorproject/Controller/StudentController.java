@@ -114,8 +114,9 @@ public class StudentController {
     @ResponseBody
     @RequestMapping(value = "/login",method = {RequestMethod.GET,RequestMethod.POST})
     public Integer logCheck(@RequestParam("student_id") String student_id,
-                                 @RequestParam("password") String password,
-                                 HttpServletRequest request){
+                            @RequestParam("password") String password,
+                            HttpServletRequest request){
+
         List<Student> studentList = studentRep.logCheck(student_id,password);
         if (studentList.isEmpty()) {
             return 0;
@@ -226,6 +227,7 @@ public class StudentController {
                                      @RequestParam("messageinfo") String messageinfo){
         ModelAndView mav = new ModelAndView();
         Message messageRec = new Message();
+        messageRec.setRec_id(5);
         messageRec.setSender(student_id);
         messageRec.setReceiver(teacher_id);
         messageRec.setMessage(messageinfo);

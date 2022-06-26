@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
 
 @Repository
@@ -21,4 +22,57 @@ public interface ApplicationRecordRep extends JpaRepository<ApplicationRecord,St
             nativeQuery = true)
     ApplicationRecord getApplicationRecordByStudentId(String student_id);
 
+    /**查询第一志愿
+     *
+     * @param student_id
+     * @return
+     */
+    @Query(value = "select" +
+            "           student_id, first_app, second_app, third_app, is_selected" +
+            "       from" +
+            "           mentor.application_record" +
+            "       where" +
+            "           first_app = ?1" +
+            "       or " +
+            "           second_app = ?1" +
+            "       or " +
+            "           third_app = ?1",
+           nativeQuery = true)
+    List<ApplicationRecord> getFirstApp(String student_id);
+
+    /**查询第二志愿
+     *
+     * @param student_id
+     * @return
+     */
+    @Query(value = "select" +
+            "           student_id, first_app, second_app, third_app, is_selected" +
+            "       from" +
+            "           mentor.application_record" +
+            "       where" +
+            "           first_app = ?1" +
+            "       or " +
+            "           second_app = ?1" +
+            "       or " +
+            "           third_app = ?1",
+            nativeQuery = true)
+    List<ApplicationRecord> getSecondApp(String student_id);
+
+    /**查询第三志愿
+     *
+     * @param student_id
+     * @return
+     */
+    @Query(value = "select" +
+            "           student_id, first_app, second_app, third_app, is_selected" +
+            "       from" +
+            "           mentor.application_record" +
+            "       where" +
+            "           first_app = ?1" +
+            "       or " +
+            "           second_app = ?1" +
+            "       or " +
+            "           third_app = ?1",
+            nativeQuery = true)
+    List<ApplicationRecord> getThirdApp(String student_id);
 }
