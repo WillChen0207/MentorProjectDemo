@@ -140,9 +140,10 @@ public class TeacherController {
      */
     @ResponseBody
     @RequestMapping(value = "/checkMessage",method = {RequestMethod.GET,RequestMethod.POST})
-    public List<Message> checkMessage(@RequestParam("teacher_id") String teacher_id){
+    public List<Message> checkMessage(@RequestParam("teacher_id") String teacher_id,
+                                      @RequestParam("student_id") String student_id){
 
-        return messageRep.checkMessage(teacher_id);
+        return messageRep.checkMessage(teacher_id,student_id);
     }
 
     /**向指定学生发送私信

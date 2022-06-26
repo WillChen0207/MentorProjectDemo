@@ -209,8 +209,9 @@ public class StudentController {
      */
     @ResponseBody
     @RequestMapping(value = "/checkMessage",method = {RequestMethod.GET,RequestMethod.POST})
-    public List<Message> checkMessage(@RequestParam("student_id") String student_id){
-        List<Message> messageList = messageRep.checkMessage(student_id);
+    public List<Message> checkMessage(@RequestParam("student_id") String student_id,
+                                      @RequestParam("teacher_id") String teacher_id){
+        List<Message> messageList = messageRep.checkMessage(student_id,teacher_id);
         return messageList;
     }
 
