@@ -111,21 +111,17 @@ public class StudentController {
      * @param student_id
      * @param password
      **/
+    @ResponseBody
     @RequestMapping(value = "/login",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView logCheck(@RequestParam("student_id") String student_id,
+    public Integer logCheck(@RequestParam("student_id") String student_id,
                                  @RequestParam("password") String password,
                                  HttpServletRequest request){
         List<Student> studentList = studentRep.logCheck(student_id,password);
-        ModelAndView mav = new ModelAndView();
         if (studentList.isEmpty()) {
-            mav.addObject("errmessage","输入的学号或密码有误");
-            mav.setViewName("errorpage");
+            return 0;
         }else {
-            mav.addObject("studentList",studentList);
-//            mav.addObject("StudentID", student_id);
-            mav.setViewName("homepage");
+            return 1;
         }
-        return mav;
     }
 
     /**
