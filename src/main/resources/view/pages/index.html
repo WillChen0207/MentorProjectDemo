@@ -154,9 +154,36 @@
                                 password: this.form.password
                             }
                         }).then(resp => {
+                if (this.form.identity ==='student'){
+                axios
+                    .get("http://localhost:8080/hellomentor/student/login", {
+                        params:{
+                            student_id: this.form.Id,
+                            password: this.form.password
+                        }
+                    }).then(resp => {
                         console.log(resp.data);
                         if (resp.data === 1) {
-                            localStorage.setItem('StudentID', this.form.studentId);
+                            localStorage.setItem('StudentID', this.form.Id);
+                            window.location.href = "http://localhost:63342/MentorProject/view/pages/homepage.html";
+                            // window.location.reload();
+                        } else {
+                            window.location.reload();
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                    })}
+                else{
+                    axios
+                        .get("http://localhost:8080/hellomentor/teacher/login", {
+                            params:{
+                                teacher_id: this.form.Id,
+                                password: this.form.password
+                            }
+                        }).then(resp => {
+                        console.log(resp.data);
+                        if (resp.data === 1) {
+                            localStorage.setItem('TeacherID', this.form.Id);
                             window.location.href = "http://localhost:63342/MentorProject/view/pages/homepage.html";
                             // window.location.reload();
                         } else {
