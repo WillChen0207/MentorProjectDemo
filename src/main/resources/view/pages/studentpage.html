@@ -219,39 +219,6 @@
                 </div>
             </transition>
 
-            <!--                <transition name="el-fade-in">-->
-            <!--                    <div v-if="seen3">-->
-            <!--                        <el-table-->
-            <!--                                :data="messageData"-->
-            <!--                                :fit="true"-->
-            <!--                                stripe>-->
-            <!--                            <el-table-column-->
-            <!--                                    width="140"-->
-            <!--                                    prop="sender"-->
-            <!--                                    label="发送者">-->
-            <!--                                <template slot-scope="scope">-->
-            <!--                                    {{teacherNameFormatter(scope.row.sender)}}-->
-            <!--                                </template>-->
-            <!--                            </el-table-column>-->
-            <!--                            <el-table-column-->
-            <!--                                    width="140"-->
-            <!--                                    prop="is_read"-->
-            <!--                                    label="是否已读">-->
-            <!--                                <template slot-scope="scope">-->
-            <!--                                    {{scope.row.is_read === 0 ? '否' : '是'}}-->
-            <!--                                </template>-->
-            <!--                            </el-table-column>-->
-            <!--                            <el-table-column-->
-            <!--                                    prop="message"-->
-            <!--                                    label="私信内容">-->
-            <!--                                <template slot-scope="scope">-->
-            <!--                                    {{scope.row.message}}-->
-            <!--                                </template>-->
-            <!--                            </el-table-column>-->
-            <!--                        </el-table>-->
-            <!--                    </div>-->
-            <!--                </transition>-->
-
             <transition name="el-fade-in">
                 <div v-if="seen3">
                     <el-row class="tac">
@@ -279,47 +246,6 @@
                     </el-row>
                 </div>
             </transition>
-
-<!--            <transition name="el-fade-in">-->
-<!--                <div v-if="seen4">-->
-<!--                    <el-table-->
-<!--                            :data="tableData"-->
-<!--                            :fit="true"-->
-<!--                            stripe>-->
-<!--                        <el-table-column-->
-<!--                                width="140"-->
-<!--                                prop="teacherId"-->
-<!--                                label="工号">-->
-<!--                            <template slot-scope="scope">-->
-<!--                                {{ scope.row.teacherId }}-->
-<!--                            </template>-->
-<!--                        </el-table-column>-->
-<!--                        <el-table-column-->
-<!--                                width="140"-->
-<!--                                prop="teacherName"-->
-<!--                                label="姓名">-->
-<!--                            <template slot-scope="scope">-->
-<!--                                {{ scope.row.teacherName }}-->
-<!--                            </template>-->
-<!--                        </el-table-column>-->
-<!--                        <el-table-column-->
-<!--                                width="140"-->
-<!--                                prop="gender"-->
-<!--                                label="性别">-->
-<!--                            <template slot-scope="scope">-->
-<!--                                {{ scope.row.gender === 0 ? '女' : '男' }}-->
-<!--                            </template>-->
-<!--                        </el-table-column>-->
-<!--                        <el-table-column-->
-<!--                                prop="teacherDescription"-->
-<!--                                label="个人介绍">-->
-<!--                            <template slot-scope="scope">-->
-<!--                                {{ scope.row.teacherDescription }}-->
-<!--                            </template>-->
-<!--                        </el-table-column>-->
-<!--                    </el-table>-->
-<!--                </div>-->
-<!--            </transition>-->
 
             <transition name="el-fade-in">
                 <div v-if="seen4">
@@ -408,6 +334,7 @@
                     .then(resp => {
                         this.$message.success('已保存修改！');
                         console.log(resp.data);
+                        window.location.reload();
                     });
             },
             cancelForm() {

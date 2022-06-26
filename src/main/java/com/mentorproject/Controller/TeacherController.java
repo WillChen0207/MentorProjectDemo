@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,17 +83,15 @@ public class TeacherController {
      **/
     @ResponseBody
     @RequestMapping(value = "/login",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView logCheck(@RequestParam("teacher_id") String teacher_id,
-                                 @RequestParam("password") String password){
+    public Integer logCheck(@RequestParam("teacher_id") String teacher_id,
+                            @RequestParam("password") String password,
+                            HttpServletRequest request){
         List<Teacher> teacherList = teacherRep.logCheck(teacher_id,password);
-        ModelAndView mav = new ModelAndView();
         if (teacherList.isEmpty()) {
-            mav.setViewName("errorpage");
+            return 0;
         }else {
-            mav.addObject("teacherList",teacherList);
-            mav.setViewName("teachershow");
+            return 1;
         }
-        return mav;
     }
     /**
      * 修改导师个人介绍
@@ -103,7 +102,7 @@ public class TeacherController {
     @ResponseBody
     @RequestMapping(value = "/updateDescription",method = {RequestMethod.GET,RequestMethod.POST})
     public Teacher updateDescription(@RequestParam("teacher_id") String teacher_id,
-                                       @RequestParam("teacher_description") String teacher_description) {
+                                     @RequestParam("teacher_description") String teacher_description) {
         Optional<Teacher> op = teacherRep.findById(teacher_id);
         op.ifPresent(teacher -> {
             teacher.setTeacherDescription(teacher_description);

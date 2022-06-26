@@ -74,7 +74,7 @@
         <el-link href="https://www.baidu.com" target="_blank">导师制双向选择系统</el-link>
     </el-header>
     <el-main>
-        <el-row gutter="20">
+        <el-row>
             <el-col :span="14">
                 <template>
                     <div class="block">
@@ -138,7 +138,7 @@
                         console.log(resp.data);
                         if (resp.data === 1) {
                             localStorage.setItem('StudentID', this.form.Id);
-                            window.location.href = "http://localhost:63342/MentorProject/view/pages/homepage.html";
+                            window.location.href = "http://localhost:8080/hellomentor/studentpage";
                             // window.location.reload();
                         } else {
                             window.location.reload();
@@ -157,7 +157,7 @@
                         console.log(resp.data);
                         if (resp.data === 1) {
                             localStorage.setItem('TeacherID', this.form.Id);
-                            window.location.href = "http://localhost:63342/MentorProject/view/pages/homepage.html";
+                            window.location.href = "http://localhost:8080/hellomentor/mentorpage";
                             // window.location.reload();
                         } else {
                             window.location.reload();
