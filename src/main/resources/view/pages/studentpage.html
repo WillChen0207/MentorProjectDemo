@@ -224,29 +224,39 @@
 
             <transition name="el-fade-in">
                 <div v-if="seen3">
-                    <el-row class="tac">
-                        <el-col :span="5">
-                            <el-menu
-                                    class="el-menu-vertical-demo"
-                                    @open="handleOpen"
-                                    @close="handleClose">
-                                <el-submenu index="1">
-                                    <template slot="title">
-                                        <i class="el-icon-message"></i>
-                                        <span>私信</span>
-                                    </template>
-                                    <el-menu-item-group>
-                                        <template slot="title" v-for="(teacher, index) in this.teacherNameList">
-                                            <el-menu-item :key="index" :index="String(index+1)" @select="handleSelect">
-                                                <i class="el-icon-user-solid"></i>
-                                                <span>{{ teacher.desc }}</span>
-                                            </el-menu-item>
-                                        </template>
-                                    </el-menu-item-group>
-                                </el-submenu>
-                            </el-menu>
-                        </el-col>
-                    </el-row>
+                    <template>
+                        <div style="padding: 10px; margin-bottom: 50px">
+                            <el-row>
+                                <el-col :span="4">
+                                    <el-card style="width: 300px; height: 300px; color: #333">
+                                        <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">在线老师<span style="font-size: 12px">（点击聊天气泡开始聊天）</span></div>
+                                        <div style="padding: 10px 0" v-for="who in tableData" :key="who.teacherId">
+                                            <span>{{who.teacherName}}</span>
+                                            <i class="el-icon-chat-dot-round" style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                                               @click="chatUser = who;recall()"></i>
+                                            <span style="font-size: 12px;color: limegreen; margin-left: 5px" v-if="who.teacherId === chatUser.teacherId">chatting...</span>
+                                        </div>
+                                    </el-card>
+                                </el-col>
+                                <el-col :span="20">
+                                    <div style="width: 800px; margin: 0 auto; background-color: white;
+                    border-radius: 5px; box-shadow: 0 0 10px #ccc">
+                                        <div style="text-align: center; line-height: 50px;">
+                                            Web聊天室（{{ chatUser.teacherName }}）
+                                        </div>
+                                        <div style="height: 350px; overflow:auto; border-top: 1px solid #ccc" v-html="content"></div>
+                                        <div style="height: 200px">
+            <textarea v-model="text" style="height: 160px; width: 95%; padding: 20px; border: none; border-top: 1px solid #ccc;
+             border-bottom: 1px solid #ccc; outline: none"></textarea>
+                                            <div style="text-align: right; padding-right: 10px">
+                                                <el-button type="primary" size="mini" @click="send">发送</el-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </template>
                 </div>
             </transition>
 
@@ -277,6 +287,18 @@
     var pageApp = new Vue({
         data() {
             return {
+                text:"",
+
+                content:'',
+
+                chatUser:{
+                    teacherId: '',
+                    teacherName: '',
+                    gender: '',
+                    teacherDescription: '',
+                    password: ''
+                },
+
                 activeIndex: '1',
                 activeIndex2: '1',
                 presentStatus: JSON.parse(localStorage.getItem('PresentStatus')),
@@ -296,10 +318,10 @@
                 },
 
                 tableData: [{
-                    teacher_id: '',
-                    teacher_name: '',
+                    teacherId: '',
+                    teacherName: '',
                     gender: '',
-                    teacher_description: '',
+                    teacherDescription: '',
                     password: ''
                 }],
                 teacherNameList: [],
@@ -323,6 +345,49 @@
             }
         },
         methods: {
+
+            recall(){
+                axios
+                    .get("http://localhost:8080/hellomentor/student/checkMessage", {
+                        params: {
+                            student_id: this.StudentId,
+                            teacher_id: this.chatUser.teacherId
+                        }
+                    })
+                    .then(resp => {
+                        this.messageData = resp.data;
+                        this.newMessage = this.messageData.length;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
+            },
+
+            send() {
+                    if (!this.chatUser.teacherId) {
+                        this.$message({type: 'warning', message: "请选择聊天对象"})
+                        return;
+                    }
+                    if (!this.text) {
+                        this.$message({type: 'warning', message: "请输入内容"})
+                    } else {
+                        axios
+                            .get("http://localhost:8080/hellomentor/student/sendMessage", {
+                                params: {
+                                    student_id: this.StudentId,
+                                    teacher_id: this.chatUser.teacherId,
+                                    messageinfo: this.text
+                                }
+                            })
+                            .then(resp => {
+                                this.$message.success('发送成功！');
+                                console.log(resp.data);
+                                window.location.reload();
+                            });
+                    }
+                },
+
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
             },
@@ -464,20 +529,6 @@
                         this.teacherNameList.push(socket);
                     }
 
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-
-            axios
-                .get("http://localhost:8080/hellomentor/student/checkMessage", {
-                    params: {
-                        student_id: this.StudentId
-                    }
-                })
-                .then(resp => {
-                    this.messageData = resp.data;
-                    this.newMessage = this.messageData.length;
                 })
                 .catch(err => {
                     console.log(err);
