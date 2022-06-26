@@ -19,7 +19,10 @@
             color: #333;
             line-height: 60px;
         }
-
+        .image {
+            width: 100%;
+            display: block;
+        }
     </style>
 </head>
 
@@ -57,7 +60,7 @@
                     <el-menu-item index="2-1" @click="seen1=false;seen21=true;seen22=false;seen3=false;seen4=false">
                         查看志愿
                     </el-menu-item>
-                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen3=false;seen4=false" v-if="this.presentStatus === 1">
+                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen3=false;seen4=false" v-if="this.presentStatus === 0">
                         填写志愿
                     </el-menu-item>
                 </el-submenu>
@@ -253,7 +256,7 @@
                         <el-row>
                             <el-col :span="4" v-for="teacher in this.teacherNameList" :key="teacher.key" :offset="3">
                                     <el-card :body-style="{ padding: '5px' }">
-                                        <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+                                        <img src="https://game.gtimg.cn/images/lol/act/img/tft/hero/lolapp_39003.png" class="image">
                                         <div style="padding: 20px;">
                                             <span>{{ teacher.desc }}</span>
                                             <div class="bottom clearfix">
@@ -424,7 +427,6 @@
                 return '暂未选择';
             },
             changeStudent() {
-                // console.log(this.StudentId);
                 if (this.StudentId !== '20206660101') {
                     localStorage.setItem('StudentID', '20206660101');
                 } else {
@@ -434,19 +436,18 @@
             },
             changeStatus() {
                 if (this.presentStatus === 5) {
-                    localStorage.setItem('PresentStatus', 1);
+                    localStorage.setItem('PresentStatus', 0);
                 } else {
                     localStorage.setItem('PresentStatus', this.presentStatus + 1);
                 }
                 window.location.reload();
             },
             logOut() {
-                localStorage.setItem('StudentId', null);
+                localStorage.setItem('StudentID', null);
                 window.location.href = "http://localhost:63342/MentorProject/view/pages/index.html"
             }
         },
         mounted() {
-            // console.log(StudentId);
             axios
                 .get("http://localhost:8080/hellomentor/teacher/getall")
                 .then(resp => {

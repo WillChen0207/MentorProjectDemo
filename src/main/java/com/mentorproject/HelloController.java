@@ -9,16 +9,16 @@ import org.springframework.web.servlet.ModelAndView;
 public class HelloController {
     @RequestMapping(value = {"/","/index"}, method = RequestMethod.GET)
     public ModelAndView index() {
-        return new ModelAndView("index");
-    }
-
-    @RequestMapping(value ="/studentpage", method = RequestMethod.GET)
-    public ModelAndView studentPage() {
         return new ModelAndView("studentpage");
     }
-
-    @RequestMapping(value ="/mentorpage", method = RequestMethod.GET)
-    public ModelAndView mentorPage() {
-        return new ModelAndView("mentorpage");
-    }
+//
+//    @RequestMapping(value ="/studentpage", method = RequestMethod.GET)
+//    public ModelAndView studentPage() {
+//        return new ModelAndView("studentpage");
+//    }
+//
+//    @RequestMapping(value ="/mentorpage", method = RequestMethod.GET)
+//    public ModelAndView mentorPage() {
+//        return new ModelAndView("mentorpage");
+//    }
 }

@@ -19,7 +19,10 @@
             color: #333;
             line-height: 60px;
         }
-
+        .image {
+            width: 100%;
+            display: block;
+        }
     </style>
 </head>
 
@@ -152,7 +155,7 @@
                         <el-row>
                             <el-col :span="4" v-for="teacher in this.teacherNameList" :key="teacher.key" :offset="3">
                                     <el-card :body-style="{ padding: '5px' }">
-                                        <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+                                        <img src="https://game.gtimg.cn/images/lol/act/img/tft/hero/lolapp_39003.png" class="image" >
                                         <div style="padding: 20px;">
                                             <span>{{ teacher.desc }}</span>
                                             <div class="bottom clearfix">
@@ -277,14 +280,14 @@
             },
             changeStatus() {
                 if (this.presentStatus === 5) {
-                    localStorage.setItem('PresentStatus', 1);
+                    localStorage.setItem('PresentStatus', 0);
                 } else {
                     localStorage.setItem('PresentStatus', this.presentStatus + 1);
                 }
                 window.location.reload();
             },
             logOut() {
-                localStorage.setItem('TeacherId', null);
+                localStorage.setItem('TeacherID', null);
                 window.location.href = "http://localhost:63342/MentorProject/view/pages/index.html"
             }
         },

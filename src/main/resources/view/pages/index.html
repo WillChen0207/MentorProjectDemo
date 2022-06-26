@@ -138,8 +138,7 @@
                         console.log(resp.data);
                         if (resp.data === 1) {
                             localStorage.setItem('StudentID', this.form.Id);
-                            window.location.href = "http://localhost:8080/hellomentor/studentpage";
-                            // window.location.reload();
+                            window.location.href = "http://localhost:63342/MentorProject/view/pages/studentpage.html";
                         } else {
                             window.location.reload();
                         }
@@ -157,8 +156,7 @@
                         console.log(resp.data);
                         if (resp.data === 1) {
                             localStorage.setItem('TeacherID', this.form.Id);
-                            window.location.href = "http://localhost:8080/hellomentor/mentorpage";
-                            // window.location.reload();
+                            window.location.href = "http://localhost:63342/MentorProject/view/pages/mentorpage.html";
                         } else {
                             window.location.reload();
                         }
