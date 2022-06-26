@@ -27,10 +27,12 @@
     <div id="pageApp">
         <el-container>
             <el-header style="text-align: right; font-size: 12px">
+
                 <el-dropdown>
                     <i class="el-icon-setting" style="margin-right: 15px"></i>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>登出</el-dropdown-item>
+                        <el-dropdown-item @click.native="">登出</el-dropdown-item>
+                        <el-dropdown-item @click.native="changeStatus()">切换阶段</el-dropdown-item>
                         <el-dropdown-item @click.native="changeStudent()">更改用户</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -62,7 +64,13 @@
                     <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen3=false;seen4=true">导师列表</el-menu-item>
                 </el-menu>
             </el-header>
-
+            <el-steps :active="this.presentStatus" finish-status="success" simple >
+                <el-step title="学生填写志愿" ></el-step>
+                <el-step title="第一轮志愿选择" ></el-step>
+                <el-step title="第二轮志愿选择" ></el-step>
+                <el-step title="第三轮志愿选择" ></el-step>
+                <el-step title="查看双选结果" ></el-step>
+            </el-steps>
             <el-main>
                 <transition name="el-fade-in">
                     <el-descriptions v-if="seen1" class="margin-top" title="个人信息" :column="3" border>
@@ -200,36 +208,64 @@
                     </div>
                 </transition>
 
+<!--                <transition name="el-fade-in">-->
+<!--                    <div v-if="seen3">-->
+<!--                        <el-table-->
+<!--                                :data="messageData"-->
+<!--                                :fit="true"-->
+<!--                                stripe>-->
+<!--                            <el-table-column-->
+<!--                                    width="140"-->
+<!--                                    prop="sender"-->
+<!--                                    label="发送者">-->
+<!--                                <template slot-scope="scope">-->
+<!--                                    {{teacherNameFormatter(scope.row.sender)}}-->
+<!--                                </template>-->
+<!--                            </el-table-column>-->
+<!--                            <el-table-column-->
+<!--                                    width="140"-->
+<!--                                    prop="is_read"-->
+<!--                                    label="是否已读">-->
+<!--                                <template slot-scope="scope">-->
+<!--                                    {{scope.row.is_read === 0 ? '否' : '是'}}-->
+<!--                                </template>-->
+<!--                            </el-table-column>-->
+<!--                            <el-table-column-->
+<!--                                    prop="message"-->
+<!--                                    label="私信内容">-->
+<!--                                <template slot-scope="scope">-->
+<!--                                    {{scope.row.message}}-->
+<!--                                </template>-->
+<!--                            </el-table-column>-->
+<!--                        </el-table>-->
+<!--                    </div>-->
+<!--                </transition>-->
+
                 <transition name="el-fade-in">
                     <div v-if="seen3">
-                        <el-table
-                                :data="messageData"
-                                :fit="true"
-                                stripe>
-                            <el-table-column
-                                    width="140"
-                                    prop="sender"
-                                    label="发送者">
-                                <template slot-scope="scope">
-                                    {{teacherNameFormatter(scope.row.sender)}}
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    width="140"
-                                    prop="is_read"
-                                    label="是否已读">
-                                <template slot-scope="scope">
-                                    {{scope.row.is_read === 0 ? '否' : '是'}}
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    prop="message"
-                                    label="私信内容">
-                                <template slot-scope="scope">
-                                    {{scope.row.message}}
-                                </template>
-                            </el-table-column>
-                        </el-table>
+                        <el-row class="tac">
+                            <el-col :span="5">
+                                <el-menu
+                                        class="el-menu-vertical-demo"
+                                        @open="handleOpen"
+                                        @close="handleClose">
+                                    <el-submenu index="1">
+                                        <template slot="title">
+                                            <i class="el-icon-message"></i>
+                                            <span>私信</span>
+                                        </template>
+                                        <el-menu-item-group>
+                                            <template slot="title" v-for="(teacher, index) in this.teacherNameList">
+                                                <el-menu-item :key="index" :index="String(index+1)" @select="handleSelect">
+                                                    <i class="el-icon-user-solid"></i>
+                                                    <span>{{ teacher.desc }}</span>
+                                                </el-menu-item>
+                                            </template>
+                                        </el-menu-item-group>
+                                    </el-submenu>
+                                </el-menu>
+                            </el-col>
+                        </el-row>
                     </div>
                 </transition>
 
@@ -278,12 +314,12 @@
     </div>
 
 <script type="text/javascript">
-    // var StudentID = [[${StudentID}]];
     var pageApp = new Vue({
         data() {
             return {
                 activeIndex: '1',
                 activeIndex2: '1',
+                presentStatus: JSON.parse(localStorage.getItem('PresentStatus')),
 
                 seen1: true,
                 seen21: false,
@@ -351,6 +387,12 @@
             },
             handleChange(value, direction, movedKeys) {
                 console.log(value, direction, movedKeys);
+            },
+            handleOpen(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            handleClose(key, keyPath) {
+                console.log(key, keyPath);
             },
             resetSelect(){
                 this.$confirm('确定要重置选择吗?', '提示', {
@@ -429,6 +471,14 @@
                     localStorage.setItem('StudentID', '20206660101');
                 } else {
                     localStorage.setItem('StudentID', '20206660102');
+                }
+                window.location.reload();
+            },
+            changeStatus(){
+                if (this.presentStatus === 5) {
+                    localStorage.setItem('PresentStatus', 1);
+                } else {
+                    localStorage.setItem('PresentStatus', this.presentStatus+1);
                 }
                 window.location.reload();
             }
