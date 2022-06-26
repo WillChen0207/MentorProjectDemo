@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <!--引入 element-ui 的样式，-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 必须先引入vue，  后使用element-ui -->
+    <!--    <script src="../js/vue.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <!-- 引入element 的组件库-->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/http-vue-loader"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue-router@3.0.0/dist/vue-router.js"></script>
+    <style>
+        .el-header {
+            background-color: #B3C0D1;
+            color: #333;
+            line-height: 60px;
+        }
+        .image {
+            width: 100%;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+<div id="pageApp">
+    <el-container>
+        <el-header style="text-align: right; font-size: 12px">
+
+            <el-dropdown>
+                <i class="el-icon-setting" style="margin-right: 15px"></i>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="logOut()">登出</el-dropdown-item>
+                    <el-dropdown-item @click.native="changeStatus()">切换阶段</el-dropdown-item>
+                    <el-dropdown-item @click.native="changeStudent()">更改用户</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <el-avatar icon="el-icon-user-solid"></el-avatar>
+        </el-header>
+    </el-container>
+
+    <el-container>
+        <el-header style="background-color: #545c64; text-align: right; font-size: 12px">
+            <el-menu
+                    :default-active="activeIndex2"
+                    class="el-menu-demo"
+                    mode="horizontal"
+                    @select="handleSelect"
+                    background-color="#545c64"
+                    text-color="#fff"
+                    active-text-color="#ffd04b">
+                <el-menu-item index="1" @click="seen1=true;seen21=false;seen22=false;seen3=false;seen4=false">个人信息
+                </el-menu-item>
+                <el-submenu index="2">
+                    <template slot="title">志愿管理</template>
+                    <el-menu-item index="2-1" @click="seen1=false;seen21=true;seen22=false;seen3=false;seen4=false">
+                        查看志愿
+                    </el-menu-item>
+                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen3=false;seen4=false" v-if="this.presentStatus === 1">
+                        填写志愿
+                    </el-menu-item>
+                </el-submenu>
+                <el-menu-item index="3" @click="seen1=false;seen21=false;seen22=false;seen3=true;seen4=false">
+                    <el-badge :value="newMessage" class="item">
+                        私信中心
+                    </el-badge>
+                </el-menu-item>
+                <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen3=false;seen4=true">导师列表
+                </el-menu-item>
+            </el-menu>
+        </el-header>
+        <el-steps :active="this.presentStatus" finish-status="success" simple>
+            <el-step title="学生填写志愿"></el-step>
+            <el-step title="第一轮志愿选择"></el-step>
+            <el-step title="第二轮志愿选择"></el-step>
+            <el-step title="第三轮志愿选择"></el-step>
+            <el-step title="查看双选结果"></el-step>
+        </el-steps>
+        <el-main>
+            <transition name="el-fade-in">
+                <el-descriptions v-if="seen1" class="margin-top" title="个人信息" :column="3" border>
+                    <template slot="extra">
+                        <div>
+                            <el-button type="primary" size="small" @click="dialogVisible=true">修改</el-button>
+                            <el-dialog title="个人信息" :visible.sync="dialogVisible">
+                                <el-form :model="form">
+                                    <el-form-item label="姓名">
+                                        <el-input v-model="form.teacherName" autocomplete="off" disabled></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="个人介绍">
+                                        <el-input v-model="form.teacherDescription" autocomplete="off"
+                                                  type="textarea"></el-input>
+                                    </el-form-item>
+                                </el-form>
+                                <div slot="footer" class="dialog-footer">
+                                    <el-button @click="dialogVisible=false;cancelForm();">取 消</el-button>
+                                    <el-button type="primary" @click="dialogVisible=false;submitForm();">确 定</el-button>
+                                </div>
+                            </el-dialog>
+                        </div>
+                    </template>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            <i class="el-icon-user"></i>
+                            姓名
+                        </template>
+                        {{ TeacherName }}
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            <i class="el-icon-mobile-phone"></i>
+                            工号
+                        </template>
+                        {{ TeacherId }}
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            <i class="el-icon-location-outline"></i>
+                            性别
+                        </template>
+                        {{ TeacherGender === 0 ? '女' : '男' }}
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            <i class="el-icon-office-building"></i>
+                            个人介绍
+                        </template>
+                        {{ TeacherDescription }}
+                    </el-descriptions-item>
+                </el-descriptions>
+            </transition>
+
+            <transition name="el-fade-in">
+                <div v-if="seen21">
+                </div>
+            </transition>
+            <transition name="el-fade-in">
+                <div v-if="seen22">
+                </div>
+            </transition>
+
+            <transition name="el-fade-in">
+                <div v-if="seen3">
+
+                </div>
+            </transition>
+
+            <transition name="el-fade-in">
+                <div v-if="seen4">
+                    <template>
+                        <el-row>
+                            <el-col :span="4" v-for="teacher in this.teacherNameList" :key="teacher.key" :offset="3">
+                                    <el-card :body-style="{ padding: '5px' }">
+                                        <img src="https://game.gtimg.cn/images/lol/act/img/tft/hero/lolapp_39003.png" class="image" >
+                                        <div style="padding: 20px;">
+                                            <span>{{ teacher.desc }}</span>
+                                            <div class="bottom clearfix">
+                                                <el-button type="text" class="button">操作按钮</el-button>
+                                            </div>
+                                        </div>
+                                    </el-card>
+                            </el-col>
+                        </el-row>
+                    </template>
+                </div>
+            </transition>
+        </el-main>
+    </el-container>
+</div>
+
+<script type="text/javascript">
+    var pageApp = new Vue({
+        data() {
+            return {
+                activeIndex: '1',
+                activeIndex2: '1',
+                presentStatus: JSON.parse(localStorage.getItem('PresentStatus')),
+
+                seen1: true,
+                seen21: false,
+                seen22: false,
+                seen3: false,
+                seen4: false,
+
+                tableData: [{
+                    teacher_id: '',
+                    teacher_name: '',
+                    gender: '',
+                    teacher_description: '',
+                    password: ''
+                }],
+                teacherNameList: [],
+
+                messageData: [],
+
+                TeacherId: JSON.parse(localStorage.getItem('TeacherID')),
+                TeacherName: '',
+                TeacherDescription: '',
+                TeacherGender: 0,
+
+                newMessage: 0,
+                dialogVisible: false,
+                form: {
+                    teacherName: '',
+                    teacherDescription: ''
+                },
+                selected: []
+            }
+        },
+        methods: {
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            submitForm() {
+                axios
+                    .get("http://localhost:8080/hellomentor/teacher/updateDescription", {
+                        params: {
+                            teacher_id: this.TeacherId,
+                            teacher_description: this.form.teacherDescription
+                        }
+                    })
+                    .then(resp => {
+                        this.$message.success('已保存修改！');
+                        console.log(resp.data);
+                        window.location.reload();
+                    });
+            },
+            cancelForm() {
+                this.$message({
+                    message: '取消提交',
+                    type: 'warning'
+                })
+            },
+            handleChange(value, direction, movedKeys) {
+                console.log(value, direction, movedKeys);
+            },
+            handleOpen(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            handleClose(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            resetSelect() {
+                this.$confirm('确定要重置选择吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.selected = [];
+                    this.$message({
+                        type: 'success',
+                        message: '已重置选择！'
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消重置'
+                    })
+                })
+            },
+            teacherNameFormatter(idToFormat) {
+                for (let i = 0; i < this.teacherNameList.length; i++) {
+                    if (idToFormat === this.teacherNameList[i].key) {
+                        return this.teacherNameList[i].desc;
+                    }
+                }
+                return '暂未选择';
+            },
+            changeStudent() {
+                if (this.TeacherId !== '20206660001') {
+                    localStorage.setItem('TeacherID', '20206660001');
+                } else {
+                    localStorage.setItem('TeacherID', '20206660002');
+                }
+                window.location.reload();
+            },
+            changeStatus() {
+                if (this.presentStatus === 5) {
+                    localStorage.setItem('PresentStatus', 0);
+                } else {
+                    localStorage.setItem('PresentStatus', this.presentStatus + 1);
+                }
+                window.location.reload();
+            },
+            logOut() {
+                localStorage.setItem('TeacherID', null);
+                window.location.href = "http://localhost:63342/MentorProject/view/pages/index.html"
+            }
+        },
+        mounted() {
+            axios
+                .get("http://localhost:8080/hellomentor/teacher/getall")
+                .then(resp => {
+                    this.tableData = resp.data;
+
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        let id = resp.data[i].teacherId;
+                        let name = resp.data[i].teacherName;
+                        let socket = {
+                            key: id,
+                            desc: name,
+                            disabled: false
+                        };
+                        this.teacherNameList.push(socket);
+                    }
+
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+            axios
+                .get("http://localhost:8080/hellomentor/teacher/checkMessage", {
+                    params: {
+                        teacher_id: this.TeacherId
+                    }
+                })
+                .then(resp => {
+                    this.messageData = resp.data;
+                    this.newMessage = this.messageData.length;
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+            axios
+                .get("http://localhost:8080/hellomentor/teacher/getinfo", {
+                    params: {
+                        teacher_id: this.TeacherId//通过登录校验控制
+                    }
+                })
+                .then(resp => {
+                    this.TeacherId = resp.data.teacherId;
+                    this.TeacherName = resp.data.teacherName;
+                    this.TeacherGender = resp.data.gender;
+                    this.TeacherDescription = resp.data.teacherDescription;
+
+                    this.form.teacherName = resp.data.teacherName;
+                    this.form.teacherDescription = resp.data.teacherDescription;
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    })
+    pageApp.$mount('#pageApp')
+
+</script>
+</body>
+</html>

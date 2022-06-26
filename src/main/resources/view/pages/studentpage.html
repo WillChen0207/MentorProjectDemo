@@ -19,7 +19,10 @@
             color: #333;
             line-height: 60px;
         }
-
+        .image {
+            width: 100%;
+            display: block;
+        }
     </style>
 </head>
 
@@ -31,7 +34,7 @@
             <el-dropdown>
                 <i class="el-icon-setting" style="margin-right: 15px"></i>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="">登出</el-dropdown-item>
+                    <el-dropdown-item @click.native="logOut()">登出</el-dropdown-item>
                     <el-dropdown-item @click.native="changeStatus()">切换阶段</el-dropdown-item>
                     <el-dropdown-item @click.native="changeStudent()">更改用户</el-dropdown-item>
                 </el-dropdown-menu>
@@ -57,7 +60,7 @@
                     <el-menu-item index="2-1" @click="seen1=false;seen21=true;seen22=false;seen3=false;seen4=false">
                         查看志愿
                     </el-menu-item>
-                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen3=false;seen4=false">
+                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen3=false;seen4=false" v-if="this.presentStatus === 0">
                         填写志愿
                     </el-menu-item>
                 </el-submenu>
@@ -219,39 +222,6 @@
                 </div>
             </transition>
 
-            <!--                <transition name="el-fade-in">-->
-            <!--                    <div v-if="seen3">-->
-            <!--                        <el-table-->
-            <!--                                :data="messageData"-->
-            <!--                                :fit="true"-->
-            <!--                                stripe>-->
-            <!--                            <el-table-column-->
-            <!--                                    width="140"-->
-            <!--                                    prop="sender"-->
-            <!--                                    label="发送者">-->
-            <!--                                <template slot-scope="scope">-->
-            <!--                                    {{teacherNameFormatter(scope.row.sender)}}-->
-            <!--                                </template>-->
-            <!--                            </el-table-column>-->
-            <!--                            <el-table-column-->
-            <!--                                    width="140"-->
-            <!--                                    prop="is_read"-->
-            <!--                                    label="是否已读">-->
-            <!--                                <template slot-scope="scope">-->
-            <!--                                    {{scope.row.is_read === 0 ? '否' : '是'}}-->
-            <!--                                </template>-->
-            <!--                            </el-table-column>-->
-            <!--                            <el-table-column-->
-            <!--                                    prop="message"-->
-            <!--                                    label="私信内容">-->
-            <!--                                <template slot-scope="scope">-->
-            <!--                                    {{scope.row.message}}-->
-            <!--                                </template>-->
-            <!--                            </el-table-column>-->
-            <!--                        </el-table>-->
-            <!--                    </div>-->
-            <!--                </transition>-->
-
             <transition name="el-fade-in">
                 <div v-if="seen3">
                     <el-row class="tac">
@@ -282,42 +252,21 @@
 
             <transition name="el-fade-in">
                 <div v-if="seen4">
-                    <el-table
-                            :data="tableData"
-                            :fit="true"
-                            stripe>
-                        <el-table-column
-                                width="140"
-                                prop="teacherId"
-                                label="工号">
-                            <template slot-scope="scope">
-                                {{ scope.row.teacherId }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                width="140"
-                                prop="teacherName"
-                                label="姓名">
-                            <template slot-scope="scope">
-                                {{ scope.row.teacherName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                width="140"
-                                prop="gender"
-                                label="性别">
-                            <template slot-scope="scope">
-                                {{ scope.row.gender === 0 ? '女' : '男' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                prop="teacherDescription"
-                                label="个人介绍">
-                            <template slot-scope="scope">
-                                {{ scope.row.teacherDescription }}
-                            </template>
-                        </el-table-column>
-                    </el-table>
+                    <template>
+                        <el-row>
+                            <el-col :span="4" v-for="teacher in this.teacherNameList" :key="teacher.key" :offset="3">
+                                    <el-card :body-style="{ padding: '5px' }">
+                                        <img src="https://game.gtimg.cn/images/lol/act/img/tft/hero/lolapp_39003.png" class="image">
+                                        <div style="padding: 20px;">
+                                            <span>{{ teacher.desc }}</span>
+                                            <div class="bottom clearfix">
+                                                <el-button type="text" class="button">操作按钮</el-button>
+                                            </div>
+                                        </div>
+                                    </el-card>
+                            </el-col>
+                        </el-row>
+                    </template>
                 </div>
             </transition>
         </el-main>
@@ -388,6 +337,7 @@
                     .then(resp => {
                         this.$message.success('已保存修改！');
                         console.log(resp.data);
+                        window.location.reload();
                     });
             },
             cancelForm() {
@@ -477,7 +427,6 @@
                 return '暂未选择';
             },
             changeStudent() {
-                // console.log(this.StudentId);
                 if (this.StudentId !== '20206660101') {
                     localStorage.setItem('StudentID', '20206660101');
                 } else {
@@ -487,15 +436,18 @@
             },
             changeStatus() {
                 if (this.presentStatus === 5) {
-                    localStorage.setItem('PresentStatus', 1);
+                    localStorage.setItem('PresentStatus', 0);
                 } else {
                     localStorage.setItem('PresentStatus', this.presentStatus + 1);
                 }
                 window.location.reload();
+            },
+            logOut() {
+                localStorage.setItem('StudentID', null);
+                window.location.href = "http://localhost:63342/MentorProject/view/pages/index.html"
             }
         },
         mounted() {
-            // console.log(StudentId);
             axios
                 .get("http://localhost:8080/hellomentor/teacher/getall")
                 .then(resp => {

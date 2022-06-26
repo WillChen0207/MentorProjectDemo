@@ -74,7 +74,7 @@
         <el-link href="https://www.baidu.com" target="_blank">导师制双向选择系统</el-link>
     </el-header>
     <el-main>
-        <el-row gutter="20">
+        <el-row>
             <el-col :span="14">
                 <template>
                     <div class="block">
@@ -92,7 +92,7 @@
                         <h3>用户登录</h3>
                     </el-form-item>
                     <el-form-item label="账号">
-                        <el-input v-model="form.studentId"></el-input><!--v-mode去掉了-->
+                        <el-input v-model="form.Id"></el-input><!--v-mode去掉了-->
                     </el-form-item>
                     <el-form-item label="密码">
                         <el-input v-model="form.password" type="password"></el-input><!--v-mode去掉了-->
@@ -117,7 +117,7 @@
         data() {
             return {
                 form: {
-                    studentId: '',
+                    Id: '',
                     password: '',
                     identity: ''
                 }
@@ -127,24 +127,43 @@
             onSubmit() {
                 console.log('submit!');
                 console.log(this.form);
+                if (this.form.identity ==='student'){
                 axios
                     .get("http://localhost:8080/hellomentor/student/login", {
                         params:{
-                            student_id: this.form.studentId,
+                            student_id: this.form.Id,
                             password: this.form.password
                         }
                     }).then(resp => {
                         console.log(resp.data);
                         if (resp.data === 1) {
-                            localStorage.setItem('StudentID', this.form.studentId);
-                            window.location.href = "http://localhost:63342/MentorProject/view/pages/homepage.html";
-                            // window.location.reload();
+                            localStorage.setItem('StudentID', this.form.Id);
+                            window.location.href = "http://localhost:63342/MentorProject/view/pages/studentpage.html";
+                        } else {
+                            window.location.reload();
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                    })}
+                else{
+                    axios
+                        .get("http://localhost:8080/hellomentor/teacher/login", {
+                            params:{
+                                teacher_id: this.form.Id,
+                                password: this.form.password
+                            }
+                        }).then(resp => {
+                        console.log(resp.data);
+                        if (resp.data === 1) {
+                            localStorage.setItem('TeacherID', this.form.Id);
+                            window.location.href = "http://localhost:63342/MentorProject/view/pages/mentorpage.html";
                         } else {
                             window.location.reload();
                         }
                     }).catch(err => {
                         console.log(err);
                     })
+                }
             }
         }
     })
