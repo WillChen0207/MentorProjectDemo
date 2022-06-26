@@ -92,7 +92,7 @@
                         <h3>用户登录</h3>
                     </el-form-item>
                     <el-form-item label="账号">
-                        <el-input v-model="form.studentId"></el-input><!--v-mode去掉了-->
+                        <el-input v-model="form.Id"></el-input><!--v-mode去掉了-->
                     </el-form-item>
                     <el-form-item label="密码">
                         <el-input v-model="form.password" type="password"></el-input><!--v-mode去掉了-->
@@ -117,7 +117,7 @@
         data() {
             return {
                 form: {
-                    studentId: '',
+                    Id: '',
                     password: '',
                     identity: ''
                 }
@@ -127,13 +127,33 @@
             onSubmit() {
                 console.log('submit!');
                 console.log(this.form);
-                axios
-                    .get("http://localhost:8080/hellomentor/student/login", {
-                        params:{
-                            student_id: this.form.studentId,
-                            password: this.form.password
+                if (this.form.identity === 'student'){
+                    axios
+                        .get("http://localhost:8080/hellomentor/student/login", {
+                            params:{
+                                student_id: this.form.Id,
+                                password: this.form.password
+                            }
+                        }).then(resp => {
+                        console.log(resp.data);
+                        if (resp.data === 1) {
+                            localStorage.setItem('StudentID', this.form.Id);
+                            window.location.href = "http://localhost:63342/MentorProject/view/pages/homepage.html";
+                            // window.location.reload();
+                        } else {
+                            window.location.reload();
                         }
-                    }).then(resp => {
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                } else {
+                    axios
+                        .get("http://localhost:8080/hellomentor/teacher/login", {
+                            params:{
+                                teacher_id: this.form.Id,
+                                password: this.form.password
+                            }
+                        }).then(resp => {
                         console.log(resp.data);
                         if (resp.data === 1) {
                             localStorage.setItem('StudentID', this.form.studentId);
@@ -145,6 +165,7 @@
                     }).catch(err => {
                         console.log(err);
                     })
+                }
             }
         }
     })
