@@ -64,6 +64,11 @@
             padding: 10px 0;
             background-color: #f9fafc;
         }
+        .visitor{
+            position: relative;
+            left: 1200px;
+            font-size: 15px;
+        }
     </style>
 </head>
 
@@ -72,6 +77,7 @@
     <el-header style="font-size: 25px">
         <i class="el-icon-s-promotion" style="margin-left: 15px;"></i>
         <el-label @click="Initialize()">Hello,导师!</el-label>
+        <a class="visitor" href="teachershow.html">游客访问</a>
     </el-header>
     <el-main>
         <el-row>
@@ -79,8 +85,8 @@
                 <template>
                     <div class="block">
                         <el-carousel height="500px">
-                            <el-carousel-item v-for="item in 4" :key="item">
-                                <h3 class="small">{{ item }}</h3>
+                            <el-carousel-item v-for="item in imagebox" :key="item.id">
+                                <img :src="item.idView" class="image">
                             </el-carousel-item>
                         </el-carousel>
                     </div>
@@ -99,7 +105,6 @@
                         <el-select placeholder="请选择身份" v-model="form.identity">
                             <el-option label="学生" value="student"></el-option>
                             <el-option label="老师" value="teacher"></el-option>
-                            <el-option label="游客" value="guest"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item>
@@ -120,7 +125,12 @@
                     Id: '',
                     password: '',
                     identity: ''
-                }
+                },
+                imagebox:[
+                    {id:1,idView:("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F0G020114924%2F200G0114924-15-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1658933142&t=973a9a80a07efe8c0f7540bef629db94")},
+                    {id:2,idView:("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1113%2F0F420110430%2F200F4110430-6-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1658933142&t=f779e2de9acb505b09879c565a6ae446")},
+                    {id:3,idView:("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F4k%2Fs%2F02%2F2109242306111155-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1658931147&t=62fa58cf4156184172a5adefc74acb13")},
+                ]
             }
         },
         methods: {
