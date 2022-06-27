@@ -59,7 +59,7 @@
                 <el-submenu index="2">
                     <template slot="title">志愿管理</template>
                     <el-menu-item index="2-1"
-                                  @click="seen1=false;seen21=true;seen22=false;seen3=false;seen4=false;checkApp(presentStatus)"
+                                  @click="seen1=false;seen21=true;seen22=false;seen3=false;seen4=false;"
                                   v-if="this.presentStatus === 1 || this.presentStatus === 2 || this.presentStatus === 3">
                         查看志愿
                     </el-menu-item>
@@ -173,47 +173,47 @@
                 </div>
             </transition>
 
-            <!--            <transition name="el-fade-in">-->
-            <!--                <div v-if="seen3">-->
-            <!--                    <template>-->
-            <!--                        <div style="padding: 10px; margin-bottom: 50px">-->
-            <!--                            <el-row>-->
-            <!--                                <el-col :span="4">-->
-            <!--                                    <el-card style="width: 300px; height: 300px; color: #333">-->
-            <!--                                        <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">在线老师<span-->
-            <!--                                                style="font-size: 12px">（点击聊天气泡开始聊天）</span></div>-->
-            <!--                                        <div style="padding: 10px 0" v-for="who in tableData" :key="who.teacherId">-->
-            <!--                                            <span>{{ who.teacherName }}</span>-->
-            <!--                                            <i class="el-icon-chat-dot-round"-->
-            <!--                                               style="margin-left: 10px; font-size: 16px; cursor: pointer"-->
-            <!--                                               @click="chatUser = who;recall()"></i>-->
-            <!--                                            <span style="font-size: 12px;color: limegreen; margin-left: 5px"-->
-            <!--                                                  v-if="who.teacherId === chatUser.teacherId">chatting...</span>-->
-            <!--                                        </div>-->
-            <!--                                    </el-card>-->
-            <!--                                </el-col>-->
-            <!--                                <el-col :span="20">-->
-            <!--                                    <div style="width: 800px; margin: 0 auto; background-color: white;-->
-            <!--                    border-radius: 5px; box-shadow: 0 0 10px #ccc">-->
-            <!--                                        <div style="text-align: center; line-height: 50px;">-->
-            <!--                                            Web聊天室（{{ chatUser.teacherName }}）-->
-            <!--                                        </div>-->
-            <!--                                        <div style="height: 350px; overflow:auto; border-top: 1px solid #ccc"-->
-            <!--                                             v-html="content"></div>-->
-            <!--                                        <div style="height: 200px">-->
-            <!--            <textarea v-model="text" style="height: 160px; width: 95%; padding: 20px; border: none; border-top: 1px solid #ccc;-->
-            <!--             border-bottom: 1px solid #ccc; outline: none"></textarea>-->
-            <!--                                            <div style="text-align: right; padding-right: 10px">-->
-            <!--                                                <el-button type="primary" size="mini" @click="send">发送</el-button>-->
-            <!--                                            </div>-->
-            <!--                                        </div>-->
-            <!--                                    </div>-->
-            <!--                                </el-col>-->
-            <!--                            </el-row>-->
-            <!--                        </div>-->
-            <!--                    </template>-->
-            <!--                </div>-->
-            <!--            </transition>-->
+            <transition name="el-fade-in">
+                <div v-if="seen3">
+                    <template>
+                        <div style="padding: 10px; margin-bottom: 50px">
+                            <el-row>
+                                <el-col :span="4">
+                                    <el-card style="width: 300px; height: 300px; color: #333">
+                                        <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">在线老师<span
+                                                style="font-size: 12px">（点击聊天气泡开始聊天）</span></div>
+                                        <div style="padding: 10px 0" v-for="who in tableData" :key="who.teacherId">
+                                            <span>{{ who.teacherName }}</span>
+                                            <i class="el-icon-chat-dot-round"
+                                               style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                                               @click="chatUser = who;recall()"></i>
+                                            <span style="font-size: 12px;color: limegreen; margin-left: 5px"
+                                                  v-if="who.teacherId === chatUser.teacherId">chatting...</span>
+                                        </div>
+                                    </el-card>
+                                </el-col>
+                                <el-col :span="20">
+                                    <div style="width: 800px; margin: 0 auto; background-color: white;
+                                border-radius: 5px; box-shadow: 0 0 10px #ccc">
+                                        <div style="text-align: center; line-height: 50px;">
+                                            Web聊天室（{{ chatUser.teacherName }}）
+                                        </div>
+                                        <div style="height: 350px; overflow:auto; border-top: 1px solid #ccc"
+                                             v-html="content"></div>
+                                        <div style="height: 200px">
+                        <textarea v-model="text" style="height: 160px; width: 95%; padding: 20px; border: none; border-top: 1px solid #ccc;
+                         border-bottom: 1px solid #ccc; outline: none"></textarea>
+                                            <div style="text-align: right; padding-right: 10px">
+                                                <el-button type="primary" size="mini" @click="send">发送</el-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </template>
+                </div>
+            </transition>
 
             <transition name="el-fade-in">
                 <div v-if="seen4">
@@ -290,12 +290,7 @@
                 },
                 selected: [],
 
-                checkAppList: [{
-                    studentId: '',
-                    studentName: '',
-                    studentGPA: 0,
-                    studentDescription: ''
-                }],
+                checkAppList: [],
                 checkStudent: []
             }
         },
@@ -451,42 +446,89 @@
             },
             checkApp(status) {//Editing
                 let _this = this;
-                if (status === 1) {
-                    axios
-                        .get("http://localhost:8080/hellomentor/teacher/getFirstApp", {
-                            params: {
-                                teacher_id: this.TeacherId
-                            }
-                        })
-                        .then(function (resp) {
-                            _this.checkStudent = resp.data;
-                            for (let i = 0; i < resp.data.length; i++) {
-                                let studentInfo = {
-                                    studentId: resp.data[i].studentId,
-                                    studentName: '',
-                                    studentGPA: 0,
-                                    studentDescription: ''
+                switch (status) {
+                    case 1: {
+                        axios
+                            .get("http://localhost:8080/hellomentor/teacher/getFirstApp", {
+                                params: {
+                                    teacher_id: this.TeacherId
                                 }
+                            })
+                            .then(function (resp) {
+                                console.log(resp.data);
+                                _this.checkStudent = resp.data;
+                                _this.checkAppList = [];
+                                for (let i = 0; i < resp.data.length; i++) {
+                                    let studentInfo = {
+                                        studentId: resp.data[i].studentId,
+                                        studentName: '',
+                                        studentGPA: 0,
+                                        studentDescription: ''
+                                    }
 
-                                axios
-                                    .get("http://localhost:8080/hellomentor/student/getinfo", {
-                                        params: {
-                                            student_id: resp.data[i].studentId
-                                        }
-                                    })
-                                    .then(function (resp1) {
-                                        console.log(resp1.data);
-                                    })
-                                    .catch(err => {
-                                        console.log(err);
-                                    })
-                            }
-                            console.log(this.checkAppList);
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        })
+                                    axios
+                                        .get("http://localhost:8080/hellomentor/student/getinfo", {
+                                            params: {
+                                                student_id: resp.data[i].studentId
+                                            }
+                                        })
+                                        .then(function (resp1) {
+                                            console.log(resp1.data);
+                                            studentInfo.studentName = resp1.data.studentName;
+                                            studentInfo.studentGPA = resp1.data.gpa;
+                                            studentInfo.studentDescription = resp1.data.studentDescription;
+                                            _this.checkAppList.push(studentInfo);
+                                        })
+                                        .catch(err => {
+                                            console.log(err);
+                                        })
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
+                        break;
+                    }
+                    case 2: {
+                        axios
+                            .get("http://localhost:8080/hellomentor/teacher/getSecondApp", {
+                                params: {
+                                    teacher_id: this.TeacherId
+                                }
+                            })
+                            .then(function (resp) {
+                                _this.checkStudent = resp.data;
+                                _this.checkAppList = [];
+                                for (let i = 0; i < resp.data.length; i++) {
+                                    let studentInfo = {
+                                        studentId: resp.data[i].studentId,
+                                        studentName: '',
+                                        studentGPA: 0,
+                                        studentDescription: ''
+                                    }
 
+                                    axios
+                                        .get("http://localhost:8080/hellomentor/student/getinfo", {
+                                            params: {
+                                                student_id: resp.data[i].studentId
+                                            }
+                                        })
+                                        .then(function (resp1) {
+                                            studentInfo.studentName = resp1.data.studentName;
+                                            studentInfo.studentGPA = resp1.data.gpa;
+                                            studentInfo.studentDescription = resp1.data.studentDescription;
+                                            _this.checkAppList.push(studentInfo);
+                                        })
+                                        .catch(err => {
+                                            console.log(err);
+                                        })
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
+                        break;
+                    }
                 }
             }
         },

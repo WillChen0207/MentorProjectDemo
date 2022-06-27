@@ -234,7 +234,7 @@ public class StudentController {
                                      @RequestParam("messageinfo") String messageinfo){
         ModelAndView mav = new ModelAndView();
         Message messageRec = new Message();
-        messageRec.setRec_id(5);
+        messageRec.setRec_id(null);
         messageRec.setSender(student_id);
         messageRec.setReceiver(teacher_id);
         messageRec.setMessage(messageinfo);
