@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,8 +90,10 @@ public class TeacherController {
     @RequestMapping(value = "/login",method = {RequestMethod.GET,RequestMethod.POST})
     public Integer logCheck(@RequestParam("teacher_id") String teacher_id,
                             @RequestParam("password") String password,
-                            HttpServletRequest request){
-        List<Teacher> teacherList = teacherRep.logCheck(teacher_id,password);
+                            HttpServletRequest request) throws Exception{
+        String psw;
+        psw = getShaPassword(password);
+        List<Teacher> teacherList = teacherRep.logCheck(teacher_id,psw);
         if (teacherList.isEmpty()) {
             return 0;
         }else {
@@ -123,10 +128,12 @@ public class TeacherController {
     @ResponseBody
     @RequestMapping(value = "/updatePassword",method = {RequestMethod.GET,RequestMethod.POST})
     public Teacher updatePassword(@RequestParam("teacher_id") String teacher_id,
-                                       @RequestParam("password") String password) {
+                                       @RequestParam("password") String password)throws Exception {
+        String psw;
+        psw = getShaPassword(password);
         Optional<Teacher> op = teacherRep.findById(teacher_id);
         op.ifPresent(teacher -> {
-            teacher.setPassword(password);
+            teacher.setPassword(psw);
             teacherRep.save(teacher);
         });
         return teacherRep.getInfo(teacher_id);
@@ -235,6 +242,21 @@ public class TeacherController {
     @RequestMapping(value = "/getThirdApp", method = {RequestMethod.GET,RequestMethod.POST})
     public List<ApplicationRecord> getAppThirdRecList(@RequestParam("teacher_id") String teacher_id){
         return appRecRep.getApp(teacher_id);
+    }
+
+    /**密码进行SHA加密
+     *
+     * @param password
+     * @return
+     * @throws Exception
+     */
+    public String getShaPassword(String password)throws Exception{
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        md.update(password.getBytes(StandardCharsets.UTF_8));
+        byte[] res = md.digest();
+        String pswoutput;
+        pswoutput = new BigInteger(1,res).toString(16);
+        return pswoutput;
     }
 
 }

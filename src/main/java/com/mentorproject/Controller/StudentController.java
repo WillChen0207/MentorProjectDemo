@@ -18,6 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -115,9 +118,10 @@ public class StudentController {
     @RequestMapping(value = "/login",method = {RequestMethod.GET,RequestMethod.POST})
     public Integer logCheck(@RequestParam("student_id") String student_id,
                             @RequestParam("password") String password,
-                            HttpServletRequest request){
-
-        List<Student> studentList = studentRep.logCheck(student_id,password);
+                            HttpServletRequest request) throws Exception {
+        String psw;
+        psw = getShaPassword(password);
+        List<Student> studentList = studentRep.logCheck(student_id,psw);
         if (studentList.isEmpty()) {
             return 0;
         }else {
@@ -175,10 +179,12 @@ public class StudentController {
     @ResponseBody
     @RequestMapping(value = "/updatePassword",method = {RequestMethod.GET,RequestMethod.POST})
     public Student updatePassword(@RequestParam("student_id") String student_id,
-                                       @RequestParam("password") String password) {
+                                       @RequestParam("password") String password)throws  Exception{
+        String psw;
+        psw = getShaPassword(password);
         Optional<Student> op = studentRep.findById(student_id);
         op.ifPresent(student -> {
-            student.setPassword(password);
+            student.setPassword(psw);
             studentRep.save(student);
         });
         return studentRep.getInfo(student_id);
@@ -247,5 +253,20 @@ public class StudentController {
     @RequestMapping(value = "/checkResult",method = {RequestMethod.GET,RequestMethod.POST})
     public List<Result> checkResult(@RequestParam("student_id") String student_id){
         return resultRep.checkResult(student_id);
+    }
+
+    /**密码进行SHA加密
+     *
+     * @param password
+     * @return
+     * @throws Exception
+     */
+    public String getShaPassword(String password)throws Exception{
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        md.update(password.getBytes(StandardCharsets.UTF_8));
+        byte[] res = md.digest();
+        String pswoutput;
+        pswoutput = new BigInteger(1,res).toString(16);
+        return pswoutput;
     }
 }
