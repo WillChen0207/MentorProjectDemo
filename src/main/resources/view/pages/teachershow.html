@@ -114,7 +114,39 @@
                             <div style="padding: 20px;">
                                 <span>姓名:{{ teacher.desc }}</span>
                                 <div class="bottom clearfix">
-                                    <el-button type="text" class="button">查看导师信息</el-button>
+                                    <el-button type="text" class="button" @click="dialogVisible=true;findMentor(teacher.key);">查看导师信息</el-button>
+                                    <el-dialog title="导师详细信息" :visible.sync="dialogVisible">
+                                        <el-descriptions>
+                                            <el-descriptions-item>
+                                                <template slot="label">
+                                                    <i class="el-icon-user"></i>
+                                                    姓名
+                                                </template>
+                                                {{ TeacherName }}
+                                            </el-descriptions-item>
+                                            <el-descriptions-item>
+                                                <template slot="label">
+                                                    <i class="el-icon-mobile-phone"></i>
+                                                    工号
+                                                </template>
+                                                {{ TeacherId }}
+                                            </el-descriptions-item>
+                                            <el-descriptions-item>
+                                                <template slot="label">
+                                                    <i class="el-icon-location-outline"></i>
+                                                    性别
+                                                </template>
+                                                {{ TeacherGender === 0 ? '女' : '男' }}
+                                            </el-descriptions-item>
+                                            <el-descriptions-item>
+                                                <template slot="label">
+                                                    <i class="el-icon-office-building"></i>
+                                                    个人介绍
+                                                </template>
+                                                {{ TeacherDescription }}
+                                            </el-descriptions-item>
+                                        </el-descriptions>
+                                    </el-dialog>
                                 </div>
                             </div>
                         </el-card>
@@ -137,7 +169,13 @@
                     teacher_description: '',
                     password: ''
                 }],
-                teacherNameList: []
+                teacherNameList: [],
+                dialogVisible: false,
+
+                TeacherName: '',
+                TeacherId: '',
+                TeacherGender: 0,
+                TeacherDescription: ''
             }
         },
         methods: {
@@ -150,6 +188,16 @@
             Home() {
                 localStorage.setItem('StudentID', '');
                 window.location.href = "http://localhost:63342/MentorProject/view/pages/index.html";
+            },
+            findMentor(teacherId) {
+                this.TeacherId = teacherId;
+                for (let i = 0; i < this.tableData.length; i++) {
+                    if (teacherId === this.tableData[i].teacherId) {
+                        this.TeacherName = this.tableData[i].teacherName;
+                        this.TeacherGender = this.tableData[i].gender;
+                        this.TeacherDescription = this.tableData[i].teacherDescription;
+                    }
+                }
             }
         },
         mounted() {
@@ -157,7 +205,7 @@
                 .get("http://localhost:8080/hellomentor/teacher/getall")
                 .then(resp => {
                     this.tableData = resp.data;
-
+                    console.log(this.tableData);
                     for (let i = 0; i < this.tableData.length; i++) {
                         let id = resp.data[i].teacherId;
                         let name = resp.data[i].teacherName;

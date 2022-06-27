@@ -234,12 +234,15 @@
                             <el-row>
                                 <el-col :span="4">
                                     <el-card style="width: 300px; height: 300px; color: #333">
-                                        <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">在线老师<span style="font-size: 12px">（点击聊天气泡开始聊天）</span></div>
+                                        <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">在线老师<span
+                                                style="font-size: 12px">（点击聊天气泡开始聊天）</span></div>
                                         <div style="padding: 10px 0" v-for="who in tableData" :key="who.teacherId">
-                                            <span>{{who.teacherName}}</span>
-                                            <i class="el-icon-chat-dot-round" style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                                            <span>{{ who.teacherName }}</span>
+                                            <i class="el-icon-chat-dot-round"
+                                               style="margin-left: 10px; font-size: 16px; cursor: pointer"
                                                @click="chatUser = who;recall()"></i>
-                                            <span style="font-size: 12px;color: limegreen; margin-left: 5px" v-if="who.teacherId === chatUser.teacherId">chatting...</span>
+                                            <span style="font-size: 12px;color: limegreen; margin-left: 5px"
+                                                  v-if="who.teacherId === chatUser.teacherId">chatting...</span>
                                         </div>
                                     </el-card>
                                 </el-col>
@@ -249,7 +252,8 @@
                                         <div style="text-align: center; line-height: 50px;">
                                             Web聊天室（{{ chatUser.teacherName }}）
                                         </div>
-                                        <div style="height: 350px; overflow:auto; border-top: 1px solid #ccc" v-html="content"></div>
+                                        <div style="height: 350px; overflow:auto; border-top: 1px solid #ccc"
+                                             v-html="content"></div>
                                         <div style="height: 200px">
             <textarea v-model="text" style="height: 160px; width: 95%; padding: 20px; border: none; border-top: 1px solid #ccc;
              border-bottom: 1px solid #ccc; outline: none"></textarea>
@@ -274,12 +278,12 @@
     var pageApp = new Vue({
         data() {
             return {
-                text:"",
-                text123:"",
+                text: "",
+                text123: "",
 
-                content:'',
+                content: '',
 
-                chatUser:{
+                chatUser: {
                     teacherId: '',
                     teacherName: '',
                     gender: '',
@@ -332,8 +336,7 @@
             }
         },
         methods: {
-
-            recall(){
+            recall() {
                 axios
                     .get("http://localhost:8080/hellomentor/student/checkMessage", {
                         params: {
@@ -348,9 +351,9 @@
                     .catch(err => {
                         console.log(err);
                     })
-                for(let item of this.messageData){
-                    if(item.sender === this.StudentId){
-                        text123=item.message;
+                for (let item of this.messageData) {
+                    if (item.sender === this.StudentId) {
+                        text123 = item.message;
 
                         html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
                             "  <div class=\"el-col el-col-22\" style=\"text-align: right; padding-right: 10px\">\n" +
@@ -362,9 +365,8 @@
                             "  </span>\n" +
                             "  </div>\n" +
                             "</div>";
-                    }
-                    else{
-                        text123=item.message;
+                    } else {
+                        text123 = item.message;
                         html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
                             "  <div class=\"el-col el-col-2\" style=\"text-align: right\">\n" +
                             "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
@@ -382,28 +384,28 @@
             },
 
             send() {
-                    if (!this.chatUser.teacherId) {
-                        this.$message({type: 'warning', message: "请选择聊天对象"})
-                        return;
-                    }
-                    if (!this.text) {
-                        this.$message({type: 'warning', message: "请输入内容"})
-                    } else {
-                        axios
-                            .get("http://localhost:8080/hellomentor/student/sendMessage", {
-                                params: {
-                                    student_id: this.StudentId,
-                                    teacher_id: this.chatUser.teacherId,
-                                    messageinfo: this.text
-                                }
-                            })
-                            .then(resp => {
-                                this.$message.success('发送成功！');
-                                console.log(resp.data);
-                                window.location.reload();
-                            });
-                    }
-                },
+                if (!this.chatUser.teacherId) {
+                    this.$message({type: 'warning', message: "请选择聊天对象"})
+                    return;
+                }
+                if (!this.text) {
+                    this.$message({type: 'warning', message: "请输入内容"})
+                } else {
+                    axios
+                        .get("http://localhost:8080/hellomentor/student/sendMessage", {
+                            params: {
+                                student_id: this.StudentId,
+                                teacher_id: this.chatUser.teacherId,
+                                messageinfo: this.text
+                            }
+                        })
+                        .then(resp => {
+                            this.$message.success('发送成功！');
+                            console.log(resp.data);
+                            window.location.reload();
+                        });
+                }
+            },
 
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
