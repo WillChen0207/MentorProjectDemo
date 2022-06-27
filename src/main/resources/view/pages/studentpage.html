@@ -273,7 +273,7 @@
                                         <div style="height: 350px; overflow:auto; border-top: 1px solid #ccc"
                                              v-html="content"></div>
                                         <div style="height: 200px">
-            <textarea v-model="text" style="height: 160px; width: 100%; padding: 20px; border: none; border-top: 1px solid #ccc;
+            <textarea v-model="text" style="height: 160px; width: 95%; padding: 20px; border: none; border-top: 1px solid #ccc;
              border-bottom: 1px solid #ccc; outline: none"></textarea>
                                             <div style="text-align: right; padding-right: 10px">
                                                 <el-button type="primary" size="mini" @click="send">发送</el-button>
@@ -351,12 +351,14 @@
                     studentName: '',
                     studentDescription: ''
                 },
-                selected: []
+                selected: [],
+                message1:'123',
+
+                isrecall: true
             }
         },
         methods: {
             recall() {
-
                 axios
                     .get("http://localhost:8080/hellomentor/student/checkMessage", {
                         params: {
@@ -367,44 +369,14 @@
                     .then(resp => {
                         this.messageData = resp.data;
                         this.newMessage = this.messageData.length;
-                        console.log(this.messageData)
+                        this.isrecall=false;
                     })
                     .catch(err => {
                         console.log(err);
                     })
-                this.content='';
-                for (let item of this.messageData) {
-                    console.log(this.chatUser.teacherName+'   '+item.receiver+'   '+item.sender)
-                    if (item.receiver === this.chatUser.teacherId) {
-                        texts = item.message;
-                        html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
-                            "  <div class=\"el-col el-col-22\" style=\"text-align: right; padding-right: 10px\">\n" +
-                            "    <div class=\"tip left\">" + texts + "</div>\n" +
-                            "  </div>\n" +
-                            "  <div class=\"el-col el-col-2\">\n" +
-                            "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
-                            "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
-                            "  </span>\n" +
-                            "  </div>\n" +
-                            "</div>";<!--当前用户信息-->
-                    } else {
-
-                        textr = item.message;
-                        html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
-                            "  <div class=\"el-col el-col-2\" style=\"text-align: right\">\n" +
-                            "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
-                            "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
-                            "  </span>\n" +
-                            "  </div>\n" +
-                            "  <div class=\"el-col el-col-22\" style=\"text-align: left; padding-left: 10px\">\n" +
-                            "    <div class=\"tip right\">" + textr + "</div>\n" +
-                            "  </div>\n" +
-                            "</div>";
-                    }
-
-                    this.content += html;
-                }
+                this.content = '';
             },
+
 
             send() {
                 if (!this.chatUser.teacherId) {
@@ -425,7 +397,7 @@
                         .then(resp => {
                             this.$message.success('发送成功！');
                             console.log(resp.data);
-                            window.location.reload();
+
                         });
                 }
             },
@@ -555,6 +527,43 @@
             }
         },
         mounted() {
+            setInterval(() => {
+                console.log('页面加载完成后-自动执行')
+                if (!this.isrecall){
+                console.log(this.messageData)
+                for (let item of this.messageData) {
+                    if (item.receiver === this.chatUser.teacherId) {
+                        texts = item.message;
+                        html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
+                            "  <div class=\"el-col el-col-22\" style=\"text-align: right; padding-right: 10px\">\n" +
+                            "    <div class=\"tip left\">" + texts + "</div>\n" +
+                            "  </div>\n" +
+                            "  <div class=\"el-col el-col-2\">\n" +
+                            "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
+                            "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
+                            "  </span>\n" +
+                            "  </div>\n" +
+                            "</div>";<!--当前用户信息-->
+                    } else {
+
+                        textr = item.message;
+                        html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
+                            "  <div class=\"el-col el-col-2\" style=\"text-align: right\">\n" +
+                            "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
+                            "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
+                            "  </span>\n" +
+                            "  </div>\n" +
+                            "  <div class=\"el-col el-col-22\" style=\"text-align: left; padding-left: 10px\">\n" +
+                            "    <div class=\"tip right\">" + textr + "</div>\n" +
+                            "  </div>\n" +
+                            "</div>";
+                    }
+
+                    this.content += html;
+                    this.isrecall=true;
+                }}
+            }, 1000)
+
             axios
                 .get("http://localhost:8080/hellomentor/teacher/getall")
                 .then(resp => {
