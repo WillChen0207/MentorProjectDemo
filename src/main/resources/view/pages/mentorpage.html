@@ -19,6 +19,7 @@
             color: #333;
             line-height: 60px;
         }
+
         .image {
             width: 100%;
             display: block;
@@ -57,11 +58,10 @@
                 </el-menu-item>
                 <el-submenu index="2">
                     <template slot="title">志愿管理</template>
-                    <el-menu-item index="2-1" @click="seen1=false;seen21=true;seen22=false;seen3=false;seen4=false">
+                    <el-menu-item index="2-1"
+                                  @click="seen1=false;seen21=true;seen22=false;seen3=false;seen4=false;checkApp(presentStatus)"
+                                  v-if="this.presentStatus === 1 || this.presentStatus === 2 || this.presentStatus === 3">
                         查看志愿
-                    </el-menu-item>
-                    <el-menu-item index="2-2" @click="seen1=false;seen21=false;seen22=true;seen3=false;seen4=false" v-if="this.presentStatus === 1">
-                        填写志愿
                     </el-menu-item>
                 </el-submenu>
                 <el-menu-item index="3" @click="seen1=false;seen21=false;seen22=false;seen3=true;seen4=false">
@@ -136,16 +136,81 @@
 
             <transition name="el-fade-in">
                 <div v-if="seen21">
-                </div>
-            </transition>
-            <transition name="el-fade-in">
-                <div v-if="seen22">
+                    <template>
+                        <el-table
+                                :data="checkAppList"
+                                border
+                                style="width: 100%">
+                            <el-table-column
+                                    fixed
+                                    prop="studentName"
+                                    label="姓名"
+                                    width="150%">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="studentGPA"
+                                    label="绩点"
+                                    width="150%">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="studentDescription"
+                                    label="个人介绍">
+                            </el-table-column>
+                            <el-table-column
+                                    fixed="right"
+                                    label="操作"
+                                    width="180%">
+                                <template slot-scope="scope">
+                                    <el-button @click="handleClick(scope.row)" type="primary" size="middle">选中
+                                    </el-button>
+                                    <el-button @click="handleClick(scope.row)" type="danger" size="middle">不选
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
                 </div>
             </transition>
 
             <transition name="el-fade-in">
                 <div v-if="seen3">
-
+                    <template>
+                        <div style="padding: 10px; margin-bottom: 50px">
+                            <el-row>
+                                <el-col :span="4">
+                                    <el-card style="width: 300px; height: 300px; color: #333">
+                                        <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">在线老师<span
+                                                style="font-size: 12px">（点击聊天气泡开始聊天）</span></div>
+                                        <div style="padding: 10px 0" v-for="who in tableData" :key="who.teacherId">
+                                            <span>{{ who.teacherName }}</span>
+                                            <i class="el-icon-chat-dot-round"
+                                               style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                                               @click="chatUser = who;recall()"></i>
+                                            <span style="font-size: 12px;color: limegreen; margin-left: 5px"
+                                                  v-if="who.teacherId === chatUser.teacherId">chatting...</span>
+                                        </div>
+                                    </el-card>
+                                </el-col>
+                                <el-col :span="20">
+                                    <div style="width: 800px; margin: 0 auto; background-color: white;
+                    border-radius: 5px; box-shadow: 0 0 10px #ccc">
+                                        <div style="text-align: center; line-height: 50px;">
+                                            Web聊天室（{{ chatUser.teacherName }}）
+                                        </div>
+                                        <div style="height: 350px; overflow:auto; border-top: 1px solid #ccc"
+                                             v-html="content"></div>
+                                        <div style="height: 200px">
+            <textarea v-model="text" style="height: 160px; width: 95%; padding: 20px; border: none; border-top: 1px solid #ccc;
+             border-bottom: 1px solid #ccc; outline: none"></textarea>
+                                            <div style="text-align: right; padding-right: 10px">
+                                                <el-button type="primary" size="mini" @click="send">发送</el-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </template>
                 </div>
             </transition>
 
@@ -154,15 +219,16 @@
                     <template>
                         <el-row>
                             <el-col :span="4" v-for="teacher in this.teacherNameList" :key="teacher.key" :offset="3">
-                                    <el-card :body-style="{ padding: '5px' }">
-                                        <img src="https://game.gtimg.cn/images/lol/act/img/tft/hero/lolapp_39003.png" class="image" >
-                                        <div style="padding: 20px;">
-                                            <span>{{ teacher.desc }}</span>
-                                            <div class="bottom clearfix">
-                                                <el-button type="text" class="button">操作按钮</el-button>
-                                            </div>
+                                <el-card :body-style="{ padding: '5px' }">
+                                    <img src="https://game.gtimg.cn/images/lol/act/img/tft/hero/lolapp_39003.png"
+                                         class="image">
+                                    <div style="padding: 20px;">
+                                        <span>{{ teacher.desc }}</span>
+                                        <div class="bottom clearfix">
+                                            <el-button type="text" class="button">操作按钮</el-button>
                                         </div>
-                                    </el-card>
+                                    </div>
+                                </el-card>
                             </el-col>
                         </el-row>
                     </template>
@@ -176,6 +242,19 @@
     var pageApp = new Vue({
         data() {
             return {
+                text: "",
+                text123: "",
+
+                content: '',
+
+                chatUser: {
+                    studentId: '',
+                    studentName: '',
+                    gender: '',
+                    studentDescription: '',
+                    password: ''
+                },
+
                 activeIndex: '1',
                 activeIndex2: '1',
                 presentStatus: JSON.parse(localStorage.getItem('PresentStatus')),
@@ -187,10 +266,10 @@
                 seen4: false,
 
                 tableData: [{
-                    teacher_id: '',
-                    teacher_name: '',
+                    teacherId: '',
+                    teacherName: '',
                     gender: '',
-                    teacher_description: '',
+                    teacherDescription: '',
                     password: ''
                 }],
                 teacherNameList: [],
@@ -208,10 +287,127 @@
                     teacherName: '',
                     teacherDescription: ''
                 },
-                selected: []
+                selected: [],
+
+                checkAppList: [{
+                    studentId: '',
+                    studentName: '',
+                    studentGPA: 0,
+                    studentDescription: ''
+                }]
             }
         },
         methods: {
+            checkApp(status) {//Editing
+                if (status === 1) {
+                    axios.all([])
+                    axios
+                        .get("http://localhost:8080/hellomentor/teacher/getFirstApp", {
+                            params: {
+                                teacher_id: this.TeacherId
+                            }
+                        })
+                        .then(resp => {
+                            for (let i = 0; i < resp.data.length; i++) {
+                                var stuId = resp.data[i].studentId;
+                                var stuName, stuGPA, stuDesc;
+                                axios.get("http://localhost:8080/hellomentor/student/getinfo", {
+                                    params: {
+                                        student_id: stuId
+                                    }
+                                })
+                                    .then(resp => {
+                                        console.log(resp.data);
+                                        stuName = resp.data[0].studentName;
+                                        stuGPA = resp.data[0].gpa;
+                                        stuDesc = resp.data[0].studentDescription;
+                                    })
+                                    .catch(err => {
+                                        console.log(err);
+                                    })
+
+                                console.log(checkStudent);
+                                this.checkAppList.push(checkStudent);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+
+                }
+            },
+
+            recall() {
+                axios
+                    .get("http://localhost:8080/hellomentor/student/checkMessage", {
+                        params: {
+                            student_id: this.StudentId,
+                            teacher_id: this.chatUser.teacherId
+                        }
+                    })
+                    .then(resp => {
+                        this.messageData = resp.data;
+                        this.newMessage = this.messageData.length;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+                for (let item of this.messageData) {
+                    if (item.sender === this.StudentId) {
+                        text123 = item.message;
+
+                        html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
+                            "  <div class=\"el-col el-col-22\" style=\"text-align: right; padding-right: 10px\">\n" +
+                            "    <div class=\"tip left\">" + text123 + "</div>\n" +
+                            "  </div>\n" +
+                            "  <div class=\"el-col el-col-2\">\n" +
+                            "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
+                            "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
+                            "  </span>\n" +
+                            "  </div>\n" +
+                            "</div>";
+                    } else {
+                        text123 = item.message;
+                        html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
+                            "  <div class=\"el-col el-col-2\" style=\"text-align: right\">\n" +
+                            "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
+                            "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
+                            "  </span>\n" +
+                            "  </div>\n" +
+                            "  <div class=\"el-col el-col-22\" style=\"text-align: left; padding-left: 10px\">\n" +
+                            "    <div class=\"tip right\">" + text123 + "</div>\n" +
+                            "  </div>\n" +
+                            "</div>";
+                    }
+                    console.log(html)
+                    this.content += html;
+                }
+            },
+
+            send() {
+                if (!this.chatUser.teacherId) {
+                    this.$message({type: 'warning', message: "请选择聊天对象"})
+                    return;
+                }
+                if (!this.text) {
+                    this.$message({type: 'warning', message: "请输入内容"})
+                } else {
+                    axios
+                        .get("http://localhost:8080/hellomentor/student/sendMessage", {
+                            params: {
+                                student_id: this.StudentId,
+                                teacher_id: this.chatUser.teacherId,
+                                messageinfo: this.text
+                            }
+                        })
+                        .then(resp => {
+                            this.$message.success('发送成功！');
+                            console.log(resp.data);
+                            window.location.reload();
+                        });
+                }
+            },
+
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
             },

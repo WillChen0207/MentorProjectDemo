@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Index</title>
+    <title>Hello,导师!</title>
     <!--引入 element-ui 的样式，-->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <!-- 必须先引入vue，  后使用element-ui -->
@@ -68,10 +68,10 @@
 </head>
 
 <body>
-<el-container style="height: 100%; border: 1px solid #000000" id="App">
+<el-container style="height: 100%; " id="App">
     <el-header style="font-size: 25px">
         <i class="el-icon-s-promotion" style="margin-left: 15px;"></i>
-        <el-link href="https://www.baidu.com" target="_blank">导师制双向选择系统</el-link>
+        <el-label @click="Initialize()">Hello,导师!</el-label>
     </el-header>
     <el-main>
         <el-row>
@@ -87,29 +87,29 @@
                 </template>
             </el-col>
             <el-col :span="10">
+                <h2 style="text-align: center">用户登录</h2>
                 <el-form ref="form" :model="form" label-width="80px">
-                    <el-form-item>
-                        <h3>用户登录</h3>
-                    </el-form-item>
                     <el-form-item label="账号">
-                        <el-input v-model="form.Id"></el-input><!--v-mode去掉了-->
+                        <el-input v-model="form.Id" :disabled="(this.isGuest)"></el-input><!--v-mode去掉了-->
                     </el-form-item>
                     <el-form-item label="密码">
-                        <el-input v-model="form.password" type="password"></el-input><!--v-mode去掉了-->
+                        <el-input v-model="form.password" type="password" :disabled="(this.isGuest === true)"></el-input><!--v-mode去掉了-->
                     </el-form-item>
                     <el-form-item label="身份">
                         <el-select placeholder="请选择身份" v-model="form.identity">
                             <el-option label="学生" value="student"></el-option>
                             <el-option label="老师" value="teacher"></el-option>
+                            <el-option label="游客" value="guest"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-button type="primary" @click="onSubmit">立即登录</el-button>
-                    <el-button>取消</el-button>
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit()">立即登录</el-button>
+                        <el-button>取消</el-button>
+                    </el-form-item>
                 </el-form>
             </el-col>
         </el-row>
     </el-main>
-    <el-footer>Footer</el-footer>
 </el-container>
 
 <script type="text/javascript">
@@ -125,8 +125,6 @@
         },
         methods: {
             onSubmit() {
-                console.log('submit!');
-                console.log(this.form);
                 if (this.form.identity ==='student'){
                 axios
                     .get("http://localhost:8080/hellomentor/student/login", {
@@ -140,12 +138,12 @@
                             localStorage.setItem('StudentID', this.form.Id);
                             window.location.href = "http://localhost:63342/MentorProject/view/pages/studentpage.html";
                         } else {
-                            window.location.reload();
+                            this.$message.error("账号/密码/身份有误，请重试");
                         }
                     }).catch(err => {
                         console.log(err);
                     })}
-                else{
+                else if (this.form.identity ==='teacher'){
                     axios
                         .get("http://localhost:8080/hellomentor/teacher/login", {
                             params:{
@@ -158,12 +156,20 @@
                             localStorage.setItem('TeacherID', this.form.Id);
                             window.location.href = "http://localhost:63342/MentorProject/view/pages/mentorpage.html";
                         } else {
-                            window.location.reload();
+                            this.$message.error("账号/密码/身份有误，请重试");
                         }
                     }).catch(err => {
                         console.log(err);
                     })
+                } else {
+                    window.location.href = "http://localhost:63342/MentorProject/view/pages/teachershow.html";
                 }
+            },
+            Initialize(){
+                localStorage.setItem('StudentID', '');
+                localStorage.setItem('TeacherID', '');
+                localStorage.setItem('PresentStatus', 0);
+                this.$message.success('初始化完成');
             }
         }
     })

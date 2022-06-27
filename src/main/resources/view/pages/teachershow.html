@@ -1,29 +1,229 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MentorList</title>
+    <title>导师详情页</title>
+    <!--引入 element-ui 的样式，-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 必须先引入vue，  后使用element-ui -->
+    <!--    <script src="../js/vue.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <!-- 引入element 的组件库-->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/http-vue-loader"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue-router@3.0.0/dist/vue-router.js"></script>
+    <style>
+        .el-header {
+            background-color: #B3C0D1;
+            color: #333;
+            line-height: 60px;
+        }
+
+        .el-carousel__item h3 {
+            color: #475669;
+            font-size: 14px;
+            opacity: 0.75;
+            line-height: 150px;
+            margin: 0;
+        }
+
+        .el-carousel__item:nth-child(2n) {
+            background-color: #99a9bf;
+        }
+
+        .el-carousel__item:nth-child(2n+1) {
+            background-color: #d3dce6;
+        }
+
+        .el-row {
+            margin-bottom: 20px;
+        }
+
+        .el-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .el-col {
+            border-radius: 4px;
+        }
+
+        .bg-purple-dark {
+            background: #99a9bf;
+        }
+
+        .bg-purple {
+            background: #d3dce6;
+        }
+
+        .bg-purple-light {
+            background: #e5e9f2;
+        }
+
+        .grid-content {
+            border-radius: 4px;
+            min-height: 36px;
+        }
+
+        .row-bg {
+            padding: 10px 0;
+            background-color: #f9fafc;
+        }
+
+        .bottom {
+            margin-top: 13px;
+            line-height: 12px;
+        }
+
+        .button {
+            padding: 0;
+            float: right;
+        }
+
+        .image {
+            width: 100%;
+            display: block;
+        }
+
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+    </style>
 </head>
+
 <body>
-<table>
-    <thead>
-    <tr>
-        <th>TeacherID</th>
-        <th>TeacherName</th>
-        <th>Gender</th>
-        <th>Description</th>
-        <th>Password</th>
-    </tr>
-    </thead>
-    <tbody>
-        <tr th:each="teacher,iterStat : ${teacherList}">
-            <td th:text="${teacher.teacherId}"></td>
-            <td th:text="${teacher.teacherName}"></td>
-            <td th:text="${teacher.gender}"></td>
-            <td th:text="${teacher.description}"></td>
-            <td th:text="${teacher.password}"></td>
-        </tr>
-    </tbody>
-</table>
+<div id="teacherApp">
+
+    <el-container style="height: 100%;">
+        <el-header style="font-size: 25px">
+            <i class="el-icon-s-promotion" style="margin-left: 15px;"></i>
+            <el-label @click="Home()">Hello,导师!</el-label>
+        </el-header>
+        <el-main>
+            <template>
+                <el-row>
+                    <el-col :span="4" v-for="teacher in this.teacherNameList" :key="teacher.key" :offset="3">
+                        <el-card :body-style="{ padding: '5px' }">
+                            <img src="https://game.gtimg.cn/images/lol/act/img/tft/hero/lolapp_39003.png" class="image">
+                            <div style="padding: 20px;">
+                                <span>姓名:{{ teacher.desc }}</span>
+                                <div class="bottom clearfix">
+                                    <el-button type="text" class="button" @click="dialogVisible=true;findMentor(teacher.key);">查看导师信息</el-button>
+                                    <el-dialog title="导师详细信息" :visible.sync="dialogVisible">
+                                        <el-descriptions>
+                                            <el-descriptions-item>
+                                                <template slot="label">
+                                                    <i class="el-icon-user"></i>
+                                                    姓名
+                                                </template>
+                                                {{ TeacherName }}
+                                            </el-descriptions-item>
+                                            <el-descriptions-item>
+                                                <template slot="label">
+                                                    <i class="el-icon-mobile-phone"></i>
+                                                    工号
+                                                </template>
+                                                {{ TeacherId }}
+                                            </el-descriptions-item>
+                                            <el-descriptions-item>
+                                                <template slot="label">
+                                                    <i class="el-icon-location-outline"></i>
+                                                    性别
+                                                </template>
+                                                {{ TeacherGender === 0 ? '女' : '男' }}
+                                            </el-descriptions-item>
+                                            <el-descriptions-item>
+                                                <template slot="label">
+                                                    <i class="el-icon-office-building"></i>
+                                                    个人介绍
+                                                </template>
+                                                {{ TeacherDescription }}
+                                            </el-descriptions-item>
+                                        </el-descriptions>
+                                    </el-dialog>
+                                </div>
+                            </div>
+                        </el-card>
+                    </el-col>
+                </el-row>
+            </template>
+        </el-main>
+
+    </el-container>
+</div>
+
+<script type="text/javascript">
+    var teacherApp = new Vue({
+        data() {
+            return {
+                tableData: [{
+                    teacher_id: '',
+                    teacher_name: '',
+                    gender: '',
+                    teacher_description: '',
+                    password: ''
+                }],
+                teacherNameList: [],
+                dialogVisible: false,
+
+                TeacherName: '',
+                TeacherId: '',
+                TeacherGender: 0,
+                TeacherDescription: ''
+            }
+        },
+        methods: {
+            Initialize() {
+                localStorage.setItem('StudentID', '');
+                localStorage.setItem('TeacherID', '');
+                localStorage.setItem('PresentStatus', 0);
+                this.$message.success('初始化完成');
+            },
+            Home() {
+                localStorage.setItem('StudentID', '');
+                window.location.href = "http://localhost:63342/MentorProject/view/pages/index.html";
+            },
+            findMentor(teacherId) {
+                this.TeacherId = teacherId;
+                for (let i = 0; i < this.tableData.length; i++) {
+                    if (teacherId === this.tableData[i].teacherId) {
+                        this.TeacherName = this.tableData[i].teacherName;
+                        this.TeacherGender = this.tableData[i].gender;
+                        this.TeacherDescription = this.tableData[i].teacherDescription;
+                    }
+                }
+            }
+        },
+        mounted() {
+            axios
+                .get("http://localhost:8080/hellomentor/teacher/getall")
+                .then(resp => {
+                    this.tableData = resp.data;
+                    console.log(this.tableData);
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        let id = resp.data[i].teacherId;
+                        let name = resp.data[i].teacherName;
+                        let socket = {
+                            key: id,
+                            desc: name,
+                            disabled: false
+                        };
+                        this.teacherNameList.push(socket);
+                    }
+
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    })
+    teacherApp.$mount('#teacherApp')
+</script>
 </body>
 </html>
