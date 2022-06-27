@@ -136,6 +136,7 @@ public class TeacherController {
     /**查看私信
      *
      * @param teacher_id
+     * @param student_id
      * @return
      */
     @ResponseBody
