@@ -19,9 +19,9 @@ public interface MessageRep extends JpaRepository<Message,Integer> {
             "       from" +
             "           mentor.message" +
             "       where " +
-            "           receiver = ?1" +
-            "       and " +
-            "           sender = ?2" ,
+            "           (sender = ?1 AND receiver = ?2)" +
+            "       or " +
+            "           (sender = ?2 AND receiver = ?1)" ,
             nativeQuery = true)
     List<Message> checkMessage(String receiver,String sender);
 }
