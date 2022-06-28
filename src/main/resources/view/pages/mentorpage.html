@@ -24,19 +24,21 @@
             width: 100%;
             display: block;
         }
+
         .tip {
             color: white;
             text-align: center;
             border-radius: 10px;
             font-family: sans-serif;
             padding: 10px;
-            width:auto;
-            display:inline-block !important;
-            display:inline;
+            width: auto;
+            display: inline-block !important;
         }
+
         .right {
             background-color: deepskyblue;
         }
+
         .left {
             background-color: forestgreen;
         }
@@ -92,8 +94,9 @@
                     私信中心
                 </el-menu-item>
                 <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen3=false;">
-                    <el-link href="teachershow.html" target="_blank">导师列表</el-link>
+                    <el-link href="teachershow.html" target="_blank" :underline="false">导师列表</el-link>
                 </el-menu-item>
+                <el-menu-item index="5" @click=""></el-menu-item>
             </el-menu>
         </el-header>
         <el-steps :active="this.presentStatus" finish-status="success" simple>
@@ -155,6 +158,30 @@
                         {{ TeacherDescription }}
                     </el-descriptions-item>
                 </el-descriptions>
+            </transition>
+
+            <transition name="el-fade-in">
+                <div v-if="this.presentStatus === 4 & seen1">
+                    <template>
+                        <el-table
+                                :data="resultData"
+                                :fit="true"
+                                style="width: 240px">
+                            <el-table-column
+                                    type="index"
+                                    width="40px">
+                            </el-table-column>
+                            <el-table-column
+                                    property="studentName"
+                                    label="学生姓名"
+                                    width="200px">
+                                <template slot-scope="scope">
+                                    {{ scope.row.studentName }}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </div>
             </transition>
 
             <transition name="el-fade-in">
@@ -274,6 +301,7 @@
                     password: ''
                 }],
                 studentNameList: [],
+                resultData: [],
 
                 messageData: [],
 
@@ -295,8 +323,8 @@
 
                 isrecall: true,
 
-                texts:"",
-                textr:"",
+                texts: "",
+                textr: "",
                 chosenList: [],
                 chosen: [],
 
@@ -304,8 +332,7 @@
             }
         },
         methods: {
-
-            tableRowClassName({ row }) {
+            tableRowClassName({row}) {
                 if (this.multipleSelection.some((item) => item === row)) {
                     return "success-row";
                 }
@@ -339,7 +366,7 @@
                     .then(resp => {
                         this.messageData = resp.data;
                         this.newMessage = this.messageData.length;
-                        this.isrecall=false;
+                        this.isrecall = false;
                     })
                     .catch(err => {
                         console.log(err);
@@ -357,15 +384,15 @@
                     axios
                         .get("http://localhost:8080/hellomentor/teacher/sendMessage", {
                             params: {
-                                teacher_id:  JSON.parse(localStorage.getItem('TeacherID')),
-                                student_id :this.chatUser.studentId,
+                                teacher_id: JSON.parse(localStorage.getItem('TeacherID')),
+                                student_id: this.chatUser.studentId,
                                 messageinfo: this.text
                             }
                         })
                         .then(resp => {
                             this.$message.success('发送成功！');
                             console.log(resp.data);
-                            this.text='';
+                            this.text = '';
                         });
                 }
             },
@@ -577,11 +604,10 @@
                 }
             }
         },
-
         mounted() {
             setInterval(() => {
                 // console.log('页面加载完成后-自动执行')
-                if (!this.isrecall){
+                if (!this.isrecall) {
                     // console.log(this.messageData)
                     for (let item of this.messageData) {
                         if (item.receiver === this.chatUser.studentId) {
@@ -612,11 +638,36 @@
                         }
 
                         this.content += html;
-                        this.isrecall=true;
-                    }}
+                        this.isrecall = true;
+                    }
+                }
             }, 1000)
 
             this.checkApp(this.presentStatus);
+
+            axios
+                .get("http://localhost:8080/hellomentor/teacher/checkResult", {
+                    params: {
+                        teacher_id: this.TeacherId
+                    }
+                })
+                .then(resp => {
+                    // console.log(resp.data);
+                    for (let i = 0; i < resp.data.length; i++) {
+                        let stuName = resp.data[i].student_name;
+                        let teaName = resp.data[i].teacher_name;
+                        let matchRec = {
+                            studentName: stuName,
+                            teacherName: teaName
+                        };
+                        this.resultData.push(matchRec);
+                    }
+                    // console.log(this.resultData);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
             axios
                 .get("http://localhost:8080/hellomentor/student/getall")
                 .then(resp => {
@@ -637,20 +688,6 @@
                 .catch(err => {
                     console.log(err);
                 })
-
-            // axios
-            //     .get("http://localhost:8080/hellomentor/teacher/checkMessage", {
-            //         params: {
-            //             teacher_id: this.TeacherId
-            //         }
-            //     })
-            //     .then(resp => {
-            //         this.messageData = resp.data;
-            //         this.newMessage = this.messageData.length;
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     })
 
             axios
                 .get("http://localhost:8080/hellomentor/teacher/getinfo", {
