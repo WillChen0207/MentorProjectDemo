@@ -111,10 +111,10 @@
         </el-header>
         <el-main>
             <template>
-                <el-row>
+                <el-row :gutter="20" type="relative">
                     <el-col :span="4" v-for="teacher in this.teacherNameList" :key="teacher.key" :offset="3">
-                        <el-card :body-style="{ padding: '5px' }">
-                            <img src="https://game.gtimg.cn/images/lol/act/img/tft/hero/lolapp_39003.png" class="image">
+                        <el-card :body-style="{ padding: '5px'}">
+                            <img src="https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png" class="image">
                             <div style="padding: 20px;">
                                 <span>姓名:{{ teacher.desc }}</span>
                                 <div class="bottom clearfix">

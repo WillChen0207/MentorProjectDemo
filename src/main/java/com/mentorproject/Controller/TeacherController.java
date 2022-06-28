@@ -260,4 +260,14 @@ public class TeacherController {
         return pswoutput;
     }
 
+    /**获取该老师当前匹配完成的个数
+     *
+     * @param teacher_id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getMatchCount", method = {RequestMethod.GET,RequestMethod.POST})
+    public Integer getMatchCount(@RequestParam("teacher_id") String teacher_id){
+        return teacherRep.getMatchCount(teacher_id);
+    }
 }
