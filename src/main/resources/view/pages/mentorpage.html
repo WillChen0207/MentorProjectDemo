@@ -24,6 +24,30 @@
             width: 100%;
             display: block;
         }
+        .tip {
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+            font-family: sans-serif;
+            padding: 10px;
+            width:auto;
+            display:inline-block !important;
+            display:inline;
+        }
+        .right {
+            background-color: deepskyblue;
+        }
+        .left {
+            background-color: forestgreen;
+        }
+
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background-color: rgb(255, 244, 232);
+        }
     </style>
 </head>
 
@@ -54,20 +78,21 @@
                     background-color="#545c64"
                     text-color="#fff"
                     active-text-color="#ffd04b">
-                <el-menu-item index="1" @click="seen1=true;seen21=false;seen22=false;seen3=false;seen4=false">个人信息
+                <el-menu-item index="1" @click="seen1=true;seen21=false;seen22=false;seen3=false;">个人信息
                 </el-menu-item>
                 <el-submenu index="2">
                     <template slot="title">志愿管理</template>
                     <el-menu-item index="2-1"
-                                  @click="seen1=false;seen21=true;seen22=false;seen3=false;seen4=false;"
+                                  @click="seen1=false;seen21=true;seen22=false;seen3=false;"
                                   v-if="this.presentStatus === 1 || this.presentStatus === 2 || this.presentStatus === 3">
                         查看志愿
                     </el-menu-item>
                 </el-submenu>
-                <el-menu-item index="3" @click="seen1=false;seen21=false;seen22=false;seen3=true;seen4=false">
+                <el-menu-item index="3" @click="seen1=false;seen21=false;seen22=false;seen3=true;">
                     私信中心
                 </el-menu-item>
-                <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen3=false;seen4=true">导师列表
+                <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen3=false;">
+                    <el-link href="teachershow.html" target="_blank">导师列表</el-link>
                 </el-menu-item>
             </el-menu>
         </el-header>
@@ -136,8 +161,11 @@
                 <div v-if="seen21">
                     <template>
                         <el-table
+                                ref="multipleTable"
                                 :data="checkAppList"
                                 :fit="true"
+                                :row-class-name="tableRowClassName"
+                                @selection-change="handleSelectionChange"
                                 border
                                 style="width: 100%">
                             <el-table-column
@@ -156,17 +184,11 @@
                                     label="个人介绍">
                             </el-table-column>
                             <el-table-column
-                                    fixed="right"
-                                    label="操作"
+                                    type="selection"
                                     width="180%">
-                                <template slot-scope="scope">
-                                    <el-button @click="handleClick(scope.row)" type="primary" size="middle">选中
-                                    </el-button>
-                                    <el-button @click="handleClick(scope.row)" type="danger" size="middle">不选
-                                    </el-button>
-                                </template>
                             </el-table-column>
                         </el-table>
+                        <el-button type="primary" @click="submitChosen()">提交</el-button>
                     </template>
                 </div>
             </transition>
@@ -177,16 +199,16 @@
                         <div style="padding: 10px; margin-bottom: 50px">
                             <el-row>
                                 <el-col :span="4">
-                                    <el-card style="width: 300px; height: 300px; color: #333">
-                                        <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">在线老师<span
+                                    <el-card style="width: 300px;  color: #333">
+                                        <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">在线学生<span
                                                 style="font-size: 12px">（点击聊天气泡开始聊天）</span></div>
-                                        <div style="padding: 10px 0" v-for="who in tableData" :key="who.teacherId">
-                                            <span>{{ who.teacherName }}</span>
+                                        <div style="padding: 10px 0" v-for="who in tableData" :key="who.studentId">
+                                            <span>{{ who.studentName }}</span>
                                             <i class="el-icon-chat-dot-round"
                                                style="margin-left: 10px; font-size: 16px; cursor: pointer"
                                                @click="chatUser = who;recall()"></i>
                                             <span style="font-size: 12px;color: limegreen; margin-left: 5px"
-                                                  v-if="who.teacherId === chatUser.teacherId">chatting...</span>
+                                                  v-if="who.studentId === chatUser.studentId">chatting...</span>
                                         </div>
                                     </el-card>
                                 </el-col>
@@ -194,7 +216,7 @@
                                     <div style="width: 800px; margin: 0 auto; background-color: white;
                                 border-radius: 5px; box-shadow: 0 0 10px #ccc">
                                         <div style="text-align: center; line-height: 50px;">
-                                            Web聊天室（{{ chatUser.teacherName }}）
+                                            私信（{{ chatUser.studentName }}）
                                         </div>
                                         <div style="height: 350px; overflow:auto; border-top: 1px solid #ccc"
                                              v-html="content"></div>
@@ -213,26 +235,6 @@
                 </div>
             </transition>
 
-            <transition name="el-fade-in">
-                <div v-if="seen4">
-                    <template>
-                        <el-row>
-                            <el-col :span="4" v-for="teacher in this.teacherNameList" :key="teacher.key" :offset="3">
-                                <el-card :body-style="{ padding: '5px' }">
-                                    <img src="https://game.gtimg.cn/images/lol/act/img/tft/hero/lolapp_39003.png"
-                                         class="image">
-                                    <div style="padding: 20px;">
-                                        <span>{{ teacher.desc }}</span>
-                                        <div class="bottom clearfix">
-                                            <el-button type="text" class="button">操作按钮</el-button>
-                                        </div>
-                                    </div>
-                                </el-card>
-                            </el-col>
-                        </el-row>
-                    </template>
-                </div>
-            </transition>
         </el-main>
     </el-container>
 </div>
@@ -265,13 +267,13 @@
                 seen4: false,
 
                 tableData: [{
-                    teacherId: '',
-                    teacherName: '',
+                    studentId: '',
+                    studentName: '',
                     gender: '',
-                    teacherDescription: '',
+                    studentDescription: '',
                     password: ''
                 }],
-                teacherNameList: [],
+                studentNameList: [],
 
                 messageData: [],
 
@@ -289,59 +291,63 @@
                 selected: [],
 
                 checkAppList: [],
-                checkStudent: []
+                checkStudent: [],
+
+                isrecall: true,
+
+                texts:"",
+                textr:"",
+                chosenList: [],
+                chosen: [],
+
+                multipleSelection: []
             }
         },
         methods: {
+
+            tableRowClassName({ row }) {
+                if (this.multipleSelection.some((item) => item === row)) {
+                    return "success-row";
+                }
+                return "";
+            },
+            toggleSelection(rows) {
+                if (rows) {
+                    rows.forEach(row => {
+                        this.$refs.multipleTable.toggleRowSelection(row);
+                    });
+                } else {
+                    this.$refs.multipleTable.clearSelection();
+                }
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            submitChosen() {
+                this.$message.success("Yes");
+                console.log(this.multipleSelection);
+            },
+
             recall() {
                 axios
-                    .get("http://localhost:8080/hellomentor/student/checkMessage", {
+                    .get("http://localhost:8080/hellomentor/teacher/checkMessage", {
                         params: {
-                            student_id: this.StudentId,
-                            teacher_id: this.chatUser.teacherId
+                            teacher_id: JSON.parse(localStorage.getItem('TeacherID')),
+                            student_id: this.chatUser.studentId
                         }
                     })
                     .then(resp => {
                         this.messageData = resp.data;
                         this.newMessage = this.messageData.length;
+                        this.isrecall=false;
                     })
                     .catch(err => {
                         console.log(err);
                     })
-                for (let item of this.messageData) {
-                    if (item.sender === this.StudentId) {
-                        text123 = item.message;
-
-                        html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
-                            "  <div class=\"el-col el-col-22\" style=\"text-align: right; padding-right: 10px\">\n" +
-                            "    <div class=\"tip left\">" + text123 + "</div>\n" +
-                            "  </div>\n" +
-                            "  <div class=\"el-col el-col-2\">\n" +
-                            "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
-                            "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
-                            "  </span>\n" +
-                            "  </div>\n" +
-                            "</div>";
-                    } else {
-                        text123 = item.message;
-                        html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
-                            "  <div class=\"el-col el-col-2\" style=\"text-align: right\">\n" +
-                            "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
-                            "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
-                            "  </span>\n" +
-                            "  </div>\n" +
-                            "  <div class=\"el-col el-col-22\" style=\"text-align: left; padding-left: 10px\">\n" +
-                            "    <div class=\"tip right\">" + text123 + "</div>\n" +
-                            "  </div>\n" +
-                            "</div>";
-                    }
-                    console.log(html)
-                    this.content += html;
-                }
+                this.content = '';
             },
-
             send() {
-                if (!this.chatUser.teacherId) {
+                if (!this.chatUser.studentId) {
                     this.$message({type: 'warning', message: "请选择聊天对象"})
                     return;
                 }
@@ -349,17 +355,17 @@
                     this.$message({type: 'warning', message: "请输入内容"})
                 } else {
                     axios
-                        .get("http://localhost:8080/hellomentor/student/sendMessage", {
+                        .get("http://localhost:8080/hellomentor/teacher/sendMessage", {
                             params: {
-                                student_id: this.StudentId,
-                                teacher_id: this.chatUser.teacherId,
+                                teacher_id:  JSON.parse(localStorage.getItem('TeacherID')),
+                                student_id :this.chatUser.studentId,
                                 messageinfo: this.text
                             }
                         })
                         .then(resp => {
                             this.$message.success('发送成功！');
                             console.log(resp.data);
-                            window.location.reload();
+                            this.text='';
                         });
                 }
             },
@@ -463,7 +469,7 @@
                                         studentGPA: 0,
                                         studentDescription: ''
                                     }
-
+                                    let chosenStatus = 0;
                                     axios
                                         .get("http://localhost:8080/hellomentor/student/getinfo", {
                                             params: {
@@ -476,6 +482,7 @@
                                             studentInfo.studentGPA = resp1.data.gpa;
                                             studentInfo.studentDescription = resp1.data.studentDescription;
                                             _this.checkAppList.push(studentInfo);
+                                            _this.chosen.push(chosenStatus);
                                         })
                                         .catch(err => {
                                             console.log(err);
@@ -572,21 +579,58 @@
         },
 
         mounted() {
+            setInterval(() => {
+                // console.log('页面加载完成后-自动执行')
+                if (!this.isrecall){
+                    // console.log(this.messageData)
+                    for (let item of this.messageData) {
+                        if (item.receiver === this.chatUser.studentId) {
+                            texts = item.message;
+                            html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
+                                "  <div class=\"el-col el-col-22\" style=\"text-align: right; padding-right: 10px\">\n" +
+                                "    <div class=\"tip left\">" + texts + "</div>\n" +
+                                "  </div>\n" +
+                                "  <div class=\"el-col el-col-2\">\n" +
+                                "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
+                                "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
+                                "  </span>\n" +
+                                "  </div>\n" +
+                                "</div>";<!--当前用户信息-->
+                        } else {
+
+                            textr = item.message;
+                            html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
+                                "  <div class=\"el-col el-col-2\" style=\"text-align: right\">\n" +
+                                "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
+                                "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
+                                "  </span>\n" +
+                                "  </div>\n" +
+                                "  <div class=\"el-col el-col-22\" style=\"text-align: left; padding-left: 10px\">\n" +
+                                "    <div class=\"tip right\">" + textr + "</div>\n" +
+                                "  </div>\n" +
+                                "</div>";
+                        }
+
+                        this.content += html;
+                        this.isrecall=true;
+                    }}
+            }, 1000)
+
             this.checkApp(this.presentStatus);
             axios
-                .get("http://localhost:8080/hellomentor/teacher/getall")
+                .get("http://localhost:8080/hellomentor/student/getall")
                 .then(resp => {
                     this.tableData = resp.data;
 
                     for (let i = 0; i < this.tableData.length; i++) {
-                        let id = resp.data[i].teacherId;
-                        let name = resp.data[i].teacherName;
+                        let id = resp.data[i].studentId;
+                        let name = resp.data[i].studentName;
                         let socket = {
                             key: id,
                             desc: name,
                             disabled: false
                         };
-                        this.teacherNameList.push(socket);
+                        this.studentNameList.push(socket);
                     }
 
                 })
