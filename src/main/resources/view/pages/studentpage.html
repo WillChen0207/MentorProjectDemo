@@ -249,7 +249,7 @@
                         <div style="padding: 10px; margin-bottom: 50px">
                             <el-row>
                                 <el-col :span="4">
-                                    <el-card style="width: 300px; height: 300px; color: #333">
+                                    <el-card style="width: 300px;  color: #333">
                                         <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">在线老师<span
                                                 style="font-size: 12px">（点击聊天气泡开始聊天）</span></div>
                                         <div style="padding: 10px 0" v-for="who in tableData" :key="who.teacherId">
@@ -266,7 +266,7 @@
                                     <div style="width: 800px; margin: 0 auto; background-color: white;
                     border-radius: 5px; box-shadow: 0 0 10px #ccc">
                                         <div style="text-align: center; line-height: 50px;">
-                                            Web聊天室（{{ chatUser.teacherName }}）
+                                            私信（{{ chatUser.teacherName }}）
                                         </div>
                                         <div style="height: 350px; overflow:auto; border-top: 1px solid #ccc"
                                              v-html="content"></div>
@@ -395,7 +395,7 @@
                         .then(resp => {
                             this.$message.success('发送成功！');
                             console.log(resp.data);
-
+                            this.text='';
                         });
                 }
             },
