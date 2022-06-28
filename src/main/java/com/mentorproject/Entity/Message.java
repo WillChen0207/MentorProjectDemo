@@ -15,6 +15,7 @@ public class Message {
     private String message;
     private Integer isRead;
 
+
     public Integer getRec_id() {
         return rec_id;
     }

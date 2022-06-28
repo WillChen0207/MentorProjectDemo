@@ -75,4 +75,17 @@ public interface TeacherRep extends JpaRepository<Teacher,String> {
             nativeQuery = true)
     List<Result> checkResult(String teacher_id);
 
+    /**获取该老师当前匹配完成的个数
+     *
+     * @param teahcer_id
+     * @return
+     */
+    @Query(value = "select " +
+            "           COUNT(*)" +
+            "        from " +
+            "           mentor.mentormatch" +
+            "        where " +
+            "           teacher_id = ?1",
+            nativeQuery = true)
+    Integer getMatchCount(String teahcer_id);
 }
