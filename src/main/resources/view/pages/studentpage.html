@@ -51,7 +51,7 @@
         <el-header style="text-align: right; font-size: 12px">
 
             <el-dropdown>
-                <i class="el-icon-setting" style="margin-right: 15px"></i>
+                <i class="el-icon-setting" style="margin-right: 30px;margin-bottom: 15px;margin-top: 15px"></i>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item @click.native="logOut()">登出</el-dropdown-item>
                     <el-dropdown-item @click.native="changeStatus()">切换阶段</el-dropdown-item>
@@ -85,9 +85,7 @@
                     </el-menu-item>
                 </el-submenu>
                 <el-menu-item index="3" @click="seen1=false;seen21=false;seen22=false;seen3=true;">
-                    <el-badge :value="newMessage" class="item">
-                        私信中心
-                    </el-badge>
+                    私信中心
                 </el-menu-item>
                 <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen3=false;">
                     <el-link href="http://localhost:63342/MentorProject/view/pages/teachershow.html" target="_blank">
@@ -274,9 +272,9 @@
                                              v-html="content"></div>
                                         <div style="height: 200px">
             <textarea v-model="text" style="height: 160px; width: 95%; padding: 20px; border: none; border-top: 1px solid #ccc;
-             border-bottom: 1px solid #ccc; outline: none"></textarea>
+             border-bottom: 1px solid #ccc; outline: none" id="messagebox"></textarea>
                                             <div style="text-align: right; padding-right: 10px">
-                                                <el-button type="primary" size="mini" @click="send">发送</el-button>
+                                                <el-button type="primary" size="mini" @click="send()">发送</el-button>
                                             </div>
                                         </div>
                                     </div>
@@ -362,7 +360,7 @@
                 axios
                     .get("http://localhost:8080/hellomentor/student/checkMessage", {
                         params: {
-                            student_id: this.StudentId,
+                            student_id: JSON.parse(localStorage.getItem('StudentID')),
                             teacher_id: this.chatUser.teacherId
                         }
                     })
@@ -389,7 +387,7 @@
                     axios
                         .get("http://localhost:8080/hellomentor/student/sendMessage", {
                             params: {
-                                student_id: this.StudentId,
+                                student_id: JSON.parse(localStorage.getItem('StudentID')),
                                 teacher_id: this.chatUser.teacherId,
                                 messageinfo: this.text
                             }
@@ -409,7 +407,7 @@
                 axios
                     .get("http://localhost:8080/hellomentor/student/updateInfo", {
                         params: {
-                            student_id: this.StudentId,
+                            student_id: JSON.parse(localStorage.getItem('StudentID')),
                             student_description: this.form.studentDescription
                         }
                     })
@@ -477,7 +475,7 @@
                 axios
                     .get("http://localhost:8080/hellomentor/student/fillapp", {
                         params: {
-                            student_id: this.StudentId,
+                            student_id: JSON.parse(localStorage.getItem('StudentID')),
                             first_app: this.selected[0],
                             second_app: this.selected[1],
                             third_app: this.selected[2],
@@ -506,7 +504,7 @@
                 return '暂未选择';
             },
             changeStudent() {
-                if (this.StudentId !== '20206660101') {
+                if (JSON.parse(localStorage.getItem('StudentID')) !== '20206660101') {
                     localStorage.setItem('StudentID', '20206660101');
                 } else {
                     localStorage.setItem('StudentID', '20206660102');
@@ -528,9 +526,9 @@
         },
         mounted() {
             setInterval(() => {
-                console.log('页面加载完成后-自动执行')
+                // console.log('页面加载完成后-自动执行')
                 if (!this.isrecall){
-                console.log(this.messageData)
+                // console.log(this.messageData)
                 for (let item of this.messageData) {
                     if (item.receiver === this.chatUser.teacherId) {
                         texts = item.message;
@@ -588,7 +586,7 @@
             axios
                 .get("http://localhost:8080/hellomentor/student/checkResult", {
                     params: {
-                        student_id: this.StudentId
+                        student_id: JSON.parse(localStorage.getItem('StudentID'))
                     }
                 })
                 .then(resp => {
@@ -601,7 +599,7 @@
             axios
                 .get("http://localhost:8080/hellomentor/student/getapp", {
                     params: {
-                        student_id: this.StudentId//通过登录校验控制
+                        student_id: JSON.parse(localStorage.getItem('StudentID'))//通过登录校验控制
                     }
                 })
                 .then(resp => {
@@ -616,7 +614,7 @@
             axios
                 .get("http://localhost:8080/hellomentor/student/getinfo", {
                     params: {
-                        student_id: this.StudentId//通过登录校验控制
+                        student_id: JSON.parse(localStorage.getItem('StudentID'))//通过登录校验控制
                     }
                 })
                 .then(resp => {

@@ -18,7 +18,7 @@ public interface ApplicationRecordRep extends JpaRepository<ApplicationRecord,St
             "           mentor.application_record" +
             "       join" +
             "           mentor.teacher" +
-            "where student_id=?1",
+            "       where student_id=?1",
             nativeQuery = true)
     ApplicationRecord getApplicationRecordByStudentId(String student_id);
 

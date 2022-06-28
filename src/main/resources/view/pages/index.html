@@ -96,10 +96,10 @@
                 <h2 style="text-align: center">用户登录</h2>
                 <el-form ref="form" :model="form" label-width="80px">
                     <el-form-item label="账号">
-                        <el-input v-model="form.Id" :disabled="(this.isGuest)"></el-input><!--v-mode去掉了-->
+                        <el-input v-model="form.Id"></el-input><!--v-mode去掉了-->
                     </el-form-item>
                     <el-form-item label="密码">
-                        <el-input v-model="form.password" type="password" :disabled="(this.isGuest === true)"></el-input><!--v-mode去掉了-->
+                        <el-input v-model="form.password" type="password"></el-input><!--v-mode去掉了-->
                     </el-form-item>
                     <el-form-item label="身份">
                         <el-select placeholder="请选择身份" v-model="form.identity">

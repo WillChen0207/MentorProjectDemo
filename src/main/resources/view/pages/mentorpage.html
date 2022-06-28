@@ -65,9 +65,7 @@
                     </el-menu-item>
                 </el-submenu>
                 <el-menu-item index="3" @click="seen1=false;seen21=false;seen22=false;seen3=true;seen4=false">
-                    <el-badge :value="newMessage" class="item">
-                        私信中心
-                    </el-badge>
+                    私信中心
                 </el-menu-item>
                 <el-menu-item index="4" @click="seen1=false;seen21=false;seen22=false;seen3=false;seen4=true">导师列表
                 </el-menu-item>
@@ -492,6 +490,46 @@
                     case 2: {
                         axios
                             .get("http://localhost:8080/hellomentor/teacher/getSecondApp", {
+                                params: {
+                                    teacher_id: this.TeacherId
+                                }
+                            })
+                            .then(function (resp) {
+                                _this.checkStudent = resp.data;
+                                _this.checkAppList = [];
+                                for (let i = 0; i < resp.data.length; i++) {
+                                    let studentInfo = {
+                                        studentId: resp.data[i].studentId,
+                                        studentName: '',
+                                        studentGPA: 0,
+                                        studentDescription: ''
+                                    }
+
+                                    axios
+                                        .get("http://localhost:8080/hellomentor/student/getinfo", {
+                                            params: {
+                                                student_id: resp.data[i].studentId
+                                            }
+                                        })
+                                        .then(function (resp1) {
+                                            studentInfo.studentName = resp1.data.studentName;
+                                            studentInfo.studentGPA = resp1.data.gpa;
+                                            studentInfo.studentDescription = resp1.data.studentDescription;
+                                            _this.checkAppList.push(studentInfo);
+                                        })
+                                        .catch(err => {
+                                            console.log(err);
+                                        })
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
+                        break;
+                    }
+                    case 3: {
+                        axios
+                            .get("http://localhost:8080/hellomentor/teacher/getThirdApp", {
                                 params: {
                                     teacher_id: this.TeacherId
                                 }
