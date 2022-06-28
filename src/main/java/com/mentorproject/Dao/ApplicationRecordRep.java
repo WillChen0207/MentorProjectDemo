@@ -48,7 +48,7 @@ public interface ApplicationRecordRep extends JpaRepository<ApplicationRecord,St
             "       from" +
             "           mentor.application_record " +
             "       WHERE" +
-            "           first_app = ?1" +
+            "           second_app = ?1" +
             "       and" +
             "           is_selected = 0",
             nativeQuery = true)
@@ -63,7 +63,7 @@ public interface ApplicationRecordRep extends JpaRepository<ApplicationRecord,St
             "       from" +
             "           mentor.application_record " +
             "       WHERE" +
-            "           first_app = ?1" +
+            "           third_app = ?1" +
             "       and" +
             "           is_selected = 0",
             nativeQuery = true)
