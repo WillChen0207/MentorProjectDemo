@@ -85,7 +85,7 @@
                 <el-submenu index="2">
                     <template slot="title">志愿管理</template>
                     <el-menu-item index="2-1"
-                                  @click="seen1=false;seen21=true;seen22=false;seen3=false;"
+                                  @click="seen1=false;seen21=true;seen22=false;seen3=false;open();"
                                   v-if="this.presentStatus === 1 || this.presentStatus === 2 || this.presentStatus === 3">
                         查看志愿
                     </el-menu-item>
@@ -270,6 +270,9 @@
     var pageApp = new Vue({
         data() {
             return {
+                number:0,
+                Visible:false,
+
                 text: "",
                 text123: "",
 
@@ -332,6 +335,17 @@
             }
         },
         methods: {
+            open() {
+                    this.$alert(3-this.number, '您还能选了几个学生', {
+                        confirmButtonText: '确定',
+                        callback: action => {
+                            this.$message({
+                                type: 'info',
+                                message: `action: ${ action }`
+                            });
+                        }
+                    });
+            },
             tableRowClassName({row}) {
                 if (this.multipleSelection.some((item) => item === row)) {
                     return "success-row";
@@ -350,9 +364,42 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            submitChosen() {
-                this.$message.success("Yes");
-                console.log(this.multipleSelection);
+            submitChosen(){
+                if (this.multipleSelection.length > 3) {
+                    this.$message.error("仅限选择三位导师作为志愿！")
+                } else {
+                    this.$confirm('请确认填写情况,是否提交?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.appSubmit();
+                        console.log(this.multipleSelection)
+                    }).catch(err => {
+
+                        this.$message({
+                            type: 'info',
+                            message: '取消提交'
+                        });
+                    });
+                }
+            },
+            appSubmit() {
+                for (let i = 0; i < this.multipleSelection.length; i++) {
+                   // console.log(i)
+                   // console.log(this.checkAppList[this.multipleSelection[i]])
+                    axios
+                        .get("http://localhost:8080/hellomentor/teacher/selectStudent", {
+                            params: {
+                                student_id:this.multipleSelection[i].studentId,
+                                teacher_id: JSON.parse(localStorage.getItem('TeacherID')),
+                            }
+                        })
+                        .then(resp => {
+                            this.$message.success('已成功提交！');
+                            this.selected = [];
+                        })}
+                window.location.reload()
             },
 
             recall() {
@@ -605,6 +652,22 @@
             }
         },
         mounted() {
+            axios
+                .get("http://localhost:8080/hellomentor/teacher/getMatchCount", {
+                    params: {
+                        teacher_id: this.TeacherId
+                    }
+                })
+                .then(resp => {
+                        console.log(resp.data);
+                        this.number=resp.data;
+                    }
+                    // console.log(this.resultData);
+                )
+                .catch(err => {
+                    console.log(err);
+                })
+
             setInterval(() => {
                 // console.log('页面加载完成后-自动执行')
                 if (!this.isrecall) {
