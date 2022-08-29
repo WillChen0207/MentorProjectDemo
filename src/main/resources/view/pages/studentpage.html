@@ -54,8 +54,8 @@
                 <i class="el-icon-setting" style="margin-right: 30px;margin-bottom: 15px;margin-top: 15px"></i>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item @click.native="logOut()">登出</el-dropdown-item>
-                    <el-dropdown-item @click.native="changeStatus()">切换阶段</el-dropdown-item>
-                    <el-dropdown-item @click.native="changeStudent()">更改用户</el-dropdown-item>
+<!--                    <el-dropdown-item @click.native="changeStatus()">切换阶段</el-dropdown-item>-->
+                    <el-dropdown-item @click.native="exitStudent()">更改用户</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
             <el-avatar icon="el-icon-user-solid"></el-avatar>
@@ -503,13 +503,9 @@
                 }
                 return '暂未选择';
             },
-            changeStudent() {
-                if (JSON.parse(localStorage.getItem('StudentID')) !== '20206660101') {
-                    localStorage.setItem('StudentID', '20206660101');
-                } else {
-                    localStorage.setItem('StudentID', '20206660102');
-                }
-                window.location.reload();
+            exitStudent() {
+                localStorage.setItem('StudentID', null);
+                window.location.href = "http://localhost:63342/MentorProject/view/pages/index.html";
             },
             changeStatus() {
                 if (this.presentStatus === 5) {
